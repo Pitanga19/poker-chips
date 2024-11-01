@@ -39,7 +39,7 @@ export class ChipHolder {
         this._pendingChips -= amount;
     }
 
-    prepareChips(amount: number): void {
+    prepareChips(amount: number = this.chips): void {
         this.addPendingChips(amount);
         this.removeChips(amount);
     }
@@ -125,32 +125,37 @@ export class Player extends ChipHolder {
 }
 
 export class Pot extends ChipHolder {
-    private _players: Player[];
-    private _winners: Player[];
+    private _winnersCount: number;
     
-    constructor(players: Player[]) {
+    constructor(players: number) {
         super();
-        this._players = players;
-        this._winners = [];
+        this._winnersCount = 0;
     }
 
-    get players(): Player[] {
-        return this._players;
+    get winners(): number {
+        return this._winnersCount;
     }
 
-    set players(players: Player[]) {
-        this._players = players;
+    set winners(value: number) {
+        this._winnersCount = value;
     }
 
-    get winners(): Player[] {
-        return this._winners;
+    defineWinnersCount(players: Player[]): void {
+        this._winnersCount = players.filter(p => p.isWinner).length;
+    }
+    
+    payWinners(players: Player[]): void {
+        players.forEach(p => {
+            if (p.isWinner) {
+                this.transferChips(p, Math.floor(this.pendingChips / this._winnersCount));
+            }
+        })
     }
 
-    set winners(players: Player[]) {
-        this._winners = players;
-    }
-
-    defineWinners(): void {
-        this.winners = this._players.filter(p => p.isWinner);
+    endPot(players: Player[]): void {
+        this.prepareChips();
+        this.defineWinnersCount(players);
+        this.payWinners(players);
+        this.chips = 0;
     }
 }
