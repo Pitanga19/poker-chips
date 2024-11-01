@@ -123,3 +123,34 @@ export class Player extends ChipHolder {
         this._isWinner = false;
     }
 }
+
+export class Pot extends ChipHolder {
+    private _players: Player[];
+    private _winners: Player[];
+    
+    constructor(players: Player[]) {
+        super();
+        this._players = players;
+        this._winners = [];
+    }
+
+    get players(): Player[] {
+        return this._players;
+    }
+
+    set players(players: Player[]) {
+        this._players = players;
+    }
+
+    get winners(): Player[] {
+        return this._winners;
+    }
+
+    set winners(players: Player[]) {
+        this._winners = players;
+    }
+
+    defineWinners(): void {
+        this.winners = this._players.filter(p => p.isWinner);
+    }
+}
