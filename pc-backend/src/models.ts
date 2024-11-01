@@ -55,6 +55,7 @@ export class Player extends ChipHolder {
     private _isPlaying: boolean;
     private _isDealer: boolean;
     private _isTurn: boolean;
+    private _isWinner: boolean;
 
     constructor(id: string, startingChips: number = 0) {
         super();
@@ -62,7 +63,8 @@ export class Player extends ChipHolder {
         this._isPlaying = true;
         this._isDealer = false;
         this._isTurn = false;
-        this.chips = startingChips
+        this._isWinner = false;
+        this.chips = startingChips;
     }
 
     get id(): string {
@@ -96,25 +98,28 @@ export class Player extends ChipHolder {
     removeDealer() {
         this._isDealer = false;
     }
-
+    
     get isTurn(): boolean {
         return this._isTurn;
     }
-
+    
     startTurn(): void {
         this._isTurn = true;
     }
-
+    
     endTurn(): void {
         this._isTurn = false;
     }
 
-    finishTurn(pot: Pot) {
-        this.transferChips(pot, this.pendingChips);
-        this.endTurn();
+    get isWinner(): boolean {
+        return this._isWinner;
     }
-}
 
-export class Pot extends ChipHolder {
+    makeWinner() {
+        this._isWinner = true;
+    }
 
+    removeWinner() {
+        this._isWinner = false;
+    }
 }
