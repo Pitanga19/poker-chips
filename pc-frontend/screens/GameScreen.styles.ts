@@ -2,24 +2,54 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
     main: {
-        margin: 20,
         flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
-        backgroundColor: '#232',
-        color: '#fff',
-        padding: 20,
     },
 
     container: {
         borderWidth: 2,
         borderColor: '#fff',
+        backgroundColor: '233',
         margin: 10,
         padding: 10,
-        height: 'auto',
     },
 
     mainText: {
+        color: '#fff'
+    },
+
+    listContainer: {
+        flexGrow: 0,
+    },
+
+    listElementContainer: {
+        flexDirection: 'row',
+        borderWidth: 2,
+        borderColor: '#fff',
+        margin: 10,
+        padding: 10,
+    },
+
+    userContainer: {
+        borderWidth: 2,
+        borderColor: '#fff',
+        margin: 10,
+        padding: 10,
+    },
+
+    actionContainer: {
+        borderWidth: 2,
+        borderColor: '#fff',
+        margin: 10,
+        padding: 10,
+    },
+
+    input: {
+        borderWidth: 2,
+        borderColor: '#fff',
+        margin: 10,
+        padding: 10,
         color: '#fff'
     },
 });

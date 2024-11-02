@@ -1,22 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, StatusBar as RNStatusBar } from 'react-native';
 // import screens:
 import GameScreen from './screens/GameScreen';
 
 export default function App() {
   return (
-    <View style={ styles.container }>
-      <StatusBar style='auto' />
+    <SafeAreaView style={ styles.safeArea }>
+      <StatusBar style='light' />
       <GameScreen />
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    backgroundColor: '#222'
+    backgroundColor: '#222',
+    paddingTop: Platform.OS === 'android' ? RNStatusBar.currentHeight : 0,
   },
 });
