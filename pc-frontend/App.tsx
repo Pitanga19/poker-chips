@@ -1,20 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+// import screens:
+import GameScreen from './screens/GameScreen';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>¡Bienvenidos a Poker Chips!</Text>
-      <StatusBar style="auto" />
+    <View style={ styles.container }>
+      <StatusBar style='auto' />
+      <GameScreen />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
+    backgroundColor: '#222'
   },
 });
