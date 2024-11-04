@@ -61,6 +61,8 @@ export class Player extends ChipHolder {
     private _id: string;
     private _isPlaying: boolean;
     private _isDealer: boolean;
+    private _isSmallBlind: boolean;
+    private _isBigBlind: boolean;
     private _isTurn: boolean;
     private _isWinner: boolean;
 
@@ -69,6 +71,8 @@ export class Player extends ChipHolder {
         this._id = id;
         this._isPlaying = true;
         this._isDealer = false;
+        this._isSmallBlind = false;
+        this._isBigBlind = false;
         this._isTurn = false;
         this._isWinner = false;
         this.chips = startingChips;
@@ -81,6 +85,8 @@ export class Player extends ChipHolder {
             pendingChips: this.pendingChips,
             isPlaying: this._isPlaying,
             isDealer: this._isDealer,
+            isSmallBlind: this._isSmallBlind,
+            isBigBlind: this._isBigBlind,
             isTurn: this.isTurn,
             isWinner: this._isWinner
         }
@@ -116,6 +122,30 @@ export class Player extends ChipHolder {
 
     removeDealer() {
         this._isDealer = false;
+    }
+
+    get isSmallBlind(): boolean {
+        return this._isSmallBlind;
+    }
+
+    giveSmallBlind() {
+        this._isSmallBlind = true;
+    }
+
+    removeSmallBlind() {
+        this._isSmallBlind = false;
+    }
+
+    get isBigBlind(): boolean {
+        return this._isBigBlind;
+    }
+
+    giveBigBlind() {
+        this._isBigBlind = true;
+    }
+
+    removeBigBlind() {
+        this._isBigBlind = false;
     }
     
     get isTurn(): boolean {
