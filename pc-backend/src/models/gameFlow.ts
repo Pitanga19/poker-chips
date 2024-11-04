@@ -1,4 +1,4 @@
-import * as ch from './chipHolders'
+import * as chips from './chipHolders'
 
 export class BetRound {
     private _isPreFlop: boolean;
@@ -6,7 +6,7 @@ export class BetRound {
     private _bigBlind: number;
     private _initialBet: number;
     private _actualBet: number;
-    private _actualRaiser: ch.Player | null;
+    private _actualRaiser: chips.Player | null;
 
     constructor(isPreFlop: boolean, smallBlind: number, bigBlind: number) {
         this._isPreFlop = isPreFlop;
@@ -36,7 +36,7 @@ export class BetRound {
         this._isPreFlop = true;
     }
 
-    RemovePreFlop(): void {
+    clearPreFlop(): void {
         this._isPreFlop = false;
     }
 
@@ -72,11 +72,11 @@ export class BetRound {
         this._actualBet = value;
     }
 
-    get actualRaiser(): ch.Player | null {
+    get actualRaiser(): chips.Player | null {
         return this._actualRaiser;
     }
 
-    set actualRaiser(player: ch.Player) {
+    set actualRaiser(player: chips.Player) {
         this._actualRaiser = player;
     }
 }
