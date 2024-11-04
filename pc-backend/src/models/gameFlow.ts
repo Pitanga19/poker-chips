@@ -92,7 +92,3 @@ export class BetRound {
         this._actualRaiserIndex = index;
     }
 }
-
-export class TurnManager {
-
-}
