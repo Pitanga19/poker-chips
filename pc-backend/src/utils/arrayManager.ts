@@ -37,11 +37,7 @@ export default class ArrayManager {
         if (this._actualIndex < this._array.length -1){
             return this._actualIndex +1;
         } else {
-            if (this._isLoop){
-                return 0;
-            } else {
-                return this._actualIndex;
-            }
+            return this._isLoop ? 0 : this._actualIndex; 
         }
     }
 
@@ -49,11 +45,7 @@ export default class ArrayManager {
         if (this._actualIndex > 0){
             return this._actualIndex - 1;
         } else {
-            if (this._isLoop) {
-                return this._array.length -1;
-            } else {
-                return 0;
-            }
+            return this._isLoop ? this._array.length -1 : 0;
         }
     }
 }
