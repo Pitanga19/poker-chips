@@ -1,63 +1,38 @@
-export default class ArrayManager {
-    private _array: any[];
+class ArrayManager {
     private _isLoop: boolean;
-    private _actualIndex: number;
 
-    constructor(array: any[], isLoop: boolean, actualIndex: number = 0){
-        this._array = array;
+    constructor(isLoop: boolean){
         this._isLoop = isLoop;
-        this._actualIndex = actualIndex;
     }
-
-    get array(): any[] {
-        return this._array;
-    }
-
-    set array(array: any[]) {
-        this._array = array;
-    }
-
-    get actualIndex(): number {
-        return this._actualIndex;
-    }
-
-    set actualIndex (index: number) {
-        this._actualIndex = index;
-    }
-
+    
     get isLoop(): boolean {
         return this._isLoop;
     }
-
+    
     set isLoop(boolean: boolean){
         this._isLoop = boolean;
     }
 
-    getNextIndex(): number {
-        if (this._actualIndex < this._array.length -1){
-            return this._actualIndex +1;
+    getNextIndex(array: any[], index: number): number {
+        if (index < array.length -1){
+            return index +1;
         } else {
-            return this._isLoop ? 0 : this._actualIndex; 
+            return this._isLoop ? 0 : index; 
         }
     }
 
-    actualizeToNextIndex(): void {
-        this._actualIndex = this.getNextIndex();
-    }
-
-    getPreviousIndex(): number {
-        if (this._actualIndex > 0){
-            return this._actualIndex - 1;
+    getPreviousIndex(array: any[], index: number): number {
+        if (index > 0){
+            return index - 1;
         } else {
-            return this._isLoop ? this._array.length -1 : 0;
+            return this._isLoop ? array.length -1 : 0;
         }
     }
 
-    actualizeToPreviousIndex(): void {
-        this._actualIndex = this.getPreviousIndex();
-    }
-
-    getRandomIndex(): number {
-        return Math.floor(Math.random() * this._array.length);
+    getRandomIndex(array: any[]): number {
+        return Math.floor(Math.random() * array.length);
     }
 }
+
+export const loopArrayManager = new ArrayManager(true);
+export const noLoopArrayManager = new ArrayManager(false);

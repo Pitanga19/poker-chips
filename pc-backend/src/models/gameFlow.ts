@@ -1,5 +1,5 @@
 import * as chips from './chipHolders'
-import ArrayManager from '../utils/arrayManager';
+import { loopArrayManager, noLoopArrayManager} from '../utils/arrayManager';
 
 export class BetRound {
     private _isPreFlop: boolean;
@@ -85,13 +85,10 @@ export class BetRound {
 export class TurnManager {
     private _betRound: BetRound;
     private _playerList: chips.Player[];
-    private _arrayManager: ArrayManager;
 
     constructor(betRound: BetRound, playerList: chips.Player[]){
         this._betRound = betRound;
         this._playerList = playerList;
-        this._arrayManager = new ArrayManager(this._playerList, true)
-        this.setInitialIndex();
     }
 
     toJSON() {
@@ -99,11 +96,6 @@ export class TurnManager {
             betRound: this._betRound,
             playerList: this._playerList
         }
-    }
-
-    private setInitialIndex(): void {
-        const dealerIndex = this._playerList.findIndex(p => p.isDealer);
-        this._arrayManager.actualIndex = (dealerIndex !== -1) ? dealerIndex : this._arrayManager.getRandomIndex();
     }
 
     get betRound(): BetRound {
