@@ -7,6 +7,13 @@ export class ChipHolder {
         this._pendingChips = 0;
     }
 
+    toJSON() {
+        return {
+            chips: this._chips,
+            pendingChips: this.pendingChips
+        }
+    }
+
     get chips(): number {
         return this._chips;
     }
@@ -65,6 +72,18 @@ export class Player extends ChipHolder {
         this._isTurn = false;
         this._isWinner = false;
         this.chips = startingChips;
+    }
+
+    toJSON() {
+        return {
+            id: this._id,
+            chips: this.chips,
+            pendingChips: this.pendingChips,
+            isPlaying: this._isPlaying,
+            isDealer: this._isDealer,
+            isTurn: this.isTurn,
+            isWinner: this._isWinner
+        }
     }
 
     get id(): string {
@@ -130,6 +149,14 @@ export class Pot extends ChipHolder {
     constructor() {
         super();
         this._winnersCount = 0;
+    }
+
+    toJSON() {
+        return {
+            chips: this.chips,
+            pendingChips: this.pendingChips,
+            winnersCount: this._winnersCount
+        }
     }
 
     get winners(): number {
