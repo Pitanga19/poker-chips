@@ -1,17 +1,17 @@
 import express from 'express';
 
 // import models
-import * as chips from './models/chipHolders';
-import * as actions from './models/gameActions'
-import * as flow from './models/gameFlow';
+import { Player, Pot } from './models/chipHolders'
+import { BetRound } from './models/gameFlow';
+import { TurnOptionsManager } from './models/gameActions';
 
 const app = express();
 const PORT = 3000;
 
-const pot = new chips.Pot();
+const pot = new Pot();
 
-const playerLuchi = new chips.Player('luchi');
-const playerMaci = new chips.Player('maci');
+const playerLuchi = new Player('luchi');
+const playerMaci = new Player('maci');
 
 app.get('/', (req, res) => {
     res.send('¡Bienvenidos a Poker Chips!');
