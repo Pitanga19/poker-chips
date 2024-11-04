@@ -56,4 +56,8 @@ export default class ArrayManager {
     actualizeToPreviousIndex(): void {
         this._actualIndex = this.getPreviousIndex();
     }
+
+    getRandomIndex(): number {
+        return Math.floor(Math.random() * this._array.length);
+    }
 }
