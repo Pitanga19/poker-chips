@@ -80,3 +80,36 @@ export class BetRound {
         this._actualRaiser = player;
     }
 }
+
+export class TurnManager {
+    private _betRound: BetRound;
+    private _playerList: chips.Player[];
+
+    constructor(betRound: BetRound, playerList: chips.Player[]){
+        this._betRound = betRound;
+        this._playerList = playerList;
+    }
+
+    toJSON() {
+        return {
+            betRound: this._betRound,
+            playerList: this._playerList
+        }
+    }
+
+    get betRound(): BetRound {
+        return this._betRound;
+    }
+
+    set betRound(betRound: BetRound) {
+        this._betRound = betRound;
+    }
+
+    get playerList(): BetRound {
+        return this._betRound;
+    }
+
+    set playerList(playerList: chips.Player[]) {
+        this._playerList = playerList;
+    }
+}
