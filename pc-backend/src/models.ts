@@ -127,7 +127,7 @@ export class Player extends ChipHolder {
 export class Pot extends ChipHolder {
     private _winnersCount: number;
     
-    constructor(players: number) {
+    constructor() {
         super();
         this._winnersCount = 0;
     }
