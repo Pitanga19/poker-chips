@@ -2,14 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, Pressable } from 'react-native';
 import styles from './GameScreen.styles';
 
-
-
-// test values
-const pot = {chips: 100}; 
-interface Player {id: string, chips: string};
-const playerMaci = {id: 'Maci', chips: '400'};
-const playerLuchi = {id: 'Luchi', chips: '500'};
-let playerList = [playerLuchi, playerMaci]
+// models interfaces
+interface Player { id: string; chips: number; pendingChips: number; isPlaying: boolean; isDealer: boolean; isTurn: boolean; isWinner: boolean }
+interface Pot { chips: number; pendingChips: number; winnersCount: number }
 
 const InputComponent = () => {
     const [text, setText] = useState('');
@@ -46,25 +41,21 @@ const renderItem = ( {item }: {item: Player} ) => (
 
 const GameScreen = () => {
     // fetch values
-    const [pot, setPot] = useState<number>(0);
     const [players, setPlayers] = useState<Player[]>([]);
-
-    const fetchGameData = async () => {
-        try {
-            const potResponse = await fetch('http://localhost:3000/api/pot');
-            const potData = await potResponse.json();
-            setPot(potData.chips);
-            
-            const playersResponse = await fetch('http://localhost:3000/api/players');
-            const playersData = await playersResponse.json();
-            setPlayers(playersData);
-        } catch (error) {
-            console.error('Error fetching data', error);
-        }
-    };
+    const [pot, setPot] = useState<Pot>({ chips: 0, pendingChips: 0, winnersCount: 0 });
 
     useEffect(() => {
-        fetchGameData();
+        // Fetch players
+        fetch('http://localhost:3000/api/players')
+            .then(response => response.json())
+            .then(data => setPlayers(data))
+            .catch(error => console.error('Error fetching players:', error));
+
+        // Fetch pot
+        fetch('http://localhost:3000/api/pot')
+            .then(response => response.json())
+            .then(data => setPot(data))
+            .catch(error => console.error('Error fetching pot:', error));
     }, []);
 
     return (
@@ -76,7 +67,7 @@ const GameScreen = () => {
 
             <View style={ styles.container }>
                 <FlatList
-                    data={ playerList }
+                    data={ players }
                     renderItem={ renderItem }
                     keyExtractor={ (item) => item.id}
                     style={ styles.listContainer }
