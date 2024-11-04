@@ -7,15 +7,17 @@ export class BetRound {
     private _bigBlind: number;
     private _initialBet: number;
     private _actualBet: number;
-    private _actualRaiser: chips.Player | null;
+    private _actualTurnIndex: number;
+    private _actualRaiserIndex: number | null;
 
-    constructor(isPreFlop: boolean, smallBlind: number, bigBlind: number) {
+    constructor(isPreFlop: boolean, smallBlind: number, bigBlind: number, actualTurnIndex: number) {
         this._isPreFlop = isPreFlop;
         this._smallBlind = smallBlind;
         this._bigBlind = bigBlind;
         this._initialBet = 0;
         this._actualBet = 0;
-        this._actualRaiser = null;
+        this._actualTurnIndex = actualTurnIndex;
+        this._actualRaiserIndex = null;
     }
 
     toJSON() {
@@ -25,7 +27,8 @@ export class BetRound {
             bigBlind: this._bigBlind,
             initialBet: this._initialBet,
             actualBet: this._actualBet,
-            actualRaiser: this._actualRaiser
+            actualTurnIndex: this._actualTurnIndex,
+            actualRaiser: this._actualRaiserIndex
         }
     }
 
@@ -73,44 +76,23 @@ export class BetRound {
         this._actualBet = value;
     }
 
-    get actualRaiser(): chips.Player | null {
-        return this._actualRaiser;
+    get actualTurnIndex(): number | null {
+        return this._actualTurnIndex;
     }
 
-    set actualRaiser(player: chips.Player) {
-        this._actualRaiser = player;
+    set actualTurnIndex(index: number) {
+        this._actualTurnIndex = index;
+    }
+
+    get actualRaiserIndex(): number | null {
+        return this._actualRaiserIndex;
+    }
+
+    set actualRaiserIndex(index: number) {
+        this._actualRaiserIndex = index;
     }
 }
 
 export class TurnManager {
-    private _betRound: BetRound;
-    private _playerList: chips.Player[];
 
-    constructor(betRound: BetRound, playerList: chips.Player[]){
-        this._betRound = betRound;
-        this._playerList = playerList;
-    }
-
-    toJSON() {
-        return {
-            betRound: this._betRound,
-            playerList: this._playerList
-        }
-    }
-
-    get betRound(): BetRound {
-        return this._betRound;
-    }
-
-    set betRound(betRound: BetRound) {
-        this._betRound = betRound;
-    }
-
-    get playerList(): BetRound {
-        return this._betRound;
-    }
-
-    set playerList(playerList: chips.Player[]) {
-        this._playerList = playerList;
-    }
 }
