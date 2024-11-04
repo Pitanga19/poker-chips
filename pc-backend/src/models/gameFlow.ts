@@ -1,4 +1,5 @@
 import * as chips from './chipHolders'
+import ArrayManager from '../utils/arrayManager';
 
 export class BetRound {
     private _isPreFlop: boolean;
