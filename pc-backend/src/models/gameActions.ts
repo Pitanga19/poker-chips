@@ -1,32 +1,31 @@
 import { Player, Pot } from './chipHolders'
 import { BetRound } from './gameFlow';
 
-export class TurnOptionsManager {
-    private _options: string[];
+type TurnOption = 'check' | 'bet' | 'fold' | 'call' | 'raise' | 'putSB' | 'putBB';
 
-    constructor() {
-        this._options = ['putSB', 'putBB', 'check', 'bet', 'call', 'raise', 'fold'];
+export class TurnOptionsManager {
+    getOptions(p: Player, br: BetRound): TurnOption[] {
+        const options: TurnOption[] = [];
+
+        if (br.actualBet < br.bigBlind) {
+            br.isPreFlop ? this.handleBlinds(p, br, options) : options.push('check', 'bet', 'fold');
+        } else if (br.actualBet === br.bigBlind && p.isBigBlind) {
+            options.push('check', 'bet', 'fold');
+        } else {
+            options.push('call', 'raise', 'fold');
+        }
+
+        return options;
     }
 
-    getOptions(p: Player, br: BetRound) {
-        let avalibeOptions = [];
-        if (br.actualBet < br.bigBlind) {
-            if (br.isPreFlop) {
-                if (p.isSmallBlind) {
-                    avalibeOptions = ['putSB']
-                } else if (p.isBigBlind) {
-                    avalibeOptions = ['putBB']
-                } else {
-                    console.error('Error con las ciegas.')
-                };
-            } else {
-                avalibeOptions = ['check', 'bet', 'fold'];
-            };
-        } else if (br.actualBet == br.bigBlind && p.isBigBlind) {
-            avalibeOptions = ['check', 'bet', 'fold'];
+    handleBlinds(p:Player, br:BetRound, options: TurnOption[]): void {
+        if (p.isSmallBlind) {
+            options.push('putSB');
+        } else if (p.isBigBlind){
+            options.push('putBB');
         } else {
-            avalibeOptions = ['call', 'raise', 'fold'];
-        };
+            console.error('Blinds error.')
+        }
     }
 }
 
