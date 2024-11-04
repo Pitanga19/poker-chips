@@ -41,11 +41,19 @@ export default class ArrayManager {
         }
     }
 
+    actualizeToNextIndex(): void {
+        this._actualIndex = this.getNextIndex();
+    }
+
     getPreviousIndex(): number {
         if (this._actualIndex > 0){
             return this._actualIndex - 1;
         } else {
             return this._isLoop ? this._array.length -1 : 0;
         }
+    }
+
+    actualizeToPreviousIndex(): void {
+        this._actualIndex = this.getPreviousIndex();
     }
 }
