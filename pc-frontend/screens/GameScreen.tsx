@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, Pressable } from 'react-native';
 import styles from './GameScreen.styles';
 
-// valores de prueba para estilar
+
+
+// test values
 const pot = {chips: 100}; 
 interface Player {id: string, chips: string};
 const playerMaci = {id: 'Maci', chips: '400'};
@@ -11,7 +13,7 @@ let playerList = [playerLuchi, playerMaci]
 
 const InputComponent = () => {
     const [text, setText] = useState('');
-
+    
     return (
         <View>
             <TextInput
@@ -20,7 +22,7 @@ const InputComponent = () => {
                 placeholderTextColor= {'#888'}
                 value={ text }
                 onChangeText={ setText }
-            />
+                />
             <Text style={ styles.mainText }>Betting: {text}</Text>
         </View>
     );
@@ -43,6 +45,28 @@ const renderItem = ( {item }: {item: Player} ) => (
 );
 
 const GameScreen = () => {
+    // fetch values
+    const [pot, setPot] = useState<number>(0);
+    const [players, setPlayers] = useState<Player[]>([]);
+
+    const fetchGameData = async () => {
+        try {
+            const potResponse = await fetch('http://localhost:3000/api/pot');
+            const potData = await potResponse.json();
+            setPot(potData.chips);
+            
+            const playersResponse = await fetch('http://localhost:3000/api/players');
+            const playersData = await playersResponse.json();
+            setPlayers(playersData);
+        } catch (error) {
+            console.error('Error fetching data', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchGameData();
+    }, []);
+
     return (
         <View style={ styles.main }>
             <View style={ styles.container }>
