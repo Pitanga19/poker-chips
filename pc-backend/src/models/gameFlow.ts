@@ -1,22 +1,19 @@
-import * as chips from './chipHolders'
-import { loopArrayManager, noLoopArrayManager} from '../utils/arrayManager';
-
 export class BetRound {
     private _isPreFlop: boolean;
     private _smallBlind: number;
     private _bigBlind: number;
-    private _initialBet: number;
-    private _actualBet: number;
     private _actualTurnIndex: number;
+    private _actualBet: number;
+    private _actualMinRaise: number;
     private _actualRaiserIndex: number | null;
 
     constructor(isPreFlop: boolean, smallBlind: number, bigBlind: number, actualTurnIndex: number) {
         this._isPreFlop = isPreFlop;
         this._smallBlind = smallBlind;
         this._bigBlind = bigBlind;
-        this._initialBet = 0;
-        this._actualBet = 0;
         this._actualTurnIndex = actualTurnIndex;
+        this._actualBet = 0;
+        this._actualMinRaise = 0;
         this._actualRaiserIndex = null;
     }
 
@@ -25,9 +22,9 @@ export class BetRound {
             isPreFlop: this._isPreFlop,
             smallBlind: this._smallBlind,
             bigBlind: this._bigBlind,
-            initialBet: this._initialBet,
-            actualBet: this._actualBet,
             actualTurnIndex: this._actualTurnIndex,
+            actualBet: this._actualBet,
+            actualMinRaise: this._actualMinRaise,
             actualRaiser: this._actualRaiserIndex
         }
     }
@@ -60,12 +57,12 @@ export class BetRound {
         this._bigBlind = value;
     }
 
-    get initialBet(): number {
-        return this._initialBet;
+    get actualTurnIndex(): number | null {
+        return this._actualTurnIndex;
     }
 
-    set initialBet(value: number) {
-        this._initialBet = value;
+    set actualTurnIndex(index: number) {
+        this._actualTurnIndex = index;
     }
 
     get actualBet(): number {
@@ -76,12 +73,12 @@ export class BetRound {
         this._actualBet = value;
     }
 
-    get actualTurnIndex(): number | null {
-        return this._actualTurnIndex;
+    get actualMinRaise(): number {
+        return this._actualMinRaise;
     }
 
-    set actualTurnIndex(index: number) {
-        this._actualTurnIndex = index;
+    set actualMinRaise(value: number) {
+        this._actualMinRaise = value;
     }
 
     get actualRaiserIndex(): number | null {
