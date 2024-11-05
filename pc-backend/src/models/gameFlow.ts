@@ -1,12 +1,19 @@
+export enum StagesList {
+    PreFlop = 'preFlop',
+    Flop = 'flop',
+    Turn = 'turn',
+    River = 'river'
+}
+
 export class BetRound {
-    private _isPreFlop: boolean;
+    private _stage: StagesList;
     private _smallBlindValue: number;
     private _bigBlindValue: number;
     private _actualBetValue: number;
     private _minimumRaise: number;
 
-    constructor(isPreFlop: boolean, smallBlindValue: number, bigBlindValue:number, ) {
-        this._isPreFlop = isPreFlop;
+    constructor(stage: StagesList, smallBlindValue: number, bigBlindValue:number, ) {
+        this._stage = stage;
         this._smallBlindValue = smallBlindValue;
         this._bigBlindValue = bigBlindValue;
         this._actualBetValue = 0;
@@ -15,24 +22,20 @@ export class BetRound {
 
     toJSON() {
         return {
-            isPreFlop: this._isPreFlop,
+            stage: this._stage,
             smallBlindValue: this._smallBlindValue,
             bigBlindValue: this._bigBlindValue,
             actualBetValue: this._actualBetValue,
             minimumRaise: this._minimumRaise
         }
     }
-
-    get isPreFlop(): boolean {
-        return this._isPreFlop;
+    
+    get stage(): StagesList {
+        return this._stage;
     }
 
-    setPreFlop(): void {
-        this._isPreFlop = true;
-    }
-
-    clearPreFlop(): void {
-        this._isPreFlop = false;
+    set stage(stage: StagesList) {
+        this._stage = stage;
     }
 
     get smallBlindValue(): number {

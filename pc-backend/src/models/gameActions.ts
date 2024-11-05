@@ -1,5 +1,5 @@
 import { Player, Pot } from './chipHolders'
-import { BetRound } from './gameFlow';
+import { StagesList, BetRound } from './gameFlow';
 
 export enum ActionsList {
     PutSmallBlind = 'putSmallBlind',
@@ -16,7 +16,7 @@ export class ActionSelector {
         const options: ActionsList[] = [];
 
         if (br.actualBetValue < br.bigBlindValue) {
-            br.isPreFlop ? this.handleBlinds(p, options) : options.push(ActionsList.Check, ActionsList.Bet, ActionsList.Fold);
+            br.stage == StagesList.PreFlop ? this.handleBlinds(p, options) : options.push(ActionsList.Check, ActionsList.Bet, ActionsList.Fold);
         } else if (br.actualBetValue === br.bigBlindValue && p.isBigBlind) {
             options.push(ActionsList.Check, ActionsList.Raise, ActionsList.Fold);
         } else {
