@@ -1,18 +1,26 @@
 import { Player, Pot } from './chipHolders'
 import { BetRound } from './gameFlow';
 
-type TurnOption = 'putSmallBlind' | 'putBigBlind' | 'check' | 'bet' | 'call' | 'raise' | 'fold';
+export enum TurnOption {
+    PutSmallBlind = 'putSmallBlind',
+    PutBigBlind = 'putBigBlind',
+    Check = 'check',
+    Bet = 'bet',
+    Call = 'call',
+    Raise = 'raise',
+    Fold = 'fold'
+}
 
 export class TurnOptionsManager {
     getOptions(p: Player, br: BetRound): TurnOption[] {
         const options: TurnOption[] = [];
 
         if (br.actualBet < br.bigBlind) {
-            br.isPreFlop ? this.handleBlinds(p, br, options) : options.push('check', 'bet', 'fold');
+            br.isPreFlop ? this.handleBlinds(p, br, options) : options.push(TurnOption.Check, TurnOption.Bet, TurnOption.Fold);
         } else if (br.actualBet === br.bigBlind && p.isBigBlind) {
-            options.push('check', 'raise', 'fold');
+            options.push(TurnOption.Check, TurnOption.Raise, TurnOption.Fold);
         } else {
-            options.push('call', 'raise', 'fold');
+            options.push(TurnOption.Call, TurnOption.Raise, TurnOption.Fold);
         }
 
         return options;
@@ -20,9 +28,9 @@ export class TurnOptionsManager {
 
     handleBlinds(p:Player, br:BetRound, options: TurnOption[]): void {
         if (p.isSmallBlind) {
-            options.push('putSmallBlind');
+            options.push(TurnOption.PutSmallBlind);
         } else if (p.isBigBlind){
-            options.push('putBigBlind');
+            options.push(TurnOption.PutBigBlind);
         } else {
             console.error('Blinds error.')
         }
