@@ -5,7 +5,7 @@ export class BetRound {
     private _actualTurnIndex: number;
     private _actualBet: number;
     private _actualMinRaise: number;
-    private _actualRaiserIndex: number | null;
+    private _actualRaiserIndex: number;
 
     constructor(isPreFlop: boolean, smallBlind: number, bigBlind: number, actualTurnIndex: number) {
         this._isPreFlop = isPreFlop;
@@ -14,7 +14,7 @@ export class BetRound {
         this._actualTurnIndex = actualTurnIndex;
         this._actualBet = 0;
         this._actualMinRaise = 0;
-        this._actualRaiserIndex = null;
+        this._actualRaiserIndex = -1;
     }
 
     toJSON() {
