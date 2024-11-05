@@ -2,23 +2,13 @@ export class BetRound {
     private _isPreFlop: boolean;
     private _smallBlindValue: number;
     private _bigBlindValue: number;
-    private _dealerIndex: number;
-    private _smallBlindIndex: number;
-    private _bigBlindIndex: number;
-    private _turnIndex: number;
-    private _raiserIndex: number;
     private _actualBetValue: number;
     private _minimumRaise: number;
 
-    constructor(isPreFlop: boolean, smallBlindValue: number, bigBlindValue:number, dealerIndex:number, smallBlindIndex: number, bigBlindIndex: number, turnIndex: number) {
+    constructor(isPreFlop: boolean, smallBlindValue: number, bigBlindValue:number, ) {
         this._isPreFlop = isPreFlop;
         this._smallBlindValue = smallBlindValue;
         this._bigBlindValue = bigBlindValue;
-        this._dealerIndex = dealerIndex;
-        this._smallBlindIndex = smallBlindIndex;
-        this._bigBlindIndex = bigBlindIndex;
-        this._turnIndex = turnIndex;
-        this._raiserIndex = -1;
         this._actualBetValue = 0;
         this._minimumRaise = 0;
     }
@@ -28,11 +18,6 @@ export class BetRound {
             isPreFlop: this._isPreFlop,
             smallBlindValue: this._smallBlindValue,
             bigBlindValue: this._bigBlindValue,
-            dealerIndex: this._dealerIndex,
-            smallBlindIndex: this._smallBlindIndex,
-            bigBlindIndex: this._bigBlindIndex,
-            turnIndex: this._turnIndex,
-            raiserIndex: this._raiserIndex,
             actualBetValue: this._actualBetValue,
             minimumRaise: this._minimumRaise
         }
@@ -64,6 +49,48 @@ export class BetRound {
 
     set bigBlindValue(value: number) {
         this._bigBlindValue = value;
+    }
+
+    get actualBetValue(): number {
+        return this._actualBetValue;
+    }
+
+    set actualBetValue(value: number) {
+        this._actualBetValue = value;
+    }
+
+    get minimumRaise(): number {
+        return this._minimumRaise;
+    }
+
+    set minimumRaise(value: number) {
+        this._minimumRaise = value;
+    }
+}
+
+export class PositionManager {
+    private _dealerIndex: number;
+    private _smallBlindIndex: number;
+    private _bigBlindIndex: number;
+    private _turnIndex: number;
+    private _raiserIndex: number;
+
+    constructor () {
+        this._dealerIndex = -1;
+        this._smallBlindIndex = -1;
+        this._bigBlindIndex = -1;
+        this._turnIndex = -1;
+        this._raiserIndex = -1;
+    }
+
+    toJSON() {
+        return {
+            dealerIndex: this._dealerIndex,
+            smallBlindIndex: this._smallBlindIndex,
+            bigBlindIndex: this._bigBlindIndex,
+            turnIndex: this._turnIndex,
+            raiserIndex: this._raiserIndex
+        }
     }
 
     get dealerIndex(): number {
@@ -104,21 +131,5 @@ export class BetRound {
 
     set raiserIndex(index: number) {
         this._raiserIndex = index;
-    }
-
-    get actualBetValue(): number {
-        return this._actualBetValue;
-    }
-
-    set actualBetValue(value: number) {
-        this._actualBetValue = value;
-    }
-
-    get minimumRaise(): number {
-        return this._minimumRaise;
-    }
-
-    set minimumRaise(value: number) {
-        this._minimumRaise = value;
     }
 }
