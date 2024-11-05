@@ -86,3 +86,84 @@ export class PlayerActions {
         p.endTurn();
     }
 }
+
+export class PositionManager {
+    private _dealerIndex: number;
+    private _smallBlindIndex: number;
+    private _bigBlindIndex: number;
+    private _turnIndex: number;
+    private _raiserIndex: number;
+    private _winnerIndex: number;
+
+    constructor () {
+        this._dealerIndex = -1;
+        this._smallBlindIndex = -1;
+        this._bigBlindIndex = -1;
+        this._turnIndex = -1;
+        this._raiserIndex = -1;
+        this._winnerIndex = -1;
+    }
+
+    toJSON() {
+        return {
+            dealerIndex: this._dealerIndex,
+            smallBlindIndex: this._smallBlindIndex,
+            bigBlindIndex: this._bigBlindIndex,
+            turnIndex: this._turnIndex,
+            raiserIndex: this._raiserIndex,
+            winnerIndex: this._winnerIndex
+        }
+    }
+
+    get dealerIndex(): number {
+        return this._dealerIndex;
+    }
+
+    set dealerIndex(value: number) {
+        this._dealerIndex = value;
+    }
+
+    get smallBlindIndex(): number {
+        return this._smallBlindIndex;
+    }
+
+    set smallBlindIndex(value: number) {
+        this._smallBlindIndex = value;
+    }
+
+    get bigBlindIndex(): number {
+        return this._bigBlindIndex;
+    }
+
+    set bigBlindIndex(value: number) {
+        this._bigBlindIndex = value;
+    }
+
+    get turnIndex(): number {
+        return this._turnIndex;
+    }
+
+    set turnIndex(index: number) {
+        this._turnIndex = index;
+    }
+
+    get raiserIndex(): number {
+        return this._raiserIndex;
+    }
+
+    set raiserIndex(index: number) {
+        this._raiserIndex = index;
+    }
+
+    get winnerIndex(): number {
+        return this._winnerIndex;
+    }
+
+    set winnerIndex(index: number) {
+        this._winnerIndex = index;
+    }
+
+    updateNextHand() {
+
+    }
+}
