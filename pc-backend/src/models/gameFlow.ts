@@ -1,31 +1,40 @@
 export class BetRound {
     private _isPreFlop: boolean;
-    private _smallBlind: number;
-    private _bigBlind: number;
-    private _actualTurnIndex: number;
-    private _actualBet: number;
-    private _actualMinRaise: number;
-    private _actualRaiserIndex: number;
+    private _smallBlindValue: number;
+    private _bigBlindValue: number;
+    private _dealerIndex: number;
+    private _smallBlindIndex: number;
+    private _bigBlindIndex: number;
+    private _turnIndex: number;
+    private _raiserIndex: number;
+    private _actualBetValue: number;
+    private _minimumRaise: number;
 
-    constructor(isPreFlop: boolean, smallBlind: number, bigBlind: number, actualTurnIndex: number) {
+    constructor(isPreFlop: boolean, smallBlindValue: number, bigBlindValue:number, dealerIndex:number, smallBlindIndex: number, bigBlindIndex: number, turnIndex: number) {
         this._isPreFlop = isPreFlop;
-        this._smallBlind = smallBlind;
-        this._bigBlind = bigBlind;
-        this._actualTurnIndex = actualTurnIndex;
-        this._actualBet = 0;
-        this._actualMinRaise = 0;
-        this._actualRaiserIndex = -1;
+        this._smallBlindValue = smallBlindValue;
+        this._bigBlindValue = bigBlindValue;
+        this._dealerIndex = dealerIndex;
+        this._smallBlindIndex = smallBlindIndex;
+        this._bigBlindIndex = bigBlindIndex;
+        this._turnIndex = turnIndex;
+        this._raiserIndex = -1;
+        this._actualBetValue = 0;
+        this._minimumRaise = 0;
     }
 
     toJSON() {
         return {
             isPreFlop: this._isPreFlop,
-            smallBlind: this._smallBlind,
-            bigBlind: this._bigBlind,
-            actualTurnIndex: this._actualTurnIndex,
-            actualBet: this._actualBet,
-            actualMinRaise: this._actualMinRaise,
-            actualRaiser: this._actualRaiserIndex
+            smallBlindValue: this._smallBlindValue,
+            bigBlindValue: this._bigBlindValue,
+            dealerIndex: this._dealerIndex,
+            smallBlindIndex: this._smallBlindIndex,
+            bigBlindIndex: this._bigBlindIndex,
+            turnIndex: this._turnIndex,
+            raiserIndex: this._raiserIndex,
+            actualBetValue: this._actualBetValue,
+            minimumRaise: this._minimumRaise
         }
     }
 
@@ -41,51 +50,75 @@ export class BetRound {
         this._isPreFlop = false;
     }
 
-    get smallBlind(): number {
-        return this._smallBlind;
+    get smallBlindValue(): number {
+        return this._smallBlindValue
     }
 
-    set smallBlind(value: number) {
-        this._smallBlind = value;
+    set smallBlindValue(value: number) {
+        this._smallBlindValue = value;
     }
 
-    get bigBlind(): number {
-        return this._bigBlind;
+    get bigBlindValue(): number {
+        return this._bigBlindValue;
     }
 
-    set bigBlind(value: number) {
-        this._bigBlind = value;
+    set bigBlindValue(value: number) {
+        this._bigBlindValue = value;
     }
 
-    get actualTurnIndex(): number | null {
-        return this._actualTurnIndex;
+    get dealerIndex(): number {
+        return this._dealerIndex;
     }
 
-    set actualTurnIndex(index: number) {
-        this._actualTurnIndex = index;
+    set dealerIndex(value: number) {
+        this._dealerIndex = value;
     }
 
-    get actualBet(): number {
-        return this._actualBet;
+    get smallBlindIndex(): number {
+        return this._smallBlindIndex;
     }
 
-    set actualBet(value: number) {
-        this._actualBet = value;
+    set smallBlindIndex(value: number) {
+        this._smallBlindIndex = value;
     }
 
-    get actualMinRaise(): number {
-        return this._actualMinRaise;
+    get bigBlindIndex(): number {
+        return this._bigBlindIndex;
     }
 
-    set actualMinRaise(value: number) {
-        this._actualMinRaise = value;
+    set bigBlindIndex(value: number) {
+        this._bigBlindIndex = value;
     }
 
-    get actualRaiserIndex(): number | null {
-        return this._actualRaiserIndex;
+    get turnIndex(): number {
+        return this._turnIndex;
     }
 
-    set actualRaiserIndex(index: number) {
-        this._actualRaiserIndex = index;
+    set turnIndex(index: number) {
+        this._turnIndex = index;
+    }
+
+    get raiserIndex(): number {
+        return this._raiserIndex;
+    }
+
+    set raiserIndex(index: number) {
+        this._raiserIndex = index;
+    }
+
+    get actualBetValue(): number {
+        return this._actualBetValue;
+    }
+
+    set actualBetValue(value: number) {
+        this._actualBetValue = value;
+    }
+
+    get minimumRaise(): number {
+        return this._minimumRaise;
+    }
+
+    set minimumRaise(value: number) {
+        this._minimumRaise = value;
     }
 }

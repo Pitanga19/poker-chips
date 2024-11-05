@@ -3,7 +3,7 @@ import express from 'express';
 // import models
 import { Player, Pot } from './models/chipHolders'
 import { BetRound } from './models/gameFlow';
-import { TurnOptionsManager } from './models/gameActions';
+import { ActionSelector, PlayerActions } from './models/gameActions';
 
 const app = express();
 const PORT = 3000;

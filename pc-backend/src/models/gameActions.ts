@@ -1,7 +1,7 @@
 import { Player, Pot } from './chipHolders'
 import { BetRound } from './gameFlow';
 
-export enum TurnOption {
+export enum ActionsList {
     PutSmallBlind = 'putSmallBlind',
     PutBigBlind = 'putBigBlind',
     Check = 'check',
@@ -11,42 +11,42 @@ export enum TurnOption {
     Fold = 'fold'
 }
 
-export class TurnOptionsManager {
-    getOptions(p: Player, br: BetRound): TurnOption[] {
-        const options: TurnOption[] = [];
+export class ActionSelector {
+    getOptions(p: Player, br: BetRound): ActionsList[] {
+        const options: ActionsList[] = [];
 
-        if (br.actualBet < br.bigBlind) {
-            br.isPreFlop ? this.handleBlinds(p, options) : options.push(TurnOption.Check, TurnOption.Bet, TurnOption.Fold);
-        } else if (br.actualBet === br.bigBlind && p.isBigBlind) {
-            options.push(TurnOption.Check, TurnOption.Raise, TurnOption.Fold);
+        if (br.actualBetValue < br.bigBlindValue) {
+            br.isPreFlop ? this.handleBlinds(p, options) : options.push(ActionsList.Check, ActionsList.Bet, ActionsList.Fold);
+        } else if (br.actualBetValue === br.bigBlindValue && p.isBigBlind) {
+            options.push(ActionsList.Check, ActionsList.Raise, ActionsList.Fold);
         } else {
-            options.push(TurnOption.Call, TurnOption.Raise, TurnOption.Fold);
+            options.push(ActionsList.Call, ActionsList.Raise, ActionsList.Fold);
         }
 
         return options;
     }
 
-    handleBlinds(p:Player, options: TurnOption[]): void {
+    handleBlinds(p:Player, options: ActionsList[]): void {
         if (p.isSmallBlind) {
-            options.push(TurnOption.PutSmallBlind);
+            options.push(ActionsList.PutSmallBlind);
         } else if (p.isBigBlind){
-            options.push(TurnOption.PutBigBlind);
+            options.push(ActionsList.PutBigBlind);
         } else {
             console.error('Blinds error.')
         }
     }
 }
 
-export class GameActions {
+export class PlayerActions {
     putSmallBlind(p:Player, br:BetRound){
-        p.prepareChips(br.smallBlind);
+        p.prepareChips(br.smallBlindValue);
         p.endTurn();
     }
     
     putBigBlind(p:Player, br:BetRound){
-        br.actualMinRaise = br.bigBlind;
-        br.actualBet = br.bigBlind;
-        p.prepareChips(br.bigBlind);
+        br.minimumRaise = br.bigBlindValue;
+        br.actualBetValue = br.bigBlindValue;
+        p.prepareChips(br.bigBlindValue);
         p.endTurn();
     }
     
@@ -55,9 +55,9 @@ export class GameActions {
     }
     
     bet(p:Player, br:BetRound, amount: number){
-        if (amount >= br.bigBlind){
-            br.actualMinRaise = amount;
-            br.actualBet = amount;
+        if (amount >= br.bigBlindValue){
+            br.minimumRaise = amount;
+            br.actualBetValue = amount;
             p.prepareChips(amount);
             p.endTurn();
         } else {
@@ -66,14 +66,14 @@ export class GameActions {
     }
     
     call(p:Player, br:BetRound){
-        p.prepareChips(br.actualBet);
+        p.prepareChips(br.actualBetValue);
         p.endTurn();
     }
     
     raise(p:Player, br:BetRound, amount: number){
-        if (amount >= br.actualBet + br.actualMinRaise){
-            br.actualMinRaise = amount - br.actualBet;
-            br.actualBet = amount;
+        if (amount >= br.actualBetValue + br.minimumRaise){
+            br.minimumRaise = amount - br.actualBetValue;
+            br.actualBetValue = amount;
             p.prepareChips(p.pendingChips - amount);
             p.endTurn();
         } else {
@@ -82,7 +82,7 @@ export class GameActions {
     }
     
     fold(p:Player, br:BetRound){
-        p.prepareChips(br.bigBlind);
+        p.prepareChips(br.bigBlindValue);
         p.endTurn();
     }
 }
