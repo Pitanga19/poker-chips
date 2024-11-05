@@ -1,4 +1,3 @@
-
 export class BetRound {
     private _isPreFlop: boolean;
     private _smallBlindValue: number;

@@ -116,7 +116,7 @@ export class Player extends ChipHolder {
         return this._isDealer;
     }
 
-    giveDealer() {
+    assignDealer() {
         this._isDealer = true;
     }
 
@@ -128,7 +128,7 @@ export class Player extends ChipHolder {
         return this._isSmallBlind;
     }
 
-    giveSmallBlind() {
+    assignSmallBlind() {
         this._isSmallBlind = true;
     }
 
@@ -140,7 +140,7 @@ export class Player extends ChipHolder {
         return this._isBigBlind;
     }
 
-    giveBigBlind() {
+    assignBigBlind() {
         this._isBigBlind = true;
     }
 
