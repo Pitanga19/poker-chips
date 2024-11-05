@@ -16,7 +16,7 @@ export class TurnOptionsManager {
         const options: TurnOption[] = [];
 
         if (br.actualBet < br.bigBlind) {
-            br.isPreFlop ? this.handleBlinds(p, br, options) : options.push(TurnOption.Check, TurnOption.Bet, TurnOption.Fold);
+            br.isPreFlop ? this.handleBlinds(p, options) : options.push(TurnOption.Check, TurnOption.Bet, TurnOption.Fold);
         } else if (br.actualBet === br.bigBlind && p.isBigBlind) {
             options.push(TurnOption.Check, TurnOption.Raise, TurnOption.Fold);
         } else {
@@ -26,7 +26,7 @@ export class TurnOptionsManager {
         return options;
     }
 
-    handleBlinds(p:Player, br:BetRound, options: TurnOption[]): void {
+    handleBlinds(p:Player, options: TurnOption[]): void {
         if (p.isSmallBlind) {
             options.push(TurnOption.PutSmallBlind);
         } else if (p.isBigBlind){
