@@ -17,7 +17,7 @@ export class ActionSelector {
 
         if (br.actualBetValue < br.bigBlindValue) {
             br.stage == StagesList.PreFlop ? this.handleBlinds(p, options) : options.push(ActionsList.Check, ActionsList.Bet, ActionsList.Fold);
-        } else if (br.actualBetValue === br.bigBlindValue && p.isBigBlind) {
+        } else if (br.actualBetValue === br.bigBlindValue /* && p.isBigBlind */) {
             options.push(ActionsList.Check, ActionsList.Raise, ActionsList.Fold);
         } else {
             options.push(ActionsList.Call, ActionsList.Raise, ActionsList.Fold);
@@ -27,31 +27,21 @@ export class ActionSelector {
     }
 
     handleBlinds(p:Player, options: ActionsList[]): void {
-        if (p.isSmallBlind) {
-            options.push(ActionsList.PutSmallBlind);
-        } else if (p.isBigBlind){
-            options.push(ActionsList.PutBigBlind);
-        } else {
-            console.error('Blinds error.')
-        }
     }
 }
 
 export class PlayerActions {
     putSmallBlind(p:Player, br:BetRound){
         p.prepareChips(br.smallBlindValue);
-        p.endTurn();
     }
     
     putBigBlind(p:Player, br:BetRound){
         br.minimumRaise = br.bigBlindValue;
         br.actualBetValue = br.bigBlindValue;
         p.prepareChips(br.bigBlindValue);
-        p.endTurn();
     }
     
     check(p:Player, br:BetRound){
-        p.endTurn();
     }
     
     bet(p:Player, br:BetRound, amount: number){
@@ -59,7 +49,6 @@ export class PlayerActions {
             br.minimumRaise = amount;
             br.actualBetValue = amount;
             p.prepareChips(amount);
-            p.endTurn();
         } else {
             console.error('Invalid amount.')
         }
@@ -67,7 +56,6 @@ export class PlayerActions {
     
     call(p:Player, br:BetRound){
         p.prepareChips(br.actualBetValue);
-        p.endTurn();
     }
     
     raise(p:Player, br:BetRound, amount: number){
@@ -75,7 +63,6 @@ export class PlayerActions {
             br.minimumRaise = amount - br.actualBetValue;
             br.actualBetValue = amount;
             p.prepareChips(p.pendingChips - amount);
-            p.endTurn();
         } else {
             console.error('Invalid amount.')
         }
@@ -83,7 +70,6 @@ export class PlayerActions {
     
     fold(p:Player, br:BetRound){
         p.prepareChips(br.bigBlindValue);
-        p.endTurn();
     }
 }
 
