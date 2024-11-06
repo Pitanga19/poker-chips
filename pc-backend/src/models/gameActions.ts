@@ -11,25 +11,6 @@ export enum ActionsList {
     Fold = 'fold'
 }
 
-export class ActionSelector {
-    getOptions(p: Player, br: BetRound): ActionsList[] {
-        const options: ActionsList[] = [];
-
-        if (br.actualBetValue < br.bigBlindValue) {
-            br.stage == StagesList.PreFlop ? this.handleBlinds(p, options) : options.push(ActionsList.Check, ActionsList.Bet, ActionsList.Fold);
-        } else if (br.actualBetValue === br.bigBlindValue /* && p.isBigBlind */) {
-            options.push(ActionsList.Check, ActionsList.Raise, ActionsList.Fold);
-        } else {
-            options.push(ActionsList.Call, ActionsList.Raise, ActionsList.Fold);
-        }
-
-        return options;
-    }
-
-    handleBlinds(p:Player, options: ActionsList[]): void {
-    }
-}
-
 export class PlayerActions {
     putSmallBlind(p:Player, br:BetRound){
         p.prepareChips(br.smallBlindValue);
@@ -73,13 +54,32 @@ export class PlayerActions {
     }
 }
 
+export class ActionSelector {
+    getOptions(p: Player, br: BetRound): ActionsList[] {
+        const options: ActionsList[] = [];
+
+        if (br.actualBetValue < br.bigBlindValue) {
+            br.stage == StagesList.PreFlop ? this.handleBlinds() : options.push(ActionsList.Check, ActionsList.Bet, ActionsList.Fold);
+        } else if (br.actualBetValue === br.bigBlindValue /* && p.isBigBlind */) {
+            options.push(ActionsList.Check, ActionsList.Raise, ActionsList.Fold);
+        } else {
+            options.push(ActionsList.Call, ActionsList.Raise, ActionsList.Fold);
+        }
+
+        return options;
+    }
+
+    handleBlinds(): void {
+    }
+}
+
 export class PositionManager {
     private _dealerIndex: number;
     private _smallBlindIndex: number;
     private _bigBlindIndex: number;
     private _turnIndex: number;
     private _raiserIndex: number;
-    private _winnerIndex: number;
+    private _winnerIndex: number[];
 
     constructor () {
         this._dealerIndex = -1;
@@ -87,7 +87,7 @@ export class PositionManager {
         this._bigBlindIndex = -1;
         this._turnIndex = -1;
         this._raiserIndex = -1;
-        this._winnerIndex = -1;
+        this._winnerIndex = [];
     }
 
     toJSON() {
@@ -141,11 +141,11 @@ export class PositionManager {
         this._raiserIndex = index;
     }
 
-    get winnerIndex(): number {
+    get winnerIndex(): number[] {
         return this._winnerIndex;
     }
 
-    set winnerIndex(index: number) {
+    set winnerIndex(index: number[]) {
         this._winnerIndex = index;
     }
 
