@@ -105,24 +105,24 @@ export class PositionManager {
         return this._dealerIndex;
     }
 
-    set dealerIndex(value: number) {
-        this._dealerIndex = value;
+    set dealerIndex(index: number) {
+        this._dealerIndex = index;
     }
 
     get smallBlindIndex(): number {
         return this._smallBlindIndex;
     }
 
-    set smallBlindIndex(value: number) {
-        this._smallBlindIndex = value;
+    set smallBlindIndex(index: number) {
+        this._smallBlindIndex = index;
     }
 
     get bigBlindIndex(): number {
         return this._bigBlindIndex;
     }
 
-    set bigBlindIndex(value: number) {
-        this._bigBlindIndex = value;
+    set bigBlindIndex(index: number) {
+        this._bigBlindIndex = index;
     }
 
     get turnIndex(): number {
@@ -145,11 +145,23 @@ export class PositionManager {
         return this._winnerIndex;
     }
 
-    set winnerIndex(index: number[]) {
-        this._winnerIndex = index;
+    set winnerIndex(indexList: number[]) {
+        this._winnerIndex = indexList;
+    }
+
+    getData() {
+
+    }
+
+    updateNextTurn() {
+
+    }
+
+    updateNextStage() {
+
     }
 
     updateNextHand() {
-
+        
     }
 }
