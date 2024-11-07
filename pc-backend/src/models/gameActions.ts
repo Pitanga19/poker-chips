@@ -1,13 +1,13 @@
 import { Player, Pot } from './chipHolders'
 import { StagesList, BetRound } from './gameFlow';
 
-export enum ValidateList {
+export enum ValidationType {
     GiveActions = 'giveActions',
     NextTurn = 'nextTurn',
     FinishRound = 'finishRound'
 }
 
-export enum ActionsList {
+export enum ActionType {
     PutSmallBlind = 'putSmallBlind',
     PutBigBlind = 'putBigBlind',
     CheckSmallBlind = 'checkSmallBlind',
@@ -114,7 +114,7 @@ export class PositionManager {
 }
 
 export class TurnValidator {
-    validate(pl: Player[], pm: PositionManager, br: BetRound): ValidateList {
+    validate(pl: Player[], pm: PositionManager, br: BetRound): ValidationType {
         const player: Player = pl[pm.turnIndex];
         const arePlaying = pl.filter(p => p.isPlaying);
         const isAlone = arePlaying.length === 1;
@@ -131,17 +131,17 @@ export class TurnValidator {
         );
 
         if (isAlone || isRaiser || doBigBlindCheck || doAllCheck || isEveryoneAllIn) {
-            return ValidateList.FinishRound;
+            return ValidationType.FinishRound;
         } else if (isPlaying && (mustEqualBet || isBigBlindWithoutActionInPreFlop)) {
-            return ValidateList.GiveActions;
+            return ValidationType.GiveActions;
         } else {
-            return ValidateList.NextTurn;
+            return ValidationType.NextTurn;
         }
     }
 }
 
 export class ActionSelector {
-    getOptions(pl: Player[], pm: PositionManager, br: BetRound): ActionsList[] {
+    getOptions(pl: Player[], pm: PositionManager, br: BetRound): ActionType[] {
         const player: Player = pl[pm.turnIndex];
         const isPreFlop = br.stage === StagesList.PreFlop;
         const isSmallBlind = pm.turnIndex == pm.smallBlindIndex;
@@ -156,19 +156,19 @@ export class ActionSelector {
         const mustAllIn = player.chips + player.pendingChips < br.actualBetValue;
 
         if (isPreFlop && isSmallBlind && mustPutBlind) {
-            return [ActionsList.PutSmallBlind];
+            return [ActionType.PutSmallBlind];
         } else if (isPreFlop && isBigBlind && mustPutBlind) {
-            return [ActionsList.PutBigBlind];
+            return [ActionType.PutBigBlind];
         } else if (isSmallBlind) {
-            return [ActionsList.CheckSmallBlind, ActionsList.Bet];
+            return [ActionType.CheckSmallBlind, ActionType.Bet];
         } else if (isPreFlop && isBigBlindWithoutActionInPreFlop) {
-            return [ActionsList.CheckBigBlind, ActionsList.Raise];
+            return [ActionType.CheckBigBlind, ActionType.Raise];
         } else if (mustEqualBet) {
-            return [ActionsList.Call, ActionsList.Raise, ActionsList.Fold];
+            return [ActionType.Call, ActionType.Raise, ActionType.Fold];
         } else if (mustAllIn) {
-            return [ActionsList.MustAllIn, ActionsList.Fold];
+            return [ActionType.MustAllIn, ActionType.Fold];
         } else {
-            return [ActionsList.Check, ActionsList.Bet];
+            return [ActionType.Check, ActionType.Bet];
         }
     }
 }
