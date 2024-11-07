@@ -7,6 +7,8 @@ export enum StagesList {
 
 export class BetRound {
     private _stage: StagesList;
+    private _doSmallBlindCheck: boolean;
+    private _doBigBlindCheck: boolean;
     private _smallBlindValue: number;
     private _bigBlindValue: number;
     private _actualBetValue: number;
@@ -14,6 +16,8 @@ export class BetRound {
 
     constructor(stage: StagesList, smallBlindValue: number, bigBlindValue:number, ) {
         this._stage = stage;
+        this._doSmallBlindCheck = false;
+        this._doBigBlindCheck = false;
         this._smallBlindValue = smallBlindValue;
         this._bigBlindValue = bigBlindValue;
         this._actualBetValue = 0;
@@ -23,6 +27,8 @@ export class BetRound {
     toJSON() {
         return {
             stage: this._stage,
+            doSmallBlindCheck: this.doSmallBlindCheck,
+            doBigBlindCheck: this.doBigBlindCheck,
             smallBlindValue: this._smallBlindValue,
             bigBlindValue: this._bigBlindValue,
             actualBetValue: this._actualBetValue,
@@ -36,6 +42,30 @@ export class BetRound {
 
     set stage(stage: StagesList) {
         this._stage = stage;
+    }
+
+    get doSmallBlindCheck(): boolean {
+        return this._doSmallBlindCheck
+    }
+
+    setSmallBlindCheck(): void {
+        this._doSmallBlindCheck = true;
+    }
+
+    removeSmallBlindCheck(): void {
+        this._doSmallBlindCheck = false;
+    }
+
+    get doBigBlindCheck(): boolean {
+        return this._doBigBlindCheck
+    }
+
+    setBigBlindCheck(): void {
+        this._doBigBlindCheck = true;
+    }
+
+    removeBigBlindCheck(): void {
+        this._doBigBlindCheck = false;
     }
 
     get smallBlindValue(): number {
