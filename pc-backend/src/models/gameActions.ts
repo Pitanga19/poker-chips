@@ -116,10 +116,12 @@ export class PositionManager {
 export class TurnValidator {
     validate(pl: Player[], pm: PositionManager, br: BetRound): ValidateList {
         const player: Player = pl[pm.turnIndex];
-        const isAlone = pl.filter(p => p.isPlaying).length === 1;
+        const arePlaying = pl.filter(p => p.isPlaying);
+        const isAlone = arePlaying.length === 1;
         const isRaiser = pm.turnIndex === pm.raiserIndex;
         const doBigBlindCheck = br.doBigBlindCheck;
         const doAllCheck = pm.turnIndex === pm.smallBlindIndex && br.doSmallBlindCheck;
+        const isEveryoneAllIn = arePlaying.filter(p => p.chips > 0).length == 1;
         const isPlaying = player.isPlaying;
         const mustEqualBet = player.pendingChips < br.actualBetValue;
         const isBigBlindWithoutActionInPreFlop = (
@@ -128,7 +130,7 @@ export class TurnValidator {
             br.stage === StagesList.PreFlop
         );
 
-        if (isAlone || isRaiser || doBigBlindCheck || doAllCheck) {
+        if (isAlone || isRaiser || doBigBlindCheck || doAllCheck || isEveryoneAllIn) {
             return ValidateList.FinishRound;
         } else if (isPlaying && (mustEqualBet || isBigBlindWithoutActionInPreFlop)) {
             return ValidateList.GiveActions;
