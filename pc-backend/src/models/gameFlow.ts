@@ -5,7 +5,7 @@ export enum StagesList {
     River = 'river'
 }
 
-export class BetRound {
+export class BettingStage {
     private _stage: StagesList;
     private _doSmallBlindCheck: boolean;
     private _doBigBlindCheck: boolean;
