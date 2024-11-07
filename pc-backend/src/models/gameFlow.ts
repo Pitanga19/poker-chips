@@ -1,4 +1,4 @@
-export enum StagesList {
+export enum StageType {
     PreFlop = 'preFlop',
     Flop = 'flop',
     Turn = 'turn',
@@ -6,7 +6,7 @@ export enum StagesList {
 }
 
 export class BettingStage {
-    private _stage: StagesList;
+    private _stage: StageType;
     private _doSmallBlindCheck: boolean;
     private _doBigBlindCheck: boolean;
     private _smallBlindValue: number;
@@ -14,7 +14,7 @@ export class BettingStage {
     private _actualBetValue: number;
     private _minimumRaise: number;
 
-    constructor(stage: StagesList, smallBlindValue: number, bigBlindValue:number, ) {
+    constructor(stage: StageType, smallBlindValue: number, bigBlindValue:number) {
         this._stage = stage;
         this._doSmallBlindCheck = false;
         this._doBigBlindCheck = false;
@@ -36,11 +36,11 @@ export class BettingStage {
         }
     }
     
-    get stage(): StagesList {
+    get stage(): StageType {
         return this._stage;
     }
 
-    set stage(stage: StagesList) {
+    set stage(stage: StageType) {
         this._stage = stage;
     }
 
@@ -98,5 +98,15 @@ export class BettingStage {
 
     set minimumRaise(value: number) {
         this._minimumRaise = value;
+    }
+
+    reset(stage: StageType, smallBlindValue: number, bigBlindValue:number) {
+        this._stage = stage;
+        this._doSmallBlindCheck = false;
+        this._doBigBlindCheck = false;
+        this._smallBlindValue = smallBlindValue;
+        this._bigBlindValue = bigBlindValue;
+        this._actualBetValue = 0;
+        this._minimumRaise = 0;
     }
 }

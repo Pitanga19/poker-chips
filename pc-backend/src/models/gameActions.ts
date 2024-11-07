@@ -1,5 +1,5 @@
 import { Player, Pot } from './chipHolders'
-import { StagesList, BettingStage } from './gameFlow';
+import { StageType, BettingStage } from './gameFlow';
 
 export enum ValidationType {
     GiveActions = 'giveActions',
@@ -114,20 +114,20 @@ export class PositionManager {
 }
 
 export class TurnValidator {
-    validate(pl: Player[], pm: PositionManager, br: BettingStage): ValidationType {
+    validate(pl: Player[], pm: PositionManager, bs: BettingStage): ValidationType {
         const player: Player = pl[pm.turnIndex];
         const arePlaying = pl.filter(p => p.isPlaying);
         const isAlone = arePlaying.length === 1;
         const isRaiser = pm.turnIndex === pm.raiserIndex;
-        const doBigBlindCheck = br.doBigBlindCheck;
-        const doAllCheck = pm.turnIndex === pm.smallBlindIndex && br.doSmallBlindCheck;
+        const doBigBlindCheck = bs.doBigBlindCheck;
+        const doAllCheck = pm.turnIndex === pm.smallBlindIndex && bs.doSmallBlindCheck;
         const isEveryoneAllIn = arePlaying.filter(p => p.chips > 0).length == 1;
         const isPlaying = player.isPlaying;
-        const mustEqualBet = player.pendingChips < br.actualBetValue;
+        const mustEqualBet = player.pendingChips < bs.actualBetValue;
         const isBigBlindWithoutActionInPreFlop = (
             pm.turnIndex === pm.bigBlindIndex &&
-            player.pendingChips === br.bigBlindValue &&
-            br.stage === StagesList.PreFlop
+            player.pendingChips === bs.bigBlindValue &&
+            bs.stage === StageType.PreFlop
         );
 
         if (isAlone || isRaiser || doBigBlindCheck || doAllCheck || isEveryoneAllIn) {
@@ -141,19 +141,19 @@ export class TurnValidator {
 }
 
 export class ActionSelector {
-    getOptions(pl: Player[], pm: PositionManager, br: BettingStage): ActionType[] {
+    getOptions(pl: Player[], pm: PositionManager, bs: BettingStage): ActionType[] {
         const player: Player = pl[pm.turnIndex];
-        const isPreFlop = br.stage === StagesList.PreFlop;
+        const isPreFlop = bs.stage === StageType.PreFlop;
         const isSmallBlind = pm.turnIndex == pm.smallBlindIndex;
         const isBigBlind = pm.turnIndex == pm.bigBlindIndex;
         const mustPutBlind = player.pendingChips === 0;
         const isBigBlindWithoutActionInPreFlop = (
             pm.turnIndex === pm.bigBlindIndex &&
-            player.pendingChips === br.bigBlindValue &&
-            br.stage === StagesList.PreFlop
+            player.pendingChips === bs.bigBlindValue &&
+            bs.stage === StageType.PreFlop
         );
-        const mustEqualBet = player.pendingChips < br.actualBetValue;
-        const mustAllIn = player.chips + player.pendingChips < br.actualBetValue;
+        const mustEqualBet = player.pendingChips < bs.actualBetValue;
+        const mustAllIn = player.chips + player.pendingChips < bs.actualBetValue;
 
         if (isPreFlop && isSmallBlind && mustPutBlind) {
             return [ActionType.PutSmallBlind];
@@ -174,43 +174,43 @@ export class ActionSelector {
 }
 
 export class PlayerActions {
-    putSmallBlind(pl: Player[], pm: PositionManager, br: BettingStage){
+    putSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
         
     }
     
-    putBigBlind(pl: Player[], pm: PositionManager, br: BettingStage){
+    putBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
         
     }
     
-    checkSmallBlind(pl: Player[], pm: PositionManager, br: BettingStage){
+    checkSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
         
     }
     
-    checkBigBlind(pl: Player[], pm: PositionManager, br: BettingStage){
+    checkBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
 
     }
     
-    check(pl: Player[], pm: PositionManager, br: BettingStage){
+    check(pl: Player[], pm: PositionManager, bs: BettingStage){
 
     }
     
-    bet(pl: Player[], pm: PositionManager, br: BettingStage, amount: number){
+    bet(pl: Player[], pm: PositionManager, bs: BettingStage, amount: number){
         
     }
     
-    call(pl: Player[], pm: PositionManager, br: BettingStage){
+    call(pl: Player[], pm: PositionManager, bs: BettingStage){
         
     }
     
-    raise(pl: Player[], pm: PositionManager, br: BettingStage, amount: number){
+    raise(pl: Player[], pm: PositionManager, bs: BettingStage, amount: number){
         
     }
     
-    mustAllIn(pl: Player[], pm: PositionManager, br: BettingStage){
+    mustAllIn(pl: Player[], pm: PositionManager, bs: BettingStage){
         
     }
     
-    fold(pl: Player[], pm: PositionManager, br: BettingStage){
+    fold(pl: Player[], pm: PositionManager, bs: BettingStage){
         
     }
 }
