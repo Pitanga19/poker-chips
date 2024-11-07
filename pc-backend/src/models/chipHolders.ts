@@ -1,3 +1,7 @@
+import { PositionManager } from "./gameActions";
+import { BettingStage } from "./gameFlow";
+import { loopArrayManager } from "../utils/arrayManager";
+
 export class ChipHolder {
     protected _chips: number;
     protected _pendingChips: number;
@@ -104,34 +108,29 @@ export class Player extends ChipHolder {
 }
 
 export class Pot extends ChipHolder {
-    private _winnersCount: number;
-    
     constructor() {
         super();
-        this._winnersCount = 0;
     }
 
     toJSON() {
         return {
             chips: this._chips,
-            pendingChips: this._pendingChips,
-            winnersCount: this._winnersCount
+            pendingChips: this._pendingChips
         }
     }
-
-    get winnersCount(): number {
-        return this._winnersCount;
-    }
-
-    set winnersCount(value: number) {
-        this._winnersCount = value;
-    }
     
-    payWinners(): void {
-        
-    }
+    payWinners(pl: Player[], pm: PositionManager, bs: BettingStage): void {
+        const winnersCount: number = pm.winnersIndex.length;
+        const winnersReward: number = Math.floor(this._chips / winnersCount);
+        for (let i of pm.winnersIndex) {
+            this.prepareChips(winnersReward);
+            this.transferChips(pl[i]);
+        }
 
-    endPot(): void {
-        
+        if (this._chips > 0){
+            const ri = loopArrayManager.getRandomIndex(pm.winnersIndex);
+            this.prepareChips(this._chips);
+            this.transferChips(pl[ri])
+        }
     }
 }

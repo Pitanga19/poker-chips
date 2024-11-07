@@ -15,15 +15,15 @@ class ArrayManager {
         this._isLoop = boolean;
     }
 
-    getNextIndex(array: Player[], index: number): number {
+    getNextIndex(array: any[], index: number): number {
         return index < array.length -1 ? index + 1 : this._isLoop ? 0 : index;
     }
 
-    getPreviousIndex(array: Player[], index: number): number {
+    getPreviousIndex(array: any[], index: number): number {
         return index > 0 ? index - 1 : this._isLoop ? array.length - 1 : 0;
     }
 
-    getRandomIndex(array: Player[]): number {
+    getRandomIndex(array: any[]): number {
         return Math.floor(Math.random() * array.length);
     }
 }
