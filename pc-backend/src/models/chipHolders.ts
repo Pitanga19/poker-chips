@@ -22,11 +22,11 @@ export class ChipHolder {
         this._chips = amount;
     }
 
-    addChips(amount: number): void {
+    incrementChips(amount: number): void {
         this._chips += amount;
     }
 
-    removeChips(amount: number): void {
+    decrementChips(amount: number): void {
         this._chips -= amount;
     }
 
@@ -38,27 +38,27 @@ export class ChipHolder {
         this._pendingChips = amount;
     }
 
-    addPendingChips(amount: number): void {
+    incrementPendingChips(amount: number): void {
         this._pendingChips += amount;
     }
 
-    removePendingChips(amount: number): void {
+    decrementPendingChips(amount: number): void {
         this._pendingChips -= amount;
     }
 
     prepareChips(amount: number = this.chips): void {
-        this.addPendingChips(amount);
-        this.removeChips(amount);
+        this.incrementPendingChips(amount);
+        this.decrementChips(amount);
     }
 
     refundChips(amount: number = this.chips): void {
-        this.addChips(amount);
-        this.removePendingChips(amount);
+        this.incrementChips(amount);
+        this.decrementPendingChips(amount);
     }
 
     transferChips(target: ChipHolder, amount: number = this.pendingChips): void {
-        target.addChips(amount);
-        this.removePendingChips(amount);
+        target.incrementChips(amount);
+        this.decrementPendingChips(amount);
     }
 }
 
