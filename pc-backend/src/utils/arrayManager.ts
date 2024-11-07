@@ -1,3 +1,5 @@
+import { Player } from "../models/chipHolders";
+
 class ArrayManager {
     private _isLoop: boolean;
 
@@ -13,23 +15,15 @@ class ArrayManager {
         this._isLoop = boolean;
     }
 
-    getNextIndex(array: any[], index: number): number {
-        if (index < array.length -1){
-            return index +1;
-        } else {
-            return this._isLoop ? 0 : index; 
-        }
+    getNextIndex(array: Player[], index: number): number {
+        return index < array.length -1 ? index + 1 : this._isLoop ? 0 : index;
     }
 
-    getPreviousIndex(array: any[], index: number): number {
-        if (index > 0){
-            return index - 1;
-        } else {
-            return this._isLoop ? array.length -1 : 0;
-        }
+    getPreviousIndex(array: Player[], index: number): number {
+        return index > 0 ? index - 1 : this._isLoop ? array.length - 1 : 0;
     }
 
-    getRandomIndex(array: any[]): number {
+    getRandomIndex(array: Player[]): number {
         return Math.floor(Math.random() * array.length);
     }
 }
