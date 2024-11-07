@@ -201,7 +201,7 @@ export class PlayerActions {
     putSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
         const player: Player = pl[pm.turnIndex];
         player.prepareChips(bs.smallBlindValue);
-        pm.updateNextTurn;
+        pm.updateNextTurn(pl);
     }
     
     putBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
