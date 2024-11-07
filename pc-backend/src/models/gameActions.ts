@@ -201,50 +201,79 @@ export class PlayerActions {
     putSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
         const player: Player = pl[pm.turnIndex];
         player.prepareChips(bs.smallBlindValue);
+        pm.updateNextTurn;
     }
     
     putBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
         const player: Player = pl[pm.turnIndex];
-        
+
+        player.prepareChips(bs.bigBlindValue);
+        pm.updateNextTurn(pl);
     }
     
     checkSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
-        const player: Player = pl[pm.turnIndex];
-        
+        bs.setSmallBlindCheck();
+        pm.updateNextTurn(pl);
     }
     
     checkBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
-        const player: Player = pl[pm.turnIndex];
-
+        bs.setBigBlindCheck();
+        pm.updateNextTurn(pl);
     }
     
-    check(pl: Player[], pm: PositionManager, bs: BettingStage){
-        const player: Player = pl[pm.turnIndex];
-
+    check(pl: Player[], pm: PositionManager){
+        pm.updateNextTurn(pl);
     }
     
     bet(pl: Player[], pm: PositionManager, bs: BettingStage, amount: number){
         const player: Player = pl[pm.turnIndex];
-        
+        const isValidAmount: boolean = amount > bs.bigBlindValue;
+
+        if (isValidAmount) {
+            player.prepareChips(amount);
+            pm.raiserIndex = pm.turnIndex;
+            bs.actualBetValue = amount;
+            bs.minimumRaise = amount * 2;
+            pm.updateNextTurn(pl);
+        } else {
+            console.log('Invalid amount, bet must be equal or bigger than big blind.');
+        };
     }
     
     call(pl: Player[], pm: PositionManager, bs: BettingStage){
         const player: Player = pl[pm.turnIndex];
         
+        player.prepareChips(bs.actualBetValue);
+        pm.updateNextTurn(pl);
     }
     
     raise(pl: Player[], pm: PositionManager, bs: BettingStage, amount: number){
         const player: Player = pl[pm.turnIndex];
-        
+        const isValidAmount: boolean = amount >= bs.minimumRaise;
+
+        if (isValidAmount) {
+            const raiseValue: number = amount - bs.actualBetValue;
+            player.prepareChips(amount - player.pendingChips);
+            pm.raiserIndex = pm.turnIndex;
+            bs.actualBetValue = amount;
+            bs.minimumRaise = bs.actualBetValue + raiseValue;
+            pm.updateNextTurn(pl);
+        } else {
+            console.log('Invalid amount, raise must be equal or bigger than last one.');
+        };
     }
     
-    mustAllIn(pl: Player[], pm: PositionManager, bs: BettingStage){
+    mustAllIn(pl: Player[], pm: PositionManager){
         const player: Player = pl[pm.turnIndex];
         
+        player.prepareChips(player.chips);
+        pm.updateNextTurn(pl);
     }
     
-    fold(pl: Player[], pm: PositionManager, bs: BettingStage){
+    fold(pl: Player[], pm: PositionManager){
         const player: Player = pl[pm.turnIndex];
         
+        player.stopPlaying();
+        pm.updateNextTurn(pl);
     }
 }
