@@ -11,6 +11,12 @@ export enum ActionsList {
     Fold = 'fold'
 }
 
+export enum ValidateList {
+    GiveActions = 'giveActions',
+    NextTurn = 'nextTurn',
+    FinishRound = 'finishRound'
+}
+
 export class PlayerActions {
     putSmallBlind(p:Player, br:BetRound){
         p.prepareChips(br.smallBlindValue);
@@ -51,25 +57,6 @@ export class PlayerActions {
     
     fold(p:Player, br:BetRound){
         p.prepareChips(br.bigBlindValue);
-    }
-}
-
-export class ActionSelector {
-    getOptions(p: Player, br: BetRound): ActionsList[] {
-        const options: ActionsList[] = [];
-
-        if (br.actualBetValue < br.bigBlindValue) {
-            br.stage == StagesList.PreFlop ? this.handleBlinds() : options.push(ActionsList.Check, ActionsList.Bet, ActionsList.Fold);
-        } else if (br.actualBetValue === br.bigBlindValue /* && p.isBigBlind */) {
-            options.push(ActionsList.Check, ActionsList.Raise, ActionsList.Fold);
-        } else {
-            options.push(ActionsList.Call, ActionsList.Raise, ActionsList.Fold);
-        }
-
-        return options;
-    }
-
-    handleBlinds(): void {
     }
 }
 
@@ -162,6 +149,44 @@ export class PositionManager {
     }
 
     updateNextHand() {
-        
+
+    }
+}
+
+export class ActionSelector {
+    getOptions(p: Player, br: BetRound): ActionsList[] {
+        const options: ActionsList[] = [];
+
+        if (br.actualBetValue < br.bigBlindValue) {
+            br.stage === StagesList.PreFlop ? this.handleBlinds() : options.push(ActionsList.Check, ActionsList.Bet, ActionsList.Fold);
+        } else if (br.actualBetValue === br.bigBlindValue /* && p.isBigBlind */) {
+            options.push(ActionsList.Check, ActionsList.Raise, ActionsList.Fold);
+        } else {
+            options.push(ActionsList.Call, ActionsList.Raise, ActionsList.Fold);
+        }
+
+        return options;
+    }
+
+    handleBlinds(): void {
+    }
+}
+
+export class TurnValidator {
+    validate(pl: Player[], pm: PositionManager, br: BetRound): ValidateList {
+        const player: Player = pl[pm.turnIndex];
+        const isAlone = pl.filter(p => p.isPlaying).length === 1;
+        const isRaiser = pm.turnIndex === pm.raiserIndex;
+        const isPlaying = player.isPlaying;
+        const mustEqualBet = player.pendingChips < br.actualBetValue
+        const isBigBlindWithoutActionInPreFlop = pm.turnIndex === pm.bigBlindIndex && player.pendingChips === br.bigBlindValue && br.stage === StagesList.PreFlop;
+
+        if (isAlone || isRaiser) {
+            return ValidateList.FinishRound;
+        } else if (isPlaying && (mustEqualBet || isBigBlindWithoutActionInPreFlop)) {
+            return ValidateList.GiveActions
+        } else {
+            return ValidateList.NextTurn
+        }
     }
 }
