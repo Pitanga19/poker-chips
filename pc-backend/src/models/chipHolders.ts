@@ -51,6 +51,11 @@ export class ChipHolder {
         this.removeChips(amount);
     }
 
+    refundChips(amount: number = this.chips): void {
+        this.addChips(amount);
+        this.removePendingChips(amount);
+    }
+
     transferChips(target: ChipHolder, amount: number = this.pendingChips): void {
         target.addChips(amount);
         this.removePendingChips(amount);
