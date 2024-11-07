@@ -16,7 +16,7 @@ export enum ActionsList {
     Bet = 'bet',
     Call = 'call',
     Raise = 'raise',
-    AllIn = 'allIn',
+    MustAllIn = 'allIn',
     Fold = 'fold'
 }
 
@@ -139,7 +139,7 @@ export class TurnValidator {
 }
 
 export class ActionSelector {
-    getOptions(pl: Player[], br: BetRound, pm: PositionManager): ActionsList[] {
+    getOptions(pl: Player[], pm: PositionManager, br: BetRound): ActionsList[] {
         const player: Player = pl[pm.turnIndex];
         const isPreFlop = br.stage === StagesList.PreFlop;
         const isSmallBlind = pm.turnIndex == pm.smallBlindIndex;
@@ -164,7 +164,7 @@ export class ActionSelector {
         } else if (mustEqualBet) {
             return [ActionsList.Call, ActionsList.Raise, ActionsList.Fold];
         } else if (mustAllIn) {
-            return [ActionsList.AllIn, ActionsList.Fold];
+            return [ActionsList.MustAllIn, ActionsList.Fold];
         } else {
             return [ActionsList.Check, ActionsList.Bet];
         }
@@ -172,44 +172,43 @@ export class ActionSelector {
 }
 
 export class PlayerActions {
-    putSmallBlind(p:Player, br:BetRound){
-        p.prepareChips(br.smallBlindValue);
+    putSmallBlind(pl: Player[], pm: PositionManager, br: BetRound){
+        
     }
     
-    putBigBlind(p:Player, br:BetRound){
-        br.minimumRaise = br.bigBlindValue;
-        br.actualBetValue = br.bigBlindValue;
-        p.prepareChips(br.bigBlindValue);
+    putBigBlind(pl: Player[], pm: PositionManager, br: BetRound){
+        
     }
     
-    check(p:Player, br:BetRound){
+    checkSmallBlind(pl: Player[], pm: PositionManager, br: BetRound){
+        
     }
     
-    bet(p:Player, br:BetRound, amount: number){
-        if (amount >= br.bigBlindValue){
-            br.minimumRaise = amount;
-            br.actualBetValue = amount;
-            p.prepareChips(amount);
-        } else {
-            console.error('Invalid amount.')
-        }
+    checkBigBlind(pl: Player[], pm: PositionManager, br: BetRound){
+
     }
     
-    call(p:Player, br:BetRound){
-        p.prepareChips(br.actualBetValue);
+    check(pl: Player[], pm: PositionManager, br: BetRound){
+
     }
     
-    raise(p:Player, br:BetRound, amount: number){
-        if (amount >= br.actualBetValue + br.minimumRaise){
-            br.minimumRaise = amount - br.actualBetValue;
-            br.actualBetValue = amount;
-            p.prepareChips(p.pendingChips - amount);
-        } else {
-            console.error('Invalid amount.')
-        }
+    bet(pl: Player[], pm: PositionManager, br: BetRound, amount: number){
+        
     }
     
-    fold(p:Player, br:BetRound){
-        p.prepareChips(br.bigBlindValue);
+    call(pl: Player[], pm: PositionManager, br: BetRound){
+        
+    }
+    
+    raise(pl: Player[], pm: PositionManager, br: BetRound, amount: number){
+        
+    }
+    
+    mustAllIn(pl: Player[], pm: PositionManager, br: BetRound){
+        
+    }
+    
+    fold(pl: Player[], pm: PositionManager, br: BetRound){
+        
     }
 }
