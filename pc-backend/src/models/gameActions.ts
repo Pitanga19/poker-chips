@@ -1,3 +1,4 @@
+import { loopArrayManager } from '../utils/arrayManager';
 import { Player, Pot } from './chipHolders'
 import { StageType, BettingStage } from './gameFlow';
 
@@ -96,20 +97,43 @@ export class PositionManager {
         this._winnersIndex = indexList;
     }
 
-    getData() {
-
+    checkDealerIsPlaying(pl: Player[], dealerIndex: number): boolean {
+        return pl[dealerIndex].isPlaying && pl[dealerIndex].chips > 0;
     }
 
-    updateNextTurn() {
+    findFirstPlayingDealerIndex(pl: Player[], dealerIndex: number) {
+        let firstPlayingDealerIndex = dealerIndex;
+        let checkedPlayingCount = 0;
 
+        while (!this.checkDealerIsPlaying(pl, firstPlayingDealerIndex) && checkedPlayingCount < pl.length) {
+            firstPlayingDealerIndex = loopArrayManager.getNextIndex(pl, firstPlayingDealerIndex);
+            checkedPlayingCount++;
+        }
+        
+        return firstPlayingDealerIndex;
     }
 
-    updateNextStage() {
-
+    initializePositions(pl: Player[], dealerIndex: number) {
+        this._dealerIndex =  this.findFirstPlayingDealerIndex(pl, dealerIndex);
+        this._smallBlindIndex = loopArrayManager.getNextIndex(pl, this._dealerIndex);
+        this._bigBlindIndex = loopArrayManager.getNextIndex(pl, this._smallBlindIndex);
+        this._turnIndex = this._smallBlindIndex;
+        this._raiserIndex = -1;
+        this._winnersIndex = [];
     }
 
-    updateNextHand() {
+    updateNextTurn(pl: Player[]) {
+        this._turnIndex = loopArrayManager.getNextIndex(pl, this._turnIndex);
+    }
 
+    updateNextStage(pl: Player[]) {
+        this._turnIndex = this._smallBlindIndex;
+        this._raiserIndex = -1;
+    }
+
+    updateNextHand(pl: Player[]) {
+        const nextDealer = loopArrayManager.getNextIndex(pl, this._dealerIndex);
+        this.initializePositions(pl, nextDealer);
     }
 }
 
@@ -175,42 +199,52 @@ export class ActionSelector {
 
 export class PlayerActions {
     putSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
-        
+        const player: Player = pl[pm.turnIndex];
+        player.prepareChips(bs.smallBlindValue);
     }
     
     putBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
+        const player: Player = pl[pm.turnIndex];
         
     }
     
     checkSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
+        const player: Player = pl[pm.turnIndex];
         
     }
     
     checkBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
+        const player: Player = pl[pm.turnIndex];
 
     }
     
     check(pl: Player[], pm: PositionManager, bs: BettingStage){
+        const player: Player = pl[pm.turnIndex];
 
     }
     
     bet(pl: Player[], pm: PositionManager, bs: BettingStage, amount: number){
+        const player: Player = pl[pm.turnIndex];
         
     }
     
     call(pl: Player[], pm: PositionManager, bs: BettingStage){
+        const player: Player = pl[pm.turnIndex];
         
     }
     
     raise(pl: Player[], pm: PositionManager, bs: BettingStage, amount: number){
+        const player: Player = pl[pm.turnIndex];
         
     }
     
     mustAllIn(pl: Player[], pm: PositionManager, bs: BettingStage){
+        const player: Player = pl[pm.turnIndex];
         
     }
     
     fold(pl: Player[], pm: PositionManager, bs: BettingStage){
+        const player: Player = pl[pm.turnIndex];
         
     }
 }
