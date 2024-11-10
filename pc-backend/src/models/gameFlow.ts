@@ -1,20 +1,52 @@
 import { BettingStageType, TurnValidationType } from "../utils/constants";
 import { loopArrayManager } from '../utils/arrayManager';
-import { Player } from "./chipHolders";
+import { Player, Pot } from "./chipHolders";
+
+export class Game {
+    private _handStage: HandStage;
+    private _bettingStageValidator: BettingStageValidator;
+    private _bettingStage: BettingStage;
+    private _positionManager: PositionManager;
+    private _turnValidator: TurnValidator;
+    private _playerList: Player[];
+
+    constructor (playerList: Player[]) {
+        this._handStage = new HandStage();
+        this._bettingStageValidator = new BettingStageValidator();
+        this._bettingStage = new BettingStage();
+        this._positionManager = new PositionManager();
+        this._turnValidator = new TurnValidator();
+        this._playerList = playerList;
+    }
+
+    toJSON() {
+        return {
+            handStage: this._handStage,
+            bettingStageValidator: this._bettingStageValidator,
+            bettingStage: this._bettingStage,
+            positionManager: this._positionManager,
+            turnValidator: this._turnValidator,
+            playerList: this._playerList,
+        }
+    }
+}
 
 export class HandStage {
     private _smallBlindValue: number;
     private _bigBlindValue: number;
+    private _pot: Pot;
 
-    constructor(smallBlindValue: number, bigBlindValue:number) {
-        this._smallBlindValue = smallBlindValue;
-        this._bigBlindValue = bigBlindValue;
+    constructor() {
+        this._smallBlindValue = 0;
+        this._bigBlindValue = 0;
+        this._pot = new Pot();
     }
 
     toJSON() {
         return {
             smallBlindValue: this._smallBlindValue,
             bigBlindValue: this._bigBlindValue,
+            pot: this._pot,
         }
     }
 
@@ -36,6 +68,10 @@ export class HandStage {
     // manage the hand, when it starts or end
 }
 
+export class BettingStageValidator {
+    // manage the start and end of betting stages
+}
+
 export class BettingStage {
     private _stage: BettingStageType;
     private _doSmallBlindCheck: boolean;
@@ -43,8 +79,8 @@ export class BettingStage {
     private _actualBetValue: number;
     private _minimumRaise: number;
 
-    constructor(stage: BettingStageType) {
-        this._stage = stage;
+    constructor() {
+        this._stage = BettingStageType.PreFlop;
         this._doSmallBlindCheck = false;
         this._doBigBlindCheck = false;
         this._actualBetValue = 0;
