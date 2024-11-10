@@ -107,6 +107,26 @@ export class Player extends ChipHolder {
     }
 }
 
+export class PlayerManager {
+    private _playerList: Player[];
+
+    constructor() {
+        this._playerList = [];
+    }
+
+    get playerList(): Player[] {
+        return this._playerList;
+    }
+
+    set playerList(playerList: Player[]) {
+        this._playerList = playerList;
+    }
+
+    addPlayer(player: Player, position: number = this._playerList.length): void {
+        this.playerList.splice(position, 0, player);
+    }
+}
+
 export class Pot extends ChipHolder {
     constructor() {
         super();
@@ -128,9 +148,9 @@ export class Pot extends ChipHolder {
         }
 
         if (this._chips > 0){
-            const ri = loopArrayManager.getRandomIndex(positionManager.winnersIndex);
+            const randomIndex = loopArrayManager.getRandomIndex(positionManager.winnersIndex);
             this.prepareChips(this._chips);
-            this.transferChips(playerList[ri])
+            this.transferChips(playerList[randomIndex])
         }
     }
 }

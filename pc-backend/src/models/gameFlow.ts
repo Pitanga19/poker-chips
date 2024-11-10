@@ -1,6 +1,6 @@
 import { BettingStageType, TurnValidationType } from "../utils/constants";
 import { loopArrayManager } from '../utils/arrayManager';
-import { Player, Pot } from "./chipHolders";
+import { Player, PlayerManager, Pot } from "./chipHolders";
 
 export class Game {
     private _handStage: HandStage;
@@ -8,15 +8,15 @@ export class Game {
     private _bettingStage: BettingStage;
     private _positionManager: PositionManager;
     private _turnValidator: TurnValidator;
-    private _playerList: Player[];
+    private _playerList: PlayerManager;
 
-    constructor (playerList: Player[]) {
+    constructor () {
         this._handStage = new HandStage();
         this._bettingStageValidator = new BettingStageValidator();
         this._bettingStage = new BettingStage();
         this._positionManager = new PositionManager();
         this._turnValidator = new TurnValidator();
-        this._playerList = playerList;
+        this._playerList = new PlayerManager();
     }
 
     toJSON() {
