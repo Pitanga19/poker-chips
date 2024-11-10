@@ -194,15 +194,15 @@ export class PositionManager {
         this._winnersIndex = indexList;
     }
 
-    checkDealerIsPlaying(pl: Player[], dealerIndex: number): boolean {
-        return pl[dealerIndex].isPlaying && pl[dealerIndex].chips > 0;
+    checkIsPlaying(pl: Player[], index: number): boolean {
+        return pl[index].isPlaying && pl[index].chips > 0;
     }
 
-    findFirstPlayingDealerIndex(pl: Player[], dealerIndex: number) {
-        let firstPlayingDealerIndex = dealerIndex;
+    findFirstPlayingIndex(pl: Player[], index: number) {
+        let firstPlayingDealerIndex = index;
         let checkedPlayingCount = 0;
 
-        while (!this.checkDealerIsPlaying(pl, firstPlayingDealerIndex) && checkedPlayingCount < pl.length) {
+        while (!this.checkIsPlaying(pl, firstPlayingDealerIndex) && checkedPlayingCount < pl.length) {
             firstPlayingDealerIndex = loopArrayManager.getNextIndex(pl, firstPlayingDealerIndex);
             checkedPlayingCount++;
         }
@@ -211,9 +211,11 @@ export class PositionManager {
     }
 
     initializePositions(pl: Player[], dealerIndex: number) {
-        this._dealerIndex =  this.findFirstPlayingDealerIndex(pl, dealerIndex);
-        this._smallBlindIndex = loopArrayManager.getNextIndex(pl, this._dealerIndex);
-        this._bigBlindIndex = loopArrayManager.getNextIndex(pl, this._smallBlindIndex);
+        this._dealerIndex =  this.findFirstPlayingIndex(pl, dealerIndex);
+        this._smallBlindIndex = this.findFirstPlayingIndex(pl,
+            loopArrayManager.getNextIndex(pl, this._dealerIndex));
+        this._bigBlindIndex = this.findFirstPlayingIndex(pl,
+            loopArrayManager.getNextIndex(pl, this._smallBlindIndex));
         this._turnIndex = this._smallBlindIndex;
         this._raiserIndex = -1;
         this._winnersIndex = [];
@@ -236,18 +238,18 @@ export class PositionManager {
 
 export class TurnValidator {
     validate(pl: Player[], pm: PositionManager, bs: BettingStage, hs: HandStage): TurnValidationType {
-        const player: Player = pl[pm.turnIndex];
+        const currentPlayer: Player = pl[pm.turnIndex];
         const arePlaying = pl.filter(p => p.isPlaying);
         const isAlone = arePlaying.length === 1;
         const isRaiser = pm.turnIndex === pm.raiserIndex;
         const doBigBlindCheck = bs.doBigBlindCheck;
         const doAllCheck = pm.turnIndex === pm.smallBlindIndex && bs.doSmallBlindCheck;
         const isEveryoneAllIn = arePlaying.filter(p => p.chips > 0).length == 1;
-        const isPlaying = player.isPlaying;
-        const mustEqualBet = player.pendingChips < bs.actualBetValue;
+        const isPlaying = currentPlayer.isPlaying;
+        const mustEqualBet = currentPlayer.pendingChips < bs.actualBetValue;
         const isBigBlindWithoutActionInPreFlop = (
             pm.turnIndex === pm.bigBlindIndex &&
-            player.pendingChips === hs.bigBlindValue &&
+            currentPlayer.pendingChips === hs.bigBlindValue &&
             bs.stage === BettingStageType.PreFlop
         );
 
