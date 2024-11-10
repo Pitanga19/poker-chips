@@ -1,6 +1,6 @@
 import { loopArrayManager } from '../utils/arrayManager';
 import { Player, Pot } from './chipHolders'
-import { StageType, BettingStage } from './gameFlow';
+import { BettingStageType, BettingStage, HandStage } from './gameFlow';
 
 export enum ValidationType {
     GiveActions = 'giveActions',
@@ -138,7 +138,7 @@ export class PositionManager {
 }
 
 export class TurnValidator {
-    validate(pl: Player[], pm: PositionManager, bs: BettingStage): ValidationType {
+    validate(pl: Player[], pm: PositionManager, bs: BettingStage, hs: HandStage): ValidationType {
         const player: Player = pl[pm.turnIndex];
         const arePlaying = pl.filter(p => p.isPlaying);
         const isAlone = arePlaying.length === 1;
@@ -150,8 +150,8 @@ export class TurnValidator {
         const mustEqualBet = player.pendingChips < bs.actualBetValue;
         const isBigBlindWithoutActionInPreFlop = (
             pm.turnIndex === pm.bigBlindIndex &&
-            player.pendingChips === bs.bigBlindValue &&
-            bs.stage === StageType.PreFlop
+            player.pendingChips === hs.bigBlindValue &&
+            bs.stage === BettingStageType.PreFlop
         );
 
         if (isAlone || isRaiser || doBigBlindCheck || doAllCheck || isEveryoneAllIn) {
@@ -165,16 +165,16 @@ export class TurnValidator {
 }
 
 export class ActionSelector {
-    getOptions(pl: Player[], pm: PositionManager, bs: BettingStage): ActionType[] {
+    getOptions(pl: Player[], pm: PositionManager, bs: BettingStage, hs:HandStage): ActionType[] {
         const player: Player = pl[pm.turnIndex];
-        const isPreFlop = bs.stage === StageType.PreFlop;
+        const isPreFlop = bs.stage === BettingStageType.PreFlop;
         const isSmallBlind = pm.turnIndex == pm.smallBlindIndex;
         const isBigBlind = pm.turnIndex == pm.bigBlindIndex;
         const mustPutBlind = player.pendingChips === 0;
         const isBigBlindWithoutActionInPreFlop = (
             pm.turnIndex === pm.bigBlindIndex &&
-            player.pendingChips === bs.bigBlindValue &&
-            bs.stage === StageType.PreFlop
+            player.pendingChips === hs.bigBlindValue &&
+            bs.stage === BettingStageType.PreFlop
         );
         const mustEqualBet = player.pendingChips < bs.actualBetValue;
         const mustAllIn = player.chips + player.pendingChips < bs.actualBetValue;
@@ -198,16 +198,16 @@ export class ActionSelector {
 }
 
 export class PlayerActions {
-    putSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
+    putSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage, hs: HandStage){
         const player: Player = pl[pm.turnIndex];
-        player.prepareChips(bs.smallBlindValue);
+        player.prepareChips(hs.smallBlindValue);
         pm.updateNextTurn(pl);
     }
     
-    putBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
+    putBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage, hs: HandStage){
         const player: Player = pl[pm.turnIndex];
 
-        player.prepareChips(bs.bigBlindValue);
+        player.prepareChips(hs.bigBlindValue);
         pm.updateNextTurn(pl);
     }
     
@@ -225,9 +225,9 @@ export class PlayerActions {
         pm.updateNextTurn(pl);
     }
     
-    bet(pl: Player[], pm: PositionManager, bs: BettingStage, amount: number){
+    bet(pl: Player[], pm: PositionManager, bs: BettingStage, hs: HandStage, amount: number){
         const player: Player = pl[pm.turnIndex];
-        const isValidAmount: boolean = amount > bs.bigBlindValue;
+        const isValidAmount: boolean = amount > hs.bigBlindValue;
 
         if (isValidAmount) {
             player.prepareChips(amount);
