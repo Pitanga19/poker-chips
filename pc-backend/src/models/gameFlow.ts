@@ -3,31 +3,79 @@ import { loopArrayManager } from '../utils/arrayManager';
 import { Player, PlayerManager, Pot } from "./chipHolders";
 
 export class Game {
+    private _playerManager: PlayerManager;
     private _handStage: HandStage;
     private _bettingStageValidator: BettingStageValidator;
     private _bettingStage: BettingStage;
     private _positionManager: PositionManager;
     private _turnValidator: TurnValidator;
-    private _playerList: PlayerManager;
 
     constructor () {
+        this._playerManager = new PlayerManager();
         this._handStage = new HandStage();
         this._bettingStageValidator = new BettingStageValidator();
         this._bettingStage = new BettingStage();
         this._positionManager = new PositionManager();
         this._turnValidator = new TurnValidator();
-        this._playerList = new PlayerManager();
     }
 
     toJSON() {
         return {
+            playerManager: this._playerManager,
             handStage: this._handStage,
             bettingStageValidator: this._bettingStageValidator,
             bettingStage: this._bettingStage,
             positionManager: this._positionManager,
             turnValidator: this._turnValidator,
-            playerList: this._playerList,
         }
+    }
+
+    get playerManager(): PlayerManager {
+        return this._playerManager;
+    }
+
+    set playerManager(playerManager: PlayerManager) {
+        this._playerManager = playerManager;
+    }
+
+    get handStage(): HandStage {
+        return this._handStage;
+    }
+
+    set handStage(handStage: HandStage) {
+        this._handStage = handStage;
+    }
+
+    get bettingStageValidator(): BettingStageValidator {
+        return this._bettingStageValidator;
+    }
+
+    set bettingStageValidator(bettingStageValidator: BettingStageValidator) {
+        this._bettingStageValidator = bettingStageValidator;
+    }
+
+    get bettingStage(): BettingStage {
+        return this._bettingStage;
+    }
+
+    set bettingStage(bettingStage: BettingStage) {
+        this._bettingStage = bettingStage;
+    }
+
+    get positionManager(): PositionManager {
+        return this._positionManager;
+    }
+
+    set positionManager(positionManager: PositionManager) {
+        this._positionManager = positionManager;
+    }
+
+    get turnValidator(): TurnValidator {
+        return this._turnValidator;
+    }
+
+    set turnValidator(turnValidator: TurnValidator) {
+        this._turnValidator = turnValidator;
     }
 }
 
@@ -261,7 +309,7 @@ export class PositionManager {
         this._turnIndex = loopArrayManager.getNextIndex(playerList, this._turnIndex);
     }
 
-    updateNextStage(playerList: Player[]): void {
+    updateNextStage(): void {
         this._turnIndex = this._smallBlindIndex;
         this._raiserIndex = -1;
     }
