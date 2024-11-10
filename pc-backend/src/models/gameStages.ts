@@ -1,32 +1,32 @@
 import { BettingStageType } from "../utils/constants";
 import { Player, PlayerManager, Pot } from "./chipHolders";
-import { PositionManager, HandStageValidator, BettingStageValidator, TurnValidator } from "./gameFlow";
+import { PositionManager, HandStageManager, BettingStageManager, TurnManager } from "./gameFlow";
 
 export class Game {
     private _playerManager: PlayerManager;
     private _handStage: HandStage;
-    private _bettingStageValidator: BettingStageValidator;
+    private _bettingStageManager: BettingStageManager;
     private _bettingStage: BettingStage;
     private _positionManager: PositionManager;
-    private _turnValidator: TurnValidator;
+    private _turnManager: TurnManager;
 
     constructor () {
         this._playerManager = new PlayerManager();
         this._handStage = new HandStage();
-        this._bettingStageValidator = new BettingStageValidator();
+        this._bettingStageManager = new BettingStageManager();
         this._bettingStage = new BettingStage();
         this._positionManager = new PositionManager();
-        this._turnValidator = new TurnValidator();
+        this._turnManager = new TurnManager();
     }
 
     toJSON() {
         return {
             playerManager: this._playerManager,
             handStage: this._handStage,
-            bettingStageValidator: this._bettingStageValidator,
+            bettingStageManager: this._bettingStageManager,
             bettingStage: this._bettingStage,
             positionManager: this._positionManager,
-            turnValidator: this._turnValidator,
+            turnManager: this._turnManager,
         }
     }
 
@@ -46,12 +46,12 @@ export class Game {
         this._handStage = handStage;
     }
 
-    get bettingStageValidator(): BettingStageValidator {
-        return this._bettingStageValidator;
+    get bettingStageManager(): BettingStageManager {
+        return this._bettingStageManager;
     }
 
-    set bettingStageValidator(bettingStageValidator: BettingStageValidator) {
-        this._bettingStageValidator = bettingStageValidator;
+    set bettingStageManager(bettingStageManager: BettingStageManager) {
+        this._bettingStageManager = bettingStageManager;
     }
 
     get bettingStage(): BettingStage {
@@ -70,12 +70,12 @@ export class Game {
         this._positionManager = positionManager;
     }
 
-    get turnValidator(): TurnValidator {
-        return this._turnValidator;
+    get turnManager(): TurnManager {
+        return this._turnManager;
     }
 
-    set turnValidator(turnValidator: TurnValidator) {
-        this._turnValidator = turnValidator;
+    set turnManager(turnManager: TurnManager) {
+        this._turnManager = turnManager;
     }
 }
 

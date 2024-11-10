@@ -1,5 +1,5 @@
 import { HandStage, BettingStage } from "./gameStages";
-import { Player, PlayerManager, Pot } from "./chipHolders";
+import { Player } from "./chipHolders";
 import { BettingStageType, TurnValidationType } from "../utils/constants";
 import { loopArrayManager } from '../utils/arrayManager';
 
@@ -121,18 +121,18 @@ export class PositionManager {
     }
 }
 
-export class HandStageValidator {
+export class HandStageManager {
     // if there are two or more players active start a hand
     validate(playerList: Player[], handStage: HandStage) {
 
     }
 }
 
-export class BettingStageValidator {
+export class BettingStageManager {
     // manage the start and end of betting stages
 }
 
-export class TurnValidator {
+export class TurnManager {
     validate(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, handStage: HandStage): TurnValidationType {
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         const arePlaying = playerList.filter(p => p.isPlaying);

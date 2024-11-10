@@ -1,5 +1,5 @@
 import { Player, PlayerManager, Pot } from "./models/chipHolders";
-import { BettingStageValidator, PositionManager, TurnValidator } from "./models/gameFlow";
+import { BettingStageManager, PositionManager, TurnManager } from "./models/gameFlow";
 import { Game, HandStage, BettingStage } from "./models/gameStages";
 import { ActionSelector, PlayerActions } from "./models/playerActions";
 
