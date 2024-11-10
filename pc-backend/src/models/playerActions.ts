@@ -3,19 +3,19 @@ import { HandStage, BettingStage, PositionManager } from './gameFlow';
 import { ActionType, BettingStageType } from '../utils/constants';
 
 export class ActionSelector {
-    getOptions(pl: Player[], pm: PositionManager, bs: BettingStage, hs:HandStage): ActionType[] {
-        const currentPlayer: Player = pl[pm.turnIndex];
-        const isPreFlop = bs.stage === BettingStageType.PreFlop;
-        const isSmallBlind = pm.turnIndex == pm.smallBlindIndex;
-        const isBigBlind = pm.turnIndex == pm.bigBlindIndex;
+    getOptions(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, handStage:HandStage): ActionType[] {
+        const currentPlayer: Player = playerList[positionManager.turnIndex];
+        const isPreFlop = bettingStage.stage === BettingStageType.PreFlop;
+        const isSmallBlind = positionManager.turnIndex == positionManager.smallBlindIndex;
+        const isBigBlind = positionManager.turnIndex == positionManager.bigBlindIndex;
         const mustPutBlind = currentPlayer.pendingChips === 0;
         const isBigBlindWithoutActionInPreFlop = (
-            pm.turnIndex === pm.bigBlindIndex &&
-            currentPlayer.pendingChips === hs.bigBlindValue &&
-            bs.stage === BettingStageType.PreFlop
+            positionManager.turnIndex === positionManager.bigBlindIndex &&
+            currentPlayer.pendingChips === handStage.bigBlindValue &&
+            bettingStage.stage === BettingStageType.PreFlop
         );
-        const mustEqualBet = currentPlayer.pendingChips < bs.actualBetValue;
-        const mustAllIn = currentPlayer.chips + currentPlayer.pendingChips < bs.actualBetValue;
+        const mustEqualBet = currentPlayer.pendingChips < bettingStage.actualBetValue;
+        const mustAllIn = currentPlayer.chips + currentPlayer.pendingChips < bettingStage.actualBetValue;
 
         if (isPreFlop && isSmallBlind && mustPutBlind) {
             return [ActionType.PutSmallBlind];
@@ -36,82 +36,82 @@ export class ActionSelector {
 }
 
 export class PlayerActions {
-    putSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage, hs: HandStage){
-        const currentPlayer: Player = pl[pm.turnIndex];
-        currentPlayer.prepareChips(hs.smallBlindValue);
-        pm.updateNextTurn(pl);
+    putSmallBlind(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, handStage: HandStage): void {
+        const currentPlayer: Player = playerList[positionManager.turnIndex];
+        currentPlayer.prepareChips(handStage.smallBlindValue);
+        positionManager.updateNextTurn(playerList);
     }
     
-    putBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage, hs: HandStage){
-        const currentPlayer: Player = pl[pm.turnIndex];
+    putBigBlind(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, handStage: HandStage): void {
+        const currentPlayer: Player = playerList[positionManager.turnIndex];
 
-        currentPlayer.prepareChips(hs.bigBlindValue);
-        pm.updateNextTurn(pl);
+        currentPlayer.prepareChips(handStage.bigBlindValue);
+        positionManager.updateNextTurn(playerList);
     }
     
-    checkSmallBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
-        bs.setSmallBlindCheck();
-        pm.updateNextTurn(pl);
+    checkSmallBlind(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage): void {
+        bettingStage.setSmallBlindCheck();
+        positionManager.updateNextTurn(playerList);
     }
     
-    checkBigBlind(pl: Player[], pm: PositionManager, bs: BettingStage){
-        bs.setBigBlindCheck();
-        pm.updateNextTurn(pl);
+    checkBigBlind(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage): void {
+        bettingStage.setBigBlindCheck();
+        positionManager.updateNextTurn(playerList);
     }
     
-    check(pl: Player[], pm: PositionManager){
-        pm.updateNextTurn(pl);
+    check(playerList: Player[], positionManager: PositionManager): void {
+        positionManager.updateNextTurn(playerList);
     }
     
-    bet(pl: Player[], pm: PositionManager, bs: BettingStage, hs: HandStage, amount: number){
-        const currentPlayer: Player = pl[pm.turnIndex];
-        const isValidAmount: boolean = amount > hs.bigBlindValue;
+    bet(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, handStage: HandStage, amount: number): void {
+        const currentPlayer: Player = playerList[positionManager.turnIndex];
+        const isValidAmount: boolean = amount > handStage.bigBlindValue;
 
         if (isValidAmount) {
             currentPlayer.prepareChips(amount);
-            pm.raiserIndex = pm.turnIndex;
-            bs.actualBetValue = amount;
-            bs.minimumRaise = amount * 2;
-            pm.updateNextTurn(pl);
+            positionManager.raiserIndex = positionManager.turnIndex;
+            bettingStage.actualBetValue = amount;
+            bettingStage.minimumRaise = amount * 2;
+            positionManager.updateNextTurn(playerList);
         } else {
             console.log('Invalid amount, bet must be equal or bigger than big blind.');
         };
     }
     
-    call(pl: Player[], pm: PositionManager, bs: BettingStage){
-        const currentPlayer: Player = pl[pm.turnIndex];
+    call(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage): void {
+        const currentPlayer: Player = playerList[positionManager.turnIndex];
         
-        currentPlayer.prepareChips(bs.actualBetValue);
-        pm.updateNextTurn(pl);
+        currentPlayer.prepareChips(bettingStage.actualBetValue);
+        positionManager.updateNextTurn(playerList);
     }
     
-    raise(pl: Player[], pm: PositionManager, bs: BettingStage, amount: number){
-        const currentPlayer: Player = pl[pm.turnIndex];
-        const isValidAmount: boolean = amount >= bs.minimumRaise;
+    raise(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, amount: number): void {
+        const currentPlayer: Player = playerList[positionManager.turnIndex];
+        const isValidAmount: boolean = amount >= bettingStage.minimumRaise;
 
         if (isValidAmount) {
-            const raiseValue: number = amount - bs.actualBetValue;
+            const raiseValue: number = amount - bettingStage.actualBetValue;
             currentPlayer.prepareChips(amount - currentPlayer.pendingChips);
-            pm.raiserIndex = pm.turnIndex;
-            bs.actualBetValue = amount;
-            bs.minimumRaise = bs.actualBetValue + raiseValue;
-            pm.updateNextTurn(pl);
+            positionManager.raiserIndex = positionManager.turnIndex;
+            bettingStage.actualBetValue = amount;
+            bettingStage.minimumRaise = bettingStage.actualBetValue + raiseValue;
+            positionManager.updateNextTurn(playerList);
         } else {
             console.log('Invalid amount, raise must be equal or bigger than last one.');
         };
     }
     
-    mustAllIn(pl: Player[], pm: PositionManager){
-        const currentPlayer: Player = pl[pm.turnIndex];
+    mustAllIn(playerList: Player[], positionManager: PositionManager): void {
+        const currentPlayer: Player = playerList[positionManager.turnIndex];
         
         currentPlayer.prepareChips(currentPlayer.chips);
-        pm.updateNextTurn(pl);
+        positionManager.updateNextTurn(playerList);
     }
     
-    fold(pl: Player[], pm: PositionManager){
-        const currentPlayer: Player = pl[pm.turnIndex];
+    fold(playerList: Player[], positionManager: PositionManager): void {
+        const currentPlayer: Player = playerList[positionManager.turnIndex];
         
         currentPlayer.stopPlaying();
-        pm.updateNextTurn(pl);
+        positionManager.updateNextTurn(playerList);
     }
 }

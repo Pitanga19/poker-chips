@@ -119,18 +119,18 @@ export class Pot extends ChipHolder {
         }
     }
     
-    payWinners(pl: Player[], pm: PositionManager, bs: BettingStage): void {
-        const winnersCount: number = pm.winnersIndex.length;
+    payWinners(playerList: Player[], positionManager: PositionManager): void {
+        const winnersCount: number = positionManager.winnersIndex.length;
         const winnersReward: number = Math.floor(this._chips / winnersCount);
-        for (let i of pm.winnersIndex) {
+        for (let i of positionManager.winnersIndex) {
             this.prepareChips(winnersReward);
-            this.transferChips(pl[i]);
+            this.transferChips(playerList[i]);
         }
 
         if (this._chips > 0){
-            const ri = loopArrayManager.getRandomIndex(pm.winnersIndex);
+            const ri = loopArrayManager.getRandomIndex(positionManager.winnersIndex);
             this.prepareChips(this._chips);
-            this.transferChips(pl[ri])
+            this.transferChips(playerList[ri])
         }
     }
 }
