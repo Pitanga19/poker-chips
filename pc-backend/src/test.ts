@@ -1,5 +1,6 @@
 import { Player, PlayerManager, Pot } from "./models/chipHolders";
-import { Game, HandStage, BettingStageValidator, BettingStage, PositionManager, TurnValidator } from "./models/gameFlow";
+import { BettingStageValidator, PositionManager, TurnValidator } from "./models/gameFlow";
+import { Game, HandStage, BettingStage } from "./models/gameStages";
 import { ActionSelector, PlayerActions } from "./models/playerActions";
 
 const player1 = new Player('maci', 300);
