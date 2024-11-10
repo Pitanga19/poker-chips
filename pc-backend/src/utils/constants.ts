@@ -18,8 +18,18 @@ export enum BettingStageType {
     River = 'river'
 }
 
+export enum HandStageValidationType {
+    StartHandStage = 'startHandStage',
+    EndGame = 'endGame'
+}
+
+export enum BettingStageValidationType {
+    StartBettingStage = 'startBettingStage',
+    EndHandStage = 'endHand'
+}
+
 export enum TurnValidationType {
     GiveActions = 'giveActions',
     NextTurn = 'nextTurn',
-    FinishRound = 'finishRound'
+    EndBettingStage = 'finishRound'
 }

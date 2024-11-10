@@ -1,5 +1,6 @@
 import { Player } from './chipHolders'
-import { HandStage, BettingStage, PositionManager } from './gameFlow';
+import { PositionManager } from './gameFlow';
+import { HandStage, BettingStage } from './gameStages';
 import { ActionType, BettingStageType } from '../utils/constants';
 
 export class ActionSelector {

@@ -1,6 +1,6 @@
 import { HandStage, BettingStage } from "./gameStages";
 import { Player } from "./chipHolders";
-import { BettingStageType, TurnValidationType } from "../utils/constants";
+import { BettingStageType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 import { loopArrayManager } from '../utils/arrayManager';
 
 export class PositionManager {
@@ -121,18 +121,24 @@ export class PositionManager {
     }
 }
 
-export class HandStageManager {
+export class HandStageValidator {
     // if there are two or more players active start a hand
-    validate(playerList: Player[], handStage: HandStage) {
-
+    validate(playerList: Player[], handStage: HandStage): HandStageValidationType {
+        const arePlaying = playerList.filter( p => p.isPlaying );
+        const areManyPlaying = arePlaying.length > 1;
+        if (areManyPlaying) {
+            return HandStageValidationType.StartHandStage;
+        } else {
+            return HandStageValidationType.EndGame;
+        }
     }
 }
 
-export class BettingStageManager {
+export class BettingStageValidator {
     // manage the start and end of betting stages
 }
 
-export class TurnManager {
+export class TurnValidator {
     validate(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, handStage: HandStage): TurnValidationType {
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         const arePlaying = playerList.filter(p => p.isPlaying);
@@ -150,7 +156,7 @@ export class TurnManager {
         );
 
         if (isAlone || isRaiser || doBigBlindCheck || doAllCheck || isEveryoneAllIn) {
-            return TurnValidationType.FinishRound;
+            return TurnValidationType.EndBettingStage;
         } else if (isPlaying && (mustEqualBet || isBigBlindWithoutActionInPreFlop)) {
             return TurnValidationType.GiveActions;
         } else {
