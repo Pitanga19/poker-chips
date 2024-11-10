@@ -79,6 +79,13 @@ export class Game {
     }
 }
 
+export class HandStageValidator {
+    // if there are two or more players active start a hand
+    validate(playerList: Player[], handStage: HandStage) {
+        
+    }
+}
+
 export class HandStage {
     private _smallBlindValue: number;
     private _bigBlindValue: number;
