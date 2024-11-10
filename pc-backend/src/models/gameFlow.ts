@@ -122,8 +122,7 @@ export class PositionManager {
 }
 
 export class HandStageValidator {
-    // if there are two or more players active start a hand
-    validate(playerList: Player[], handStage: HandStage): HandStageValidationType {
+    validate(playerList: Player[]): HandStageValidationType {
         const arePlaying = playerList.filter( p => p.isPlaying );
         const areManyPlaying = arePlaying.length > 1;
         if (areManyPlaying) {
@@ -135,7 +134,15 @@ export class HandStageValidator {
 }
 
 export class BettingStageValidator {
-    // manage the start and end of betting stages
+    validate(positionManager: PositionManager): BettingStageValidationType {
+        const areWinners = positionManager.winnersIndex.length > 0;
+
+        if (areWinners) {
+            return BettingStageValidationType.EndHandStage;
+        } else {
+            return BettingStageValidationType.StartBettingStage;
+        }
+    }
 }
 
 export class TurnValidator {
@@ -160,7 +167,7 @@ export class TurnValidator {
         } else if (isPlaying && (mustEqualBet || isBigBlindWithoutActionInPreFlop)) {
             return TurnValidationType.GiveActions;
         } else {
-            return TurnValidationType.NextTurn;
+            return TurnValidationType.SkipPlayer;
         }
     }
 }
