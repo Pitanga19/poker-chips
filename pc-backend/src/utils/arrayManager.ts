@@ -1,5 +1,3 @@
-import { Player } from "../models/chipHolders";
-
 class ArrayManager {
     private _isLoop: boolean;
 

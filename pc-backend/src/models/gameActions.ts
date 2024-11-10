@@ -2,7 +2,7 @@ import { loopArrayManager } from '../utils/arrayManager';
 import { Player, Pot } from './chipHolders'
 import { BettingStageType, BettingStage, HandStage } from './gameFlow';
 
-export enum ValidationType {
+export enum TurnValidationType {
     GiveActions = 'giveActions',
     NextTurn = 'nextTurn',
     FinishRound = 'finishRound'
@@ -138,7 +138,7 @@ export class PositionManager {
 }
 
 export class TurnValidator {
-    validate(pl: Player[], pm: PositionManager, bs: BettingStage, hs: HandStage): ValidationType {
+    validate(pl: Player[], pm: PositionManager, bs: BettingStage, hs: HandStage): TurnValidationType {
         const player: Player = pl[pm.turnIndex];
         const arePlaying = pl.filter(p => p.isPlaying);
         const isAlone = arePlaying.length === 1;
@@ -155,11 +155,11 @@ export class TurnValidator {
         );
 
         if (isAlone || isRaiser || doBigBlindCheck || doAllCheck || isEveryoneAllIn) {
-            return ValidationType.FinishRound;
+            return TurnValidationType.FinishRound;
         } else if (isPlaying && (mustEqualBet || isBigBlindWithoutActionInPreFlop)) {
-            return ValidationType.GiveActions;
+            return TurnValidationType.GiveActions;
         } else {
-            return ValidationType.NextTurn;
+            return TurnValidationType.NextTurn;
         }
     }
 }
