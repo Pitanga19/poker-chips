@@ -122,14 +122,24 @@ export class PositionManager {
 }
 
 export class HandStageValidator {
-    validate(playerList: Player[]): HandStageValidationType {
+    validate(playerList: Player[], bettingStageValidator: BettingStageValidator, positionManager: PositionManager): HandStageValidationType {
         const arePlaying = playerList.filter( p => p.isPlaying );
         const areManyPlaying = arePlaying.length > 1;
         if (areManyPlaying) {
+            this.startHandStage(bettingStageValidator, positionManager);
             return HandStageValidationType.StartHandStage;
         } else {
+            this.endGame(playerList);
             return HandStageValidationType.EndGame;
         }
+    }
+
+    startHandStage(bettingStageValidator: BettingStageValidator, positionManager: PositionManager): void {
+        bettingStageValidator.validate(positionManager);
+    }
+
+    endGame(playerList: Player[]):void {
+        playerList.forEach( p => p.stopPlaying() );
     }
 }
 
