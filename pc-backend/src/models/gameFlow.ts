@@ -1,5 +1,5 @@
 import { HandStage, BettingStage } from "./gameStages";
-import { Player } from "./chipHolders";
+import { Player, PlayerManager, Pot } from "./chipHolders";
 import { BettingStageType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 import { loopArrayManager } from '../utils/arrayManager';
 
@@ -122,11 +122,18 @@ export class PositionManager {
 }
 
 export class HandStageValidator {
-    validate(playerList: Player[], bettingStageValidator: BettingStageValidator, positionManager: PositionManager): HandStageValidationType {
+    validate(
+        playerManager: PlayerManager,
+        bettingStage: BettingStage,
+        bettingStageValidator: BettingStageValidator,
+        positionManager: PositionManager,
+        pot: Pot
+    ): HandStageValidationType {
+        const playerList = playerManager.playerList;
         const arePlaying = playerList.filter( p => p.isPlaying );
         const areManyPlaying = arePlaying.length > 1;
         if (areManyPlaying) {
-            this.startHandStage(bettingStageValidator, positionManager);
+            this.startHandStage(bettingStage, bettingStageValidator, positionManager, playerManager, pot);
             return HandStageValidationType.StartHandStage;
         } else {
             this.endGame(playerList);
@@ -134,8 +141,9 @@ export class HandStageValidator {
         }
     }
 
-    startHandStage(bettingStageValidator: BettingStageValidator, positionManager: PositionManager): void {
-        bettingStageValidator.validate(positionManager);
+    startHandStage(bettingStage: BettingStage, bettingStageValidator: BettingStageValidator, positionManager: PositionManager, playerManager: PlayerManager, pot: Pot): void {
+        bettingStage.reset(BettingStageType.PreFlop);
+        bettingStageValidator.validate(positionManager, this, playerManager, bettingStage, pot);
     }
 
     endGame(playerList: Player[]):void {
@@ -144,19 +152,38 @@ export class HandStageValidator {
 }
 
 export class BettingStageValidator {
-    validate(positionManager: PositionManager): BettingStageValidationType {
+    validate(
+        positionManager: PositionManager,
+        handStageValidator: HandStageValidator,
+        playerManager: PlayerManager,
+        bettingStage: BettingStage,
+        pot: Pot,
+        
+    ): BettingStageValidationType {
         const areWinners = positionManager.winnersIndex.length > 0;
+        const riverPlayed = bettingStage.stage = BettingStageType.River;
 
-        if (areWinners) {
+        if (areWinners || riverPlayed) {
+            this.endHand(handStageValidator, playerManager, bettingStage, positionManager, pot);
             return BettingStageValidationType.EndHandStage;
         } else {
             return BettingStageValidationType.StartBettingStage;
         }
     }
+
+    endHand(handStageValidator: HandStageValidator, playerManager: PlayerManager, bettingStage: BettingStage, positionManager: PositionManager, pot: Pot) {
+        const playerList = playerManager.playerList;
+
+        pot.payWinners(playerList, positionManager);
+        playerManager.resetIsPlaying();
+        positionManager.updateNextHand(playerList);
+        handStageValidator.validate(playerManager, bettingStage, this, positionManager, pot);
+    }
 }
 
 export class TurnValidator {
-    validate(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, handStage: HandStage): TurnValidationType {
+    validate(playerManager: PlayerManager, positionManager: PositionManager, bettingStage: BettingStage, handStage: HandStage): TurnValidationType {
+        const playerList = playerManager.playerList;
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         const arePlaying = playerList.filter(p => p.isPlaying);
         const isAlone = arePlaying.length === 1;

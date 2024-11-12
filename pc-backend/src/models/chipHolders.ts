@@ -124,6 +124,10 @@ export class PlayerManager {
     addPlayer(player: Player, position: number = this._playerList.length): void {
         this.playerList.splice(position, 0, player);
     }
+
+    resetIsPlaying() {
+        this._playerList.forEach( p => p.chips > 0 ? p.startPlaying : p.stopPlaying )
+    }
 }
 
 export class Pot extends ChipHolder {

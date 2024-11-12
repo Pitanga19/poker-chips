@@ -27,5 +27,3 @@ const playerActions = game.playerActions;
 playerManager.playerList = playerList;
 handStage.defineBlindsValues(bigBlindValue);
 positionManager.initializePositions(playerManager.playerList, firstDealer);
-console.log(handStageValidator.validate(playerManager.playerList, bettingStageValidator, positionManager));
-console.log(bettingStageValidator.validate(positionManager));
