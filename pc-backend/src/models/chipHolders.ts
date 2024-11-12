@@ -126,7 +126,7 @@ export class PlayerManager {
     }
 
     resetIsPlaying() {
-        this._playerList.forEach( p => p.chips > 0 ? p.startPlaying : p.stopPlaying )
+        this._playerList.forEach( p => p.chips > 0 ? p.startPlaying() : p.stopPlaying() )
     }
 }
 
