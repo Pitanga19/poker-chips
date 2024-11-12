@@ -158,6 +158,11 @@ export class HandStage {
     set bigBlindValue(value: number) {
         this._bigBlindValue = value;
     }
+
+    defineBlindsValues(bigBlindValue: number) {
+        this._bigBlindValue = bigBlindValue;
+        this._smallBlindValue = Math.floor(bigBlindValue / 2);
+    }
     // manage the hand, when it starts or end
 }
 
