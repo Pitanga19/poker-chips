@@ -8,7 +8,7 @@ export class Game {
     private _pot: Pot;
     private _handStageValidator: HandStageValidator;
     private _handStage: HandStage;
-    private _bettingStageManager: BettingStageValidator;
+    private _bettingStageValidator: BettingStageValidator;
     private _bettingStage: BettingStage;
     private _positionManager: PositionManager;
     private _turnValidator: TurnValidator;
@@ -20,7 +20,7 @@ export class Game {
         this._pot = new Pot();
         this._handStageValidator = new HandStageValidator();
         this._handStage = new HandStage();
-        this._bettingStageManager = new BettingStageValidator();
+        this._bettingStageValidator = new BettingStageValidator();
         this._bettingStage = new BettingStage();
         this._positionManager = new PositionManager();
         this._turnValidator = new TurnValidator();
@@ -34,7 +34,7 @@ export class Game {
             pot: this._pot,
             handStageValidator: this._handStageValidator,
             handStage: this._handStage,
-            bettingStageManager: this._bettingStageManager,
+            bettingStageValidator: this._bettingStageValidator,
             bettingStage: this._bettingStage,
             positionManager: this._positionManager,
             turnValidator: this._turnValidator,
@@ -75,12 +75,12 @@ export class Game {
         this._handStage = handStage;
     }
 
-    get bettingStageManager(): BettingStageValidator {
-        return this._bettingStageManager;
+    get bettingStageValidator(): BettingStageValidator {
+        return this._bettingStageValidator;
     }
 
-    set bettingStageManager(bettingStageManager: BettingStageValidator) {
-        this._bettingStageManager = bettingStageManager;
+    set bettingStageValidator(bettingStageValidator: BettingStageValidator) {
+        this._bettingStageValidator = bettingStageValidator;
     }
 
     get bettingStage(): BettingStage {
