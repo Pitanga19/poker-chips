@@ -127,19 +127,16 @@ export class Game {
 export class HandStage {
     private _smallBlindValue: number;
     private _bigBlindValue: number;
-    private _pot: Pot;
 
     constructor() {
         this._smallBlindValue = 0;
         this._bigBlindValue = 0;
-        this._pot = new Pot();
     }
 
     toJSON() {
         return {
             smallBlindValue: this._smallBlindValue,
             bigBlindValue: this._bigBlindValue,
-            pot: this._pot,
         }
     }
 
