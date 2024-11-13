@@ -32,6 +32,14 @@ app.post('/api/playerList', (req, res) => {
         console.log('Upadted game data:', currentGame);
     };
     res.status(200).json({ message: 'Player list received successfully' });
+});
+
+app.get('/api/currentGame/playerList', (req, res) => {
+    if (currentGame && currentGame.playerManager) {
+        res.status(200).json(currentGame.playerManager.playerList);
+    } else {
+        res.status(404).json({ message: 'No active game found.' });
+    }
 })
 
 app.listen(PORT, IP, () => {
