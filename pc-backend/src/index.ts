@@ -27,7 +27,9 @@ app.post('/api/playerList', (req, res) => {
 
     if (currentGame instanceof Game) {
         currentGame.playerManager.playerList = playerList;
-        console.log('Received player list:', currentGame.playerManager.playerList);
+        console.log('Received player list:', playerList);
+        currentGame.positionManager.initializePositions(playerList, -1);
+        console.log('Upadted game data:', currentGame);
     };
     res.status(200).json({ message: 'Player list received successfully' });
 })
