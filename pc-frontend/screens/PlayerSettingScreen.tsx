@@ -4,11 +4,9 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
+import { IP, PORT } from '../App';
 
 type PlayerSettingScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PlayerSetting'>;
-
-const PORT = 3000;
-const IP = 'localhost';
 
 interface Player {
     id: string;
