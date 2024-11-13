@@ -99,7 +99,7 @@ const GameScreen = () => {
             .then(response => response.json())
             .then(data => setGame(data))
             .catch(error => console.error('Error fetching players:', error));
-    });
+    }, []);
 
     return (
         <View style={ styles.main }>
