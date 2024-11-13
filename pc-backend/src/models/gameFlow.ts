@@ -95,7 +95,8 @@ export class PositionManager {
         return firstPlayingDealerIndex;
     }
 
-    initializePositions(playerList: Player[], dealerIndex: number): void {
+    initializePositions(playerList: Player[], dealerIndex: number = -1): void {
+        dealerIndex = dealerIndex === -1 ? loopArrayManager.getRandomIndex(playerList) : dealerIndex;
         this._dealerIndex =  this.findFirstPlayingIndex(playerList, dealerIndex);
         this._smallBlindIndex = this.findFirstPlayingIndex(playerList,
             loopArrayManager.getNextIndex(playerList, this._dealerIndex));
