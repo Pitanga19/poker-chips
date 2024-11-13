@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Alert, View, Text, FlatList, TextInput, Pressable } from 'react-native';
 import styles from './PlayerSettingScreen.styles';
 
+const PORT = 3000;
+const IP = 'localhost';
+
 interface Player {
     id: string;
     chips: number;
@@ -53,7 +56,7 @@ const PlayerSettingScreen = () => {
         }
 
         try {
-            const response = await fetch('http://localhost:3000/api/playerList', {
+            const response = await fetch(`http://${IP}:${PORT}/api/playerList`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

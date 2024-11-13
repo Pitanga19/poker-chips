@@ -3,6 +3,7 @@ import cors from 'cors';
 
 const app = express();
 const PORT = 3000;
+const IP = 'localhost';
 
 app.use(cors());
 app.use(express.json());
@@ -24,6 +25,6 @@ app.post('/api/playerList', (req, res) => {
     res.status(200).json({ message: 'Player list received successfully' });
 })
 
-app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}`)
+app.listen(PORT, IP, () => {
+    console.log(`Server running at http://${IP}:${PORT}`)
 });
