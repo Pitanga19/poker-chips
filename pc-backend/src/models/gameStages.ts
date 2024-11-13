@@ -167,11 +167,14 @@ export class HandStage {
         this._stagesPlayed = stagesPlayed;
     }
 
+    clearStages() {
+        this._stagesPlayed = []
+    }
+
     defineBlindsValues(bigBlindValue: number) {
         this._bigBlindValue = bigBlindValue;
         this._smallBlindValue = Math.floor(bigBlindValue / 2);
     }
-    // manage the hand, when it starts or end
 }
 
 export class BettingStage {

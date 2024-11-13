@@ -138,9 +138,11 @@ export class HandStageValidator {
     }
 
     startHandStage(game: Game): void {
+        const handStage = game.handStage;
         const bettingStage = game.bettingStage;
         const bettingStageValidator = game.bettingStageValidator;
 
+        handStage.clearStages();
         bettingStage.reset(BettingStageType.PreFlop);
         bettingStageValidator.validate(game);
     }
@@ -222,7 +224,10 @@ export class TurnValidator {
         }
     }
 
-    endBettingStage () {
-        
+    endBettingStage (game: Game) {
+        const handStage = game.handStage;
+        const bettingStage = game.bettingStage;
+
+        handStage.stagesPlayed.push(bettingStage.stage);
     }
 }
