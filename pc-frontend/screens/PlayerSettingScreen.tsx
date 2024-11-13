@@ -18,6 +18,7 @@ interface Player {
 };
 
 const PlayerSettingScreen = () => {
+    const navigation = useNavigation<PlayerSettingScreenNavigationProp>();
     const [playerID, setPlayerID] = useState('');
     const [startingChips, setStartingChips] = useState('');
     const [playerList, setPlayerList] = useState<Player[]>([]);
@@ -75,6 +76,7 @@ const PlayerSettingScreen = () => {
 
             const data = await response.json();
             Alert.alert('¡Succes!', 'Player list sent succesfully.');
+            navigation.navigate('Game');
         } catch (error: unknown) {
             if (error instanceof Error) {
                 Alert.alert('¡Error!', error.message);
