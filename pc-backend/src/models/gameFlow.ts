@@ -221,4 +221,8 @@ export class TurnValidator {
             return TurnValidationType.SkipPlayer;
         }
     }
+
+    endBettingStage () {
+        
+    }
 }

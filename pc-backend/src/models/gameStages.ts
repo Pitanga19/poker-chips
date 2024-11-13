@@ -127,16 +127,19 @@ export class Game {
 export class HandStage {
     private _smallBlindValue: number;
     private _bigBlindValue: number;
+    private _stagesPlayed: BettingStageType[];
 
     constructor() {
         this._smallBlindValue = 0;
         this._bigBlindValue = 0;
+        this._stagesPlayed = []
     }
 
     toJSON() {
         return {
             smallBlindValue: this._smallBlindValue,
             bigBlindValue: this._bigBlindValue,
+            stagesPlayed: this._stagesPlayed,
         }
     }
 
@@ -154,6 +157,14 @@ export class HandStage {
 
     set bigBlindValue(value: number) {
         this._bigBlindValue = value;
+    }
+
+    get stagesPlayed(): BettingStageType[] {
+        return this._stagesPlayed;
+    }
+
+    set stagesPlayed(stagesPlayed: BettingStageType[]) {
+        this._stagesPlayed = stagesPlayed;
     }
 
     defineBlindsValues(bigBlindValue: number) {
