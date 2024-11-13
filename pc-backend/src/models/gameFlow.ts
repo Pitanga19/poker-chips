@@ -143,7 +143,7 @@ export class HandStageValidator {
         const bettingStageValidator = game.bettingStageValidator;
 
         handStage.clearStages();
-        bettingStage.reset(BettingStageType.PreFlop);
+        bettingStage.reset(handStage);
         bettingStageValidator.validate(game);
     }
 

@@ -18,6 +18,13 @@ export enum BettingStageType {
     River = 'river'
 }
 
+export const BettingStageTypeList: BettingStageType[] = [
+    BettingStageType.PreFlop,
+    BettingStageType.Flop,
+    BettingStageType.Turn,
+    BettingStageType.River
+];
+
 export enum HandStageValidationType {
     StartHandStage = 'startHandStage',
     EndGame = 'endGame'

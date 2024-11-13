@@ -1,4 +1,4 @@
-import { BettingStageType } from "../utils/constants";
+import { BettingStageType, BettingStageTypeList } from "../utils/constants";
 import { PlayerManager, Pot } from "./chipHolders";
 import { PositionManager, HandStageValidator, BettingStageValidator, TurnValidator } from "./gameFlow";
 import { ActionSelector, PlayerActions } from "./playerActions";
@@ -250,8 +250,10 @@ export class BettingStage {
         this._minimumRaise = value;
     }
 
-    reset(stage: BettingStageType): void {
-        this._stage = stage;
+    reset(handStage: HandStage): void {
+        const stagesPlayedCount = handStage.stagesPlayed.length;
+        
+        this._stage = BettingStageTypeList[stagesPlayedCount];
         this._doSmallBlindCheck = false;
         this._doBigBlindCheck = false;
         this._actualBetValue = 0;
