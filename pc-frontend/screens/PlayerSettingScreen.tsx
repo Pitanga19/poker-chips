@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Alert, View, Text, FlatList, TextInput, Pressable } from 'react-native';
 import styles from './styles';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
+import { useNavigation } from '@react-navigation/native';
+
+type PlayerSettingScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PlayerSetting'>;
 
 const PORT = 3000;
 const IP = 'localhost';

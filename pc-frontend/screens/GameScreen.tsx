@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, Pressable } from 'react-native';
 import styles from './styles';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
+import { useNavigation } from '@react-navigation/native';
+
+type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
 
 // models interfaces
 interface Player { id: string; chips: number; pendingChips: number; isPlaying: boolean; isDealer: boolean; isTurn: boolean; isWinner: boolean }

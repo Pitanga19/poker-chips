@@ -5,9 +5,9 @@ import MainMenuScreen from "../screens/MainMenuScreen";
 import PlayerSettingScreen from "../screens/PlayerSettingScreen";
 import GameScreen from "../screens/GameScreen";
 
-type RootStackParamList = {
+export type RootStackParamList = {
     MainMenu: undefined;
-    PlayerSettings: undefined;
+    PlayerSetting: undefined;
     Game: undefined;
 };
 
@@ -17,7 +17,7 @@ const AppNavigator = () => (
     <NavigationContainer>
         <Stack.Navigator initialRouteName="MainMenu">
             <Stack.Screen name="MainMenu" component={MainMenuScreen} options={{ title: 'Main Menu' }} />
-            <Stack.Screen name="PlayerSettings" component={PlayerSettingScreen} options={{ title: 'Player Settings' }} />
+            <Stack.Screen name="PlayerSetting" component={PlayerSettingScreen} options={{ title: 'Player Settings' }} />
             <Stack.Screen name="Game" component={GameScreen} options={{ title: 'Game' }} />
         </Stack.Navigator>
     </NavigationContainer>
