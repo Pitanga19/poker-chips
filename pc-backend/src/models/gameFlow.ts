@@ -143,7 +143,6 @@ export class HandStageValidator {
         const bettingStageValidator = game.bettingStageValidator;
 
         handStage.clearStages();
-        bettingStage.reset(handStage);
         bettingStageValidator.validate(game);
     }
 
@@ -158,10 +157,10 @@ export class HandStageValidator {
 export class BettingStageValidator {
     validate(game: Game): BettingStageValidationType {
         const positionManager = game.positionManager;
-        const bettingStage = game.bettingStage;
+        const handStage = game.handStage;
 
         const areWinners = positionManager.winnersIndex.length > 0;
-        const riverPlayed = bettingStage.stage = BettingStageType.River;
+        const riverPlayed = handStage.stagesPlayed.length === 4;
 
         if (areWinners || riverPlayed) {
             this.endHand(game);
@@ -186,8 +185,11 @@ export class BettingStageValidator {
     }
 
     startBettingStage(game: Game) {
+        const bettingStage = game.bettingStage;
+        const handStage = game.handStage;
         const turnValidator = game.turnValidator;
 
+        bettingStage.reset(handStage);
         turnValidator.validate(game);
     }
 }
@@ -230,4 +232,6 @@ export class TurnValidator {
 
         handStage.stagesPlayed.push(bettingStage.stage);
     }
+
+    
 }
