@@ -46,6 +46,36 @@ const PlayerSettingScreen = () => {
         )
     };
 
+    const sendPlayerList = async () => {
+        if (playerList.length === 0) {
+            Alert.alert('¡Invalid list!', 'No players listed.');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3000/api/playerList', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(playerList,)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send player list.');
+            }
+
+            const data = await response.json();
+            Alert.alert('¡Succes!', 'Player list sent succesfully.');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                Alert.alert('¡Error!', error.message);
+            } else {
+                Alert.alert('¡Error!', 'Unknown error.');
+            }
+        }
+    }
+
     return (
         <View style={ styles.main }>
             <View style={ styles.container }>
@@ -85,7 +115,7 @@ const PlayerSettingScreen = () => {
             </View>
 
             <View>
-                <Pressable style={ styles.button}>
+                <Pressable style={ styles.button} onPress={ sendPlayerList }>
                     <Text style={ styles.mainText }>Send Players List</Text>
                 </Pressable>
             </View>
