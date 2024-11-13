@@ -2,7 +2,6 @@ import { Game } from "./gameStages";
 import { Player } from "./chipHolders";
 import { BettingStageType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 import { loopArrayManager } from '../utils/arrayManager';
-import { ActionSelector } from "./playerActions";
 
 export class PositionManager {
     private _dealerIndex: number;
@@ -246,8 +245,13 @@ export class TurnValidator {
         const handStage = game.handStage;
 
         const posibleActions = actionSelector.getOptions(playerList, positionManager, bettingStage, handStage);
-        // acá necesito ayuda para darle al front la lista de acciones posibles, la lista de jugadores y el position manager, para que el jugador que sea el turno seleccione de entre la lista su accion deseada
-        this.nextPlayer(game);
+        const turnData = {
+            posibleActions: posibleActions,
+            playerId: playerList[positionManager.turnIndex].id,
+        }
+
+        // se le da acciones al jugador, cuando hace su movimiento se vuelve a this.nextPlayer(game);
+        return turnData;
     }
 
     nextPlayer (game: Game) {
