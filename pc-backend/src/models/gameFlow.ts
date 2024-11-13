@@ -179,6 +179,10 @@ export class BettingStageValidator {
         positionManager.updateNextHand(playerList);
         handStageValidator.validate(playerManager, bettingStage, this, positionManager, pot);
     }
+
+    startBettingStage(turnValidator: TurnValidator, playerManager: PlayerManager, positionManager: PositionManager, bettingStage: BettingStage, handStage: HandStage) {
+        turnValidator.validate(playerManager, positionManager, bettingStage, handStage);
+    }
 }
 
 export class TurnValidator {
