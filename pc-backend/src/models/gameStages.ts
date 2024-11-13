@@ -6,11 +6,11 @@ import { ActionSelector, PlayerActions } from "./playerActions";
 export class Game {
     private _playerManager: PlayerManager;
     private _pot: Pot;
+    private _positionManager: PositionManager;
     private _handStageValidator: HandStageValidator;
     private _handStage: HandStage;
     private _bettingStageValidator: BettingStageValidator;
     private _bettingStage: BettingStage;
-    private _positionManager: PositionManager;
     private _turnValidator: TurnValidator;
     private _actionSelector: ActionSelector;
     private _playerActions: PlayerActions;
@@ -18,11 +18,11 @@ export class Game {
     constructor () {
         this._playerManager = new PlayerManager();
         this._pot = new Pot();
+        this._positionManager = new PositionManager();
         this._handStageValidator = new HandStageValidator();
         this._handStage = new HandStage();
         this._bettingStageValidator = new BettingStageValidator();
         this._bettingStage = new BettingStage();
-        this._positionManager = new PositionManager();
         this._turnValidator = new TurnValidator();
         this._actionSelector = new ActionSelector();
         this._playerActions = new PlayerActions();
@@ -32,11 +32,11 @@ export class Game {
         return {
             playerManager: this._playerManager,
             pot: this._pot,
+            positionManager: this._positionManager,
             handStageValidator: this._handStageValidator,
             handStage: this._handStage,
             bettingStageValidator: this._bettingStageValidator,
             bettingStage: this._bettingStage,
-            positionManager: this._positionManager,
             turnValidator: this._turnValidator,
             actionSelector: this._actionSelector,
             playerActions: this._playerActions,
@@ -57,6 +57,14 @@ export class Game {
 
     set pot(pot: Pot) {
         this._pot = pot;
+    }
+
+    get positionManager(): PositionManager {
+        return this._positionManager;
+    }
+
+    set positionManager(positionManager: PositionManager) {
+        this._positionManager = positionManager;
     }
 
     get handStageValidator(): HandStageValidator {
@@ -89,14 +97,6 @@ export class Game {
 
     set bettingStage(bettingStage: BettingStage) {
         this._bettingStage = bettingStage;
-    }
-
-    get positionManager(): PositionManager {
-        return this._positionManager;
-    }
-
-    set positionManager(positionManager: PositionManager) {
-        this._positionManager = positionManager;
     }
 
     get turnValidator(): TurnValidator {

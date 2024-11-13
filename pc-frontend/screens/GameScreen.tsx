@@ -8,6 +8,13 @@ import { useNavigation } from '@react-navigation/native';
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
 
 // models interfaces
+enum BettingStageType {
+    PreFlop = 'preFlop',
+    Flop = 'flop',
+    Turn = 'turn',
+    River = 'river'
+}
+
 interface Player {
     id: string;
     chips: number;
@@ -15,10 +22,56 @@ interface Player {
     isPlaying: boolean;
 };
 
+interface PlayerManager {
+    playerList: Player[];
+}
+
 interface Pot {
     chips: number;
     pendingChips: number;
 };
+
+interface PositionManager {
+    dealerIndex: number;
+    smallBlindIndex: number;
+    bigBlindIndex: number;
+    turnIndex: number;
+    raiserIndex: number;
+    winnersIndex: number[];
+}
+
+interface HandStage {
+    smallBlindValue: number;
+    bigBlindValue: number;
+    stagesPlayed: BettingStageType[];
+}
+
+interface BettingStage {
+    stage: BettingStageType;
+    doSmallBlindCheck: boolean;
+    doBigBlindCheck: boolean;
+    actualBetValue: number;
+    minimumRaise: number;
+}
+
+interface HandStageValidator {};
+interface BettingStageValidator {};
+interface TurnValidator {};
+interface ActionSelector {};
+interface PlayerActions {};
+
+interface Game {
+    playerManager: PlayerManager;
+    pot: Pot;
+    positionManager: PositionManager;
+    handStageValidator: HandStageValidator;
+    handStage: HandStage;
+    bettingStageValidator: BettingStageValidator;
+    bettingStage: BettingStage;
+    turnValidator: TurnValidator;
+    actionSelector: ActionSelector;
+    playerActions: PlayerActions;
+}
 
 const InputComponent = () => {
     const [text, setText] = useState('');
