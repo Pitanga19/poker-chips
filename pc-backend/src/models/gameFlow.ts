@@ -2,6 +2,7 @@ import { Game } from "./gameStages";
 import { Player } from "./chipHolders";
 import { BettingStageType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 import { loopArrayManager } from '../utils/arrayManager';
+import { ActionSelector } from "./playerActions";
 
 export class PositionManager {
     private _dealerIndex: number;
@@ -139,7 +140,6 @@ export class HandStageValidator {
 
     startHandStage(game: Game): void {
         const handStage = game.handStage;
-        const bettingStage = game.bettingStage;
         const bettingStageValidator = game.bettingStageValidator;
 
         handStage.clearStages();
@@ -222,16 +222,41 @@ export class TurnValidator {
         } else if (isPlaying && (mustEqualBet || isBigBlindWithoutActionInPreFlop)) {
             return TurnValidationType.GiveActions;
         } else {
-            return TurnValidationType.SkipPlayer;
+            return TurnValidationType.NextPlayer;
         }
     }
 
     endBettingStage (game: Game) {
         const handStage = game.handStage;
         const bettingStage = game.bettingStage;
+        const positionManager = game.positionManager;
+        const bettingStageValidator = game.bettingStageValidator;
 
         handStage.stagesPlayed.push(bettingStage.stage);
+        positionManager.updateNextStage();
+        bettingStageValidator.validate(game);
     }
 
-    
+    giveActions (game: Game) {
+        const actionSelector = game.actionSelector;
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+        const positionManager = game.positionManager;
+        const bettingStage = game.bettingStage;
+        const handStage = game.handStage;
+
+        const posibleActions = actionSelector.getOptions(playerList, positionManager, bettingStage, handStage);
+        // acá necesito ayuda para darle al front la lista de acciones posibles, la lista de jugadores y el position manager, para que el jugador que sea el turno seleccione de entre la lista su accion deseada
+        this.nextPlayer(game);
+    }
+
+    nextPlayer (game: Game) {
+        const positionManager = game.positionManager;
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+        const turnValidator = game.turnValidator;
+
+        positionManager.updateNextTurn(playerList);
+        turnValidator.validate(game);
+    }
 }

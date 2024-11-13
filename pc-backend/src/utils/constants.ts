@@ -37,6 +37,6 @@ export enum BettingStageValidationType {
 
 export enum TurnValidationType {
     GiveActions = 'giveActions',
-    SkipPlayer = 'nextTurn',
+    NextPlayer = 'nextPlayer',
     EndBettingStage = 'finishRound'
 }
