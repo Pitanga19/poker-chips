@@ -38,6 +38,13 @@ const styles = StyleSheet.create({
         padding: 10,
     },
 
+    button: {
+        borderWidth: 2,
+        borderColor: '#fff',
+        margin: 10,
+        padding: 10,
+    },
+
     actionContainer: {
         borderWidth: 2,
         borderColor: '#fff',

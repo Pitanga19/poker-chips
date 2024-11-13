@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Alert, View, Text, FlatList, TextInput, Pressable } from 'react-native';
-import styles from './PlayerSettingScreen.styles';
+import styles from './styles';
 
 const PORT = 3000;
 const IP = 'localhost';

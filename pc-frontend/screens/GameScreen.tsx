@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TextInput, Pressable } from 'react-native';
-import styles from './GameScreen.styles';
+import styles from './styles';
 
 // models interfaces
 interface Player { id: string; chips: number; pendingChips: number; isPlaying: boolean; isDealer: boolean; isTurn: boolean; isWinner: boolean }
