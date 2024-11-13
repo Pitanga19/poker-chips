@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { Game } from './models/gameStages';
 
 const app = express();
 const PORT = 3000;
@@ -8,8 +9,12 @@ const IP = 'localhost';
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('¡Welcome to Poker Chips!');
+let currentGame: Game | null = null;
+
+app.post('/api/newGame', (req, res) => {
+    currentGame = new Game();
+    console.log('New game created:', currentGame);
+    res.status(201).json({ message: 'New game created successfully', game: currentGame.toJSON() });
 });
 
 app.post('/api/playerList', (req, res) => {
