@@ -8,8 +8,17 @@ import { useNavigation } from '@react-navigation/native';
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
 
 // models interfaces
-interface Player { id: string; chips: number; pendingChips: number; isPlaying: boolean; isDealer: boolean; isTurn: boolean; isWinner: boolean }
-interface Pot { chips: number; pendingChips: number; winnersCount: number }
+interface Player {
+    id: string;
+    chips: number;
+    pendingChips: number;
+    isPlaying: boolean;
+};
+
+interface Pot {
+    chips: number;
+    pendingChips: number;
+};
 
 const InputComponent = () => {
     const [text, setText] = useState('');
@@ -47,7 +56,7 @@ const renderItem = ( {item }: {item: Player} ) => (
 const GameScreen = () => {
     // fetch values
     const [players, setPlayers] = useState<Player[]>([]);
-    const [pot, setPot] = useState<Pot>({ chips: 0, pendingChips: 0, winnersCount: 0 });
+    const [pot, setPot] = useState<Pot>({ chips: 0, pendingChips: 0});
 
     useEffect(() => {
         // Fetch players
