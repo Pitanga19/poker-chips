@@ -58,7 +58,10 @@ app.post('/api/playerAction', (req: Request, res: Response) => {
     if (!currentGame) {
         res.status(404).json({ message: 'No active game found.' });
     } else {
+        console.log('Received body:', req.body);
         const { action, amount } = req.body;
+        console.log('Received action:', action);
+        console.log('Received amount:',amount);
         const playerActions = currentGame.playerActions;
         const playerList = currentGame.playerManager.playerList;
         const positionManager = currentGame.positionManager;
@@ -98,6 +101,7 @@ app.post('/api/playerAction', (req: Request, res: Response) => {
                 break;
             default:
                 res.status(400).json({ message: 'Invalid action specified.' });
+                return;
         };
 
         res.status(200).json({ updatedGame: currentGame });
