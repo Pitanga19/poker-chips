@@ -74,6 +74,7 @@ const GameScreen = () => {
     const [playerList, setPlayerList] = useState<Player[]>([]);
     const [positionManager, setPositionManager] = useState<PositionManager | null>(null);
     const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([]);
+    const [amount, setAmount] = useState<string>('');
 
     useEffect(() => {
         fetch(`http://${IP}:${PORT}/api/currentGame`)
@@ -124,13 +125,12 @@ const GameScreen = () => {
     }
 
     const renderAction = ({ item }: {item: ActionType}) => {
-        const [amount, setAmount] = useState<string>('');
-        const handleAmountChange = (amount: string) => {setAmount(amount)};
-
         console.log('Rendering action:', item);
         const isBet = item === ActionType.Bet;
         const isRaise = item === ActionType.Raise;
 
+        const handleAmountChange = (amount: string) => {setAmount(amount)};
+        
         return (
             <View style={ styles.container }>
                 {(isBet || isRaise) && (
@@ -139,11 +139,11 @@ const GameScreen = () => {
                         placeholder="Player ID"
                         placeholderTextColor= {'#888'}
                         value={amount}
-                        onChangeText={setAmount}
+                        onChangeText={handleAmountChange}
                         keyboardType="numeric"
                     />
                 )}
-                <Pressable style={ styles.button }><Text>{item}</Text></Pressable>
+                <Pressable style={ styles.button }><Text style={ styles.mainText }>{item}</Text></Pressable>
             </View>
         )
     }
