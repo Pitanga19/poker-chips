@@ -4,7 +4,12 @@ import { HandStage, BettingStage } from './gameStages';
 import { ActionType, BettingStageType } from '../utils/constants';
 
 export class ActionSelector {
-    getOptions(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, handStage:HandStage): ActionType[] {
+    getOptions(
+        playerList: Player[],
+        positionManager: PositionManager,
+        bettingStage: BettingStage,
+        handStage:HandStage
+    ): ActionType[] {
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         const isPreFlop = bettingStage.stage === BettingStageType.PreFlop;
         const isSmallBlind = positionManager.turnIndex == positionManager.smallBlindIndex;

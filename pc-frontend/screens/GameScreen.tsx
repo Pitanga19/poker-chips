@@ -4,7 +4,7 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
-import { IP, PORT } from '../constants/constants';
+import { IP, PORT, ActionType } from '../constants/constants';
 
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
 
@@ -69,8 +69,11 @@ interface Game {
 const GameScreen = () => {
     // fetch values
     const [game, setGame] = useState<Game | null>(null);
-    const [playerList, setPlayerList] = useState<Player[] | undefined>(undefined);
-    const [pot, setPot] = useState<Pot | undefined>(undefined);
+    const [pot, setPot] = useState<Pot | null>(null);
+    const [playerManager, setPlayerManager] = useState<PlayerManager | null>(null);
+    const [playerList, setPlayerList] = useState<Player[]>([]);
+    const [positionManager, setPositionManager] = useState<PositionManager | null>(null);
+    const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([]);
 
     useEffect(() => {
         fetch(`http://${IP}:${PORT}/api/currentGame`)
@@ -78,14 +81,27 @@ const GameScreen = () => {
             .then(data => {
                 console.log('Game data received:', data);
                 setGame(data);
-                setPlayerList(data.playerManager?.playerList);
                 setPot(data.pot);
+                setPlayerManager(data.playerManager);
+                setPlayerList(data.playerManager?.playerList);
+                setPositionManager(data.positionManager);
             })
             .catch(error => console.error('Error fetching players:', error));
     }, []);
 
-    const renderItem = ({ item }: { item: Player}) => {
-        console.log('Rendering player:', item)
+    useEffect(() => {
+        fetch(`http://${IP}:${PORT}/api/currentAvalibleActions`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Avalible actions received:', data);
+                setAvalibleActions(data);
+            })
+            .catch(error => console.error('Error fetching players:', error));
+    },[]);
+
+    const renderPlayer = ({ item }: { item: Player}) => {
+        console.log('Rendering player:', item);
+        const isCurrentTurn = positionManager? item.id === playerManager?.playerList[positionManager.turnIndex].id : -1;
         return (
             <View style={ styles.container }>
                 <View style={ styles.container }>
@@ -94,18 +110,24 @@ const GameScreen = () => {
                     <Text style={ styles.mainText }>Chips: {item.chips}</Text>
                     <Text style={ styles.mainText }>Pending chips: {item.pendingChips}</Text>
                 </View>
-                <View style={ styles.container }>
-                    <Text style={ styles.mainText }>Avalible actions</Text>
-                    <TextInput
-                        style={ styles.input }
-                        placeholder='amount'
+                {isCurrentTurn && (
+                    <FlatList 
+                        data={ avalibleActions }
+                        renderItem={ renderAction }
+                        keyExtractor={ (item) => item }
+                        style={ styles.listContainer }
                     />
-                    <Pressable style={ styles.button }>Check</Pressable>
-                    <Pressable style={ styles.button }>Bet</Pressable>
-                    <Pressable style={ styles.button }>Call</Pressable>
-                    <Pressable style={ styles.button }>Raise</Pressable>
-                    <Pressable style={ styles.button }>Fold</Pressable>
-                </View>
+                    )
+                }
+            </View>
+        )
+    }
+
+    const renderAction = ({ item }: {item: ActionType}) => {
+        console.log('Rendering action:', item);
+        return (
+            <View style={ styles.container }>
+                <Pressable style={ styles.button }><Text>{item}</Text></Pressable>
             </View>
         )
     }
@@ -120,7 +142,7 @@ const GameScreen = () => {
                 <Text style={ styles.mainText }>Players</Text>
                 <FlatList
                     data={ playerList || [] }
-                    renderItem={ renderItem }
+                    renderItem={ renderPlayer }
                     keyExtractor={ (item) => item.id }
                     style={ styles.listContainer }
                 />
