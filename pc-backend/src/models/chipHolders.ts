@@ -113,6 +113,12 @@ export class PlayerManager {
         this._playerList = [];
     }
 
+    toJSON() {
+        return {
+            playerList: this._playerList,
+        }
+    }
+
     get playerList(): Player[] {
         return this._playerList;
     }
