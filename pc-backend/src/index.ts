@@ -29,14 +29,24 @@ app.post('/api/playerList', (req, res) => {
         currentGame.playerManager.playerList = playerList;
         console.log('Received player list:', playerList);
         currentGame.positionManager.initializePositions(playerList, -1);
-        console.log('Updated game data:', currentGame);
+        console.log('Updated positions:', currentGame.positionManager);
     };
     res.status(200).json({ message: 'Player list received successfully' });
 });
 
 app.get('/api/currentGame', (req, res) => {
-    if (currentGame && currentGame.playerManager) {
+    if (currentGame) {
         res.status(200).json(currentGame);
+    } else {
+        res.status(404).json({ message: 'No active game found.' });
+    }
+})
+
+app.get('/api/currentAvalibleActions', (req, res) => {
+    if (currentGame) {
+        const avalibleActions = currentGame.actionSelector.getOptions(currentGame.playerManager.playerList, currentGame.positionManager, currentGame.bettingStage, currentGame.handStage);
+        console.log('Updated avalible actions:', avalibleActions)
+        res.status(200).json(avalibleActions);
     } else {
         res.status(404).json({ message: 'No active game found.' });
     }
