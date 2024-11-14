@@ -101,7 +101,7 @@ const GameScreen = () => {
 
     const renderPlayer = ({ item }: { item: Player}) => {
         console.log('Rendering player:', item);
-        const isCurrentTurn = positionManager? item.id === playerManager?.playerList[positionManager.turnIndex].id : -1;
+        const isCurrentTurn = positionManager? item.id === playerManager?.playerList[positionManager.turnIndex].id : null;
         return (
             <View style={ styles.container }>
                 <View style={ styles.container }>
@@ -124,9 +124,25 @@ const GameScreen = () => {
     }
 
     const renderAction = ({ item }: {item: ActionType}) => {
+        const [amount, setAmount] = useState<string>('');
+        const handleAmountChange = (amount: string) => {setAmount(amount)};
+
         console.log('Rendering action:', item);
+        const isBet = item === ActionType.Bet;
+        const isRaise = item === ActionType.Raise;
+
         return (
             <View style={ styles.container }>
+                {(isBet || isRaise) && (
+                    <TextInput
+                        style={ styles.input }
+                        placeholder="Player ID"
+                        placeholderTextColor= {'#888'}
+                        value={amount}
+                        onChangeText={setAmount}
+                        keyboardType="numeric"
+                    />
+                )}
                 <Pressable style={ styles.button }><Text>{item}</Text></Pressable>
             </View>
         )

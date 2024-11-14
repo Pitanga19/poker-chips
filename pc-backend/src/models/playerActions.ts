@@ -42,13 +42,13 @@ export class ActionSelector {
 }
 
 export class PlayerActions {
-    putSmallBlind(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, handStage: HandStage): void {
+    putSmallBlind(playerList: Player[], positionManager: PositionManager, handStage: HandStage): void {
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         currentPlayer.prepareChips(handStage.smallBlindValue);
         positionManager.updateNextTurn(playerList);
     }
     
-    putBigBlind(playerList: Player[], positionManager: PositionManager, bettingStage: BettingStage, handStage: HandStage): void {
+    putBigBlind(playerList: Player[], positionManager: PositionManager, handStage: HandStage): void {
         const currentPlayer: Player = playerList[positionManager.turnIndex];
 
         currentPlayer.prepareChips(handStage.bigBlindValue);
