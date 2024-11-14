@@ -2,8 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, SafeAreaView, Platform, StatusBar as RNStatusBar } from 'react-native';
 // import screens:
 import AppNavigator from './navigation/AppNavigator';
-export const PORT = 3000;
-export const IP = 'localhost';
 
 export default function App() {
   return (
