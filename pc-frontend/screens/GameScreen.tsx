@@ -121,8 +121,42 @@ const GameScreen = () => {
                     )
                 }
             </View>
-        )
-    }
+        );
+    };
+
+    const handleActionPress = async (action: ActionType) => {
+        console.log('Sending action:', action);
+        const isBet = action === ActionType.Bet;
+        const isRaise = action === ActionType.Raise;
+
+        const payload = {
+            action: action,
+            amount: isBet || isRaise ? parseInt(amount) : undefined
+        }
+
+        try {
+            const response = await fetch(`http://${IP}:${PORT}/api/playerAction`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (data.message) {
+                console.error('Action error:', data.message);
+            } else {
+                console.log('Action result:', data);
+                setGame(data.updatedGame);
+            }
+            setAmount('');
+        } catch(error) {
+            console.error('Error processing action:', error);
+        }
+    };
 
     const renderAction = ({ item }: {item: ActionType}) => {
         console.log('Rendering action:', item);
@@ -143,10 +177,12 @@ const GameScreen = () => {
                         keyboardType="numeric"
                     />
                 )}
-                <Pressable style={ styles.button }><Text style={ styles.mainText }>{item}</Text></Pressable>
+                <Pressable style={ styles.button } onPress={ () => handleActionPress(item) }>
+                    <Text style={ styles.mainText }>{item}</Text>
+                </Pressable>
             </View>
-        )
-    }
+        );
+    };
 
     return (
         <View style={ styles.main }>
