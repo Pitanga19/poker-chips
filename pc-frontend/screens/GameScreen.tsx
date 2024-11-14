@@ -69,11 +69,23 @@ interface Game {
 const GameScreen = () => {
     // fetch values
     const [game, setGame] = useState<Game | null>(null);
-    const playerManager = game?.playerManager;
-    const playerList = playerManager?.playerList;
-    const pot = game?.pot;
+    const [playerList, setPlayerList] = useState<Player[] | undefined>(undefined);
+    const [pot, setPot] = useState<Pot | undefined>(undefined);
+
+    useEffect(() => {
+        fetch(`http://${IP}:${PORT}/api/currentGame`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Game data received:', data);
+                setGame(data);
+                setPlayerList(data.playerManager?.playerList);
+                setPot(data.pot);
+            })
+            .catch(error => console.error('Error fetching players:', error));
+    }, []);
 
     const renderItem = ({ item }: { item: Player}) => {
+        console.log('Rendering player:', item)
         return (
             <View style={ styles.container }>
                 <View style={ styles.container }>
@@ -88,18 +100,15 @@ const GameScreen = () => {
                         style={ styles.input }
                         placeholder='amount'
                     />
+                    <Pressable style={ styles.button }>Check</Pressable>
+                    <Pressable style={ styles.button }>Bet</Pressable>
+                    <Pressable style={ styles.button }>Call</Pressable>
+                    <Pressable style={ styles.button }>Raise</Pressable>
+                    <Pressable style={ styles.button }>Fold</Pressable>
                 </View>
             </View>
         )
     }
-
-    useEffect(() => {
-        // Fetch game
-        fetch(`http://${IP}:${PORT}/api/currentGame`)
-            .then(response => response.json())
-            .then(data => setGame(data))
-            .catch(error => console.error('Error fetching players:', error));
-    }, []);
 
     return (
         <View style={ styles.main }>
@@ -110,7 +119,7 @@ const GameScreen = () => {
             <View style={ styles.container }>
                 <Text style={ styles.mainText }>Players</Text>
                 <FlatList
-                    data={ playerList }
+                    data={ playerList || [] }
                     renderItem={ renderItem }
                     keyExtractor={ (item) => item.id }
                     style={ styles.listContainer }
