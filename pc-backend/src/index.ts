@@ -2,8 +2,7 @@ import express, {Request, Response} from 'express';
 import cors from 'cors';
 import { Game } from './models/gameStages';
 import { Player } from './models/chipHolders';
-import { ActionType } from './utils/constants';
-import { PlayerActions } from './models/playerActions';
+import { ActionType, BettingStageType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "./utils/constants";
 
 const app = express();
 const PORT = 3000;
@@ -18,9 +17,6 @@ app.post('/api/newGame', (req: Request, res: Response) => {
     currentGame = new Game();
     const {bigBlindValue} = req.body
     currentGame.handStage.defineBlindsValues(bigBlindValue);
-
-    console.log('New game created:', currentGame);
-    console.log('Big blind value received:', bigBlindValue);
     
     res.status(201).json({ message: 'New game created successfully', game: currentGame.toJSON() });
 });
@@ -29,32 +25,58 @@ app.post('/api/playerList', (req: Request, res: Response) => {
     const playerReq = req.body;
     const playerList: Player[] = [];
 
-    for (let p of playerReq) {
-        const newPlayer = new Player(p.id, p.chips);
-        playerList.push(newPlayer);
-    };
-
-    if (!Array.isArray(playerList) || playerList.length === 0) {
+    if (!Array.isArray(playerList) || playerList.length <= 1) {
         res.status(400).json({ message: 'Invalid player list' });
         return;
     };
 
+    for (let player of playerReq) {
+        const newPlayer = new Player(player.id, player.chips);
+        playerList.push(newPlayer);
+    };
+
     if (currentGame instanceof Game) {
         currentGame.playerManager.playerList = playerList;
-        console.log('Received player list:', playerList);
         currentGame.positionManager.initializePositions(playerList, -1);
         console.log('Updated positions:', currentGame.positionManager);
     };
-    res.status(200).json({ message: 'Player list received successfully' });
+
+    res.status(200).json({ message: 'Player list received successfully', playerList: currentGame?.playerManager.playerList });
 });
 
 app.get('/api/currentGame', (req: Request, res: Response) => {
     if (currentGame) {
+        console.log('Validating hand ...');
+        const handValidation: HandStageValidationType = currentGame.handStageValidator.validate(currentGame);
+        if (handValidation === HandStageValidationType.EndGame) {
+            currentGame.handStageValidator.endGame(currentGame);
+        } else if (handValidation === HandStageValidationType.StartHandStage) {
+            currentGame.handStageValidator.startHandStage(currentGame);
+        }
+
+        console.log('Validating betting stage');
+        const bettingStageValidation: BettingStageValidationType = currentGame.bettingStageValidator.validate(currentGame);
+        if (bettingStageValidation === BettingStageValidationType.EndHandStage) {
+            currentGame.bettingStageValidator.endHand(currentGame);
+        } else if (bettingStageValidation === BettingStageValidationType.StartBettingStage) {
+            currentGame.bettingStageValidator.startBettingStage(currentGame);
+        }
+
+        console.log('Validating turn');
+        const turnValidation: TurnValidationType = currentGame.turnValidator.validate(currentGame);
+        if (turnValidation === TurnValidationType.EndBettingStage) {
+            currentGame.turnValidator.endBettingStage(currentGame);
+        } else if (turnValidation === TurnValidationType.GiveActions) {
+            currentGame.turnValidator.giveActions(currentGame);
+        } else if (turnValidation === TurnValidationType.NextPlayer) {
+            currentGame.turnValidator.nextPlayer(currentGame);
+        }
+
         res.status(200).json(currentGame);
     } else {
         res.status(404).json({ message: 'No active game found.' });
-    }
-})
+    };
+});
 
 app.get('/api/currentAvalibleActions', (req: Request, res: Response) => {
     if (currentGame) {
@@ -63,8 +85,8 @@ app.get('/api/currentAvalibleActions', (req: Request, res: Response) => {
         res.status(200).json(avalibleActions);
     } else {
         res.status(404).json({ message: 'No active game found.' });
-    }
-})
+    };
+});
 
 app.post('/api/playerAction', (req: Request, res: Response) => {
     if (!currentGame) {
@@ -77,8 +99,6 @@ app.post('/api/playerAction', (req: Request, res: Response) => {
         const playerActions = currentGame.playerActions;
         const playerList = currentGame.playerManager.playerList;
         const positionManager = currentGame.positionManager;
-        const handStage = currentGame.handStage;
-        const bettingStage = currentGame.bettingStage;
 
         switch (action) {
             case ActionType.Bet:
