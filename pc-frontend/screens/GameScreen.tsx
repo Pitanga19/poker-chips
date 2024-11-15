@@ -76,29 +76,38 @@ const GameScreen = () => {
     const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([]);
     const [amount, setAmount] = useState<string>('');
 
-    useEffect(() => {
-        fetch(`http://${IP}:${PORT}/api/currentGame`)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Game data received:', data);
-                setGame(data);
-                setPot(data.pot);
-                setPlayerManager(data.playerManager);
-                setPlayerList(data.playerManager?.playerList);
-                setPositionManager(data.positionManager);
-            })
-            .catch(error => console.error('Error fetching players:', error));
-    }, []);
+    const fetchGameData = async () => {
+        try {
+            const response = await fetch(`http://${IP}:${PORT}/api/currentGame`);
+            const data = await response.json();
+
+            console.log('Game data received:', data);
+            setGame(data);
+            setPot(data.pot);
+            setPlayerManager(data.playerManager);
+            setPlayerList(data.playerManager?.playerList);
+            setPositionManager(data.positionManager);
+        } catch (error) {
+            console.error('Error fetching game:', error);
+        };
+    };
+
+    const fetchAvalibleActions = async () => {
+        try {
+            const response = await fetch(`http://${IP}:${PORT}/api/currentAvalibleActions`);
+            const data = await response.json();
+
+            console.log('Avalible actions received:', data);
+            setAvalibleActions(data);
+        } catch (error) {
+            console.error('Error fetching avalible actions:', error);
+        }
+    }
 
     useEffect(() => {
-        fetch(`http://${IP}:${PORT}/api/currentAvalibleActions`)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Avalible actions received:', data);
-                setAvalibleActions(data);
-            })
-            .catch(error => console.error('Error fetching players:', error));
-    },[]);
+        fetchGameData();
+        fetchAvalibleActions();
+    }, []);
 
     const renderPlayer = ({ item }: { item: Player}) => {
         console.log('Rendering player:', item);
@@ -151,6 +160,9 @@ const GameScreen = () => {
             } else {
                 console.log('Action result:', data);
                 setGame(data.updatedGame);
+
+                fetchGameData();
+                fetchAvalibleActions();
             }
             setAmount('');
         } catch(error) {
