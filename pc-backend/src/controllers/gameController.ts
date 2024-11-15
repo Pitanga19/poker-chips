@@ -16,7 +16,7 @@ export const playerList = (req: Request, res: Response) => {
     const playerReq = req.body;
     const playerList: Player[] = [];
 
-    if (!Array.isArray(playerList) || playerList.length <= 1) {
+    if (!Array.isArray(playerReq) || playerReq.length <= 1) {
         res.status(400).json({ message: 'Invalid player list' });
         return;
     };
