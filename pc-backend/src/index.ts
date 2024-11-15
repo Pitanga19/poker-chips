@@ -1,6 +1,7 @@
 import express, {Request, Response} from 'express';
 import cors from 'cors';
 import { Game } from './models/gameStages';
+import { Player } from './models/chipHolders';
 import { ActionType } from './utils/constants';
 import { PlayerActions } from './models/playerActions';
 
@@ -16,22 +17,27 @@ let currentGame: Game | null = null;
 app.post('/api/newGame', (req: Request, res: Response) => {
     currentGame = new Game();
     const {bigBlindValue} = req.body
+    currentGame.handStage.defineBlindsValues(bigBlindValue);
 
     console.log('New game created:', currentGame);
     console.log('Big blind value received:', bigBlindValue);
-
-    currentGame.handStage.defineBlindsValues(bigBlindValue);
     
     res.status(201).json({ message: 'New game created successfully', game: currentGame.toJSON() });
 });
 
 app.post('/api/playerList', (req: Request, res: Response) => {
-    const playerList = req.body;
+    const playerReq = req.body;
+    const playerList: Player[] = [];
+
+    for (let p of playerReq) {
+        const newPlayer = new Player(p.id, p.chips);
+        playerList.push(newPlayer);
+    };
 
     if (!Array.isArray(playerList) || playerList.length === 0) {
         res.status(400).json({ message: 'Invalid player list' });
         return;
-    }
+    };
 
     if (currentGame instanceof Game) {
         currentGame.playerManager.playerList = playerList;

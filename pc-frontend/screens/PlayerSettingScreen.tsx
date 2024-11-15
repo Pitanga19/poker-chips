@@ -65,7 +65,7 @@ const PlayerSettingScreen = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(playerList,)
+                body: JSON.stringify(playerList)
             });
 
             if (!response.ok) {
