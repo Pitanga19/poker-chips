@@ -82,34 +82,44 @@ app.post('/api/playerAction', (req: Request, res: Response) => {
 
         switch (action) {
             case ActionType.Bet:
-                playerActions.bet(playerList, positionManager, bettingStage, handStage, amount)
+                playerActions.bet(playerList, positionManager, bettingStage, handStage, amount);
+                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Call:
-                playerActions.call(playerList, positionManager, bettingStage)
+                playerActions.call(playerList, positionManager, bettingStage);
+                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Check:
-                playerActions.check(playerList, positionManager)
+                playerActions.check(playerList, positionManager);
+                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.CheckBigBlind:
-                playerActions.checkBigBlind(playerList, positionManager, bettingStage)
+                playerActions.checkBigBlind(playerList, positionManager, bettingStage);
+                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.CheckSmallBlind:
-                playerActions.checkSmallBlind(playerList, positionManager, bettingStage)
+                playerActions.checkSmallBlind(playerList, positionManager, bettingStage);
+                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Fold:
-                playerActions.fold(playerList, positionManager)
+                playerActions.fold(playerList, positionManager);
+                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.MustAllIn:
-                playerActions.mustAllIn(playerList, positionManager)
+                playerActions.mustAllIn(playerList, positionManager);
+                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.PutBigBlind:
-                playerActions.putBigBlind(playerList, positionManager, handStage)
+                playerActions.putBigBlind(playerList, positionManager, handStage);
+                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.PutSmallBlind:
-                playerActions.putSmallBlind(playerList, positionManager, handStage)
+                playerActions.putSmallBlind(playerList, positionManager, handStage);
+                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Raise:
-                playerActions.raise(playerList, positionManager, bettingStage, amount)
+                playerActions.raise(playerList, positionManager, bettingStage, amount);
+                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             default:
                 res.status(400).json({ message: 'Invalid action specified.' });
