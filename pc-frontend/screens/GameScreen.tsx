@@ -170,7 +170,7 @@ const GameScreen = () => {
                 {(isBet || isRaise) && (
                     <TextInput
                         style={ styles.input }
-                        placeholder="Player ID"
+                        placeholder="amount"
                         placeholderTextColor= {'#888'}
                         value={amount}
                         onChangeText={handleAmountChange}
