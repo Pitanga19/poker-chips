@@ -15,7 +15,13 @@ let currentGame: Game | null = null;
 
 app.post('/api/newGame', (req: Request, res: Response) => {
     currentGame = new Game();
+    const {bigBlindValue} = req.body
+
     console.log('New game created:', currentGame);
+    console.log('Big blind value received:', bigBlindValue);
+
+    currentGame.handStage.defineBlindsValues(bigBlindValue);
+    
     res.status(201).json({ message: 'New game created successfully', game: currentGame.toJSON() });
 });
 
