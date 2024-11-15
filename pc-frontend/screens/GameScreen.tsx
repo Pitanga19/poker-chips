@@ -9,12 +9,6 @@ import { IP, PORT, ActionType } from '../constants/constants';
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
 
 // models interfaces
-enum BettingStageType {
-    PreFlop = 'preFlop',
-    Flop = 'flop',
-    Turn = 'turn',
-    River = 'river'
-}
 interface Player {
     id: string;
     chips: number;
@@ -36,39 +30,9 @@ interface PositionManager {
     raiserIndex: number;
     winnersIndex: number[];
 }
-interface HandStage {
-    smallBlindValue: number;
-    bigBlindValue: number;
-    stagesPlayed: BettingStageType[];
-}
-interface BettingStage {
-    stage: BettingStageType;
-    doSmallBlindCheck: boolean;
-    doBigBlindCheck: boolean;
-    actualBetValue: number;
-    minimumRaise: number;
-}
-interface HandStageValidator {};
-interface BettingStageValidator {};
-interface TurnValidator {};
-interface ActionSelector {};
-interface PlayerActions {};
-interface Game {
-    playerManager: PlayerManager;
-    pot: Pot;
-    positionManager: PositionManager;
-    handStageValidator: HandStageValidator;
-    handStage: HandStage;
-    bettingStageValidator: BettingStageValidator;
-    bettingStage: BettingStage;
-    turnValidator: TurnValidator;
-    actionSelector: ActionSelector;
-    playerActions: PlayerActions;
-}
 
 const GameScreen = () => {
     // fetch values
-    const [game, setGame] = useState<Game | null>(null);
     const [pot, setPot] = useState<Pot | null>(null);
     const [playerManager, setPlayerManager] = useState<PlayerManager | null>(null);
     const [playerList, setPlayerList] = useState<Player[]>([]);
@@ -82,7 +46,6 @@ const GameScreen = () => {
             const data = await response.json();
 
             console.log('Game data received:', data);
-            setGame(data);
             setPot(data.pot);
             setPlayerManager(data.playerManager);
             setPlayerList(data.playerManager?.playerList);
@@ -92,21 +55,8 @@ const GameScreen = () => {
         };
     };
 
-    const fetchAvalibleActions = async () => {
-        try {
-            const response = await fetch(`http://${IP}:${PORT}/api/currentAvalibleActions`);
-            const data = await response.json();
-
-            console.log('Avalible actions received:', data);
-            setAvalibleActions(data);
-        } catch (error) {
-            console.error('Error fetching avalible actions:', error);
-        }
-    }
-
     useEffect(() => {
         fetchGameData();
-        fetchAvalibleActions();
     }, []);
 
     const renderPlayer = ({ item }: { item: Player}) => {
@@ -159,10 +109,8 @@ const GameScreen = () => {
                 console.error('Action error:', data.message);
             } else {
                 console.log('Action result:', data);
-                setGame(data.updatedGame);
 
                 fetchGameData();
-                fetchAvalibleActions();
             }
             setAmount('');
         } catch(error) {
