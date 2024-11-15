@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Game } from '../models/gameStages';
 import { Player } from '../models/chipHolders';
-import { ActionType, BettingStageType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
+import { ActionType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 
 let currentGame: Game | null = null;
 

@@ -59,6 +59,11 @@ const PlayerSettingScreen = () => {
             return;
         }
 
+        if (isNaN(parseInt(startingChips)) || parseInt(startingChips) <= 0) {
+            Alert.alert('¡Invalid value!', 'Starting chips must be a positive number.');
+            return;
+        }
+
         try {
             const response = await fetch(`http://${IP}:${PORT}/api/playerList`, {
                 method: 'POST',
