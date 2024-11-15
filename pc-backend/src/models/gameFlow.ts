@@ -245,7 +245,7 @@ export class TurnValidator {
         const bettingStage = game.bettingStage;
         const handStage = game.handStage;
 
-        const posibleActions = actionSelector.getOptions(playerList, positionManager, bettingStage, handStage);
+        const posibleActions = actionSelector.getOptions(game);
         const turnData = {
             posibleActions: posibleActions,
             playerId: playerList[positionManager.turnIndex].id,

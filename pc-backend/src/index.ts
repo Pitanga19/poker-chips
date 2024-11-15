@@ -58,7 +58,7 @@ app.get('/api/currentGame', (req: Request, res: Response) => {
 
 app.get('/api/currentAvalibleActions', (req: Request, res: Response) => {
     if (currentGame) {
-        const avalibleActions = currentGame.actionSelector.getOptions(currentGame.playerManager.playerList, currentGame.positionManager, currentGame.bettingStage, currentGame.handStage);
+        const avalibleActions = currentGame.actionSelector.getOptions(currentGame);
         console.log('Updated avalible actions:', avalibleActions)
         res.status(200).json(avalibleActions);
     } else {
@@ -82,43 +82,43 @@ app.post('/api/playerAction', (req: Request, res: Response) => {
 
         switch (action) {
             case ActionType.Bet:
-                playerActions.bet(playerList, positionManager, bettingStage, handStage, amount);
+                playerActions.bet(currentGame, amount);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Call:
-                playerActions.call(playerList, positionManager, bettingStage);
+                playerActions.call(currentGame);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Check:
-                playerActions.check(playerList, positionManager);
+                playerActions.check(currentGame);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.CheckBigBlind:
-                playerActions.checkBigBlind(playerList, positionManager, bettingStage);
+                playerActions.checkBigBlind(currentGame);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.CheckSmallBlind:
-                playerActions.checkSmallBlind(playerList, positionManager, bettingStage);
+                playerActions.checkSmallBlind(currentGame);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Fold:
-                playerActions.fold(playerList, positionManager);
+                playerActions.fold(currentGame);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.MustAllIn:
-                playerActions.mustAllIn(playerList, positionManager);
+                playerActions.mustAllIn(currentGame);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.PutBigBlind:
-                playerActions.putBigBlind(playerList, positionManager, handStage);
+                playerActions.putBigBlind(currentGame);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.PutSmallBlind:
-                playerActions.putSmallBlind(playerList, positionManager, handStage);
+                playerActions.putSmallBlind(currentGame);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Raise:
-                playerActions.raise(playerList, positionManager, bettingStage, amount);
+                playerActions.raise(currentGame, amount);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             default:
