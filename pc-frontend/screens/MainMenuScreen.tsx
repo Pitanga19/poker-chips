@@ -10,11 +10,11 @@ type MainMenuScreenNavigationProp = NativeStackNavigationProp<RootStackParamList
 
 const MainMenuScreen = () => {
     const navigation = useNavigation<MainMenuScreenNavigationProp>();
-    const [bigBlindValue, setBigBlindValue] = useState<string>('');
+    const [bigBlindValue, setBigBlindValue] = useState<number>(0);
 
     const createNewGame = async () => {
         try {
-            if (bigBlindValue === '') throw new Error('Missing big blind value.');
+            if (bigBlindValue === 0) throw new Error('Missing big blind value.');
 
             const response = await fetch(`http://${IP}:${PORT}/api/newGame`, {
                 method: 'POST',
@@ -36,7 +36,7 @@ const MainMenuScreen = () => {
         }
     }
 
-    const handleBigBlindValue = (value: string) => { setBigBlindValue(value)};
+    const handleBigBlindValue = (value: string) => { setBigBlindValue(parseInt(value))};
 
     return (
         <View style={ styles.main }>
@@ -45,7 +45,7 @@ const MainMenuScreen = () => {
                     style={ styles.input }
                     placeholder="big blind value"
                     placeholderTextColor= {'#888'}
-                    value={ bigBlindValue }
+                    value={ bigBlindValue.toString() }
                     onChangeText={ handleBigBlindValue }
                     keyboardType="numeric"
                 />
