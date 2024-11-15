@@ -22,14 +22,18 @@ export class ChipHolder {
     }
 
     set chips(amount: number) {
+        if (amount < 0) throw new Error('Amount cannot be negative');
         this._chips = amount;
     }
 
     incrementChips(amount: number): void {
+        if (amount <= 0) throw new Error('Amount must be positive');
         this._chips += amount;
     }
 
     decrementChips(amount: number): void {
+        if (amount <= 0) throw new Error('Amount must be positive');
+        if (this._chips < amount) throw new Error('Not enough chips');
         this._chips -= amount;
     }
 
@@ -38,28 +42,36 @@ export class ChipHolder {
     }
 
     set pendingChips(amount: number) {
+        if (amount < 0) throw new Error('Amount cannot be negative');
         this._pendingChips = amount;
     }
 
     incrementPendingChips(amount: number): void {
+        if (amount <= 0) throw new Error('Amount must be positive');
         this._pendingChips += amount;
     }
 
     decrementPendingChips(amount: number): void {
+        if (amount <= 0) throw new Error('Amount must be positive');
+        if (this._pendingChips < amount) throw new Error('Not enough pending chips');
         this._pendingChips -= amount;
     }
 
     prepareChips(amount: number = this.chips): void {
+        if (amount < 0) throw new Error('Amount cannot be negative');
         this.incrementPendingChips(amount);
         this.decrementChips(amount);
     }
 
     refundChips(amount: number = this.chips): void {
+        if (amount < 0) throw new Error('Amount cannot be negative');
         this.incrementChips(amount);
         this.decrementPendingChips(amount);
     }
 
     transferChips(target: ChipHolder, amount: number = this.pendingChips): void {
+        if (amount < 0) throw new Error('Amount cannot be negative');
+        if (this._pendingChips < amount) throw new Error('Not enough pending chips to transfer');
         target.incrementChips(amount);
         this.decrementPendingChips(amount);
     }
