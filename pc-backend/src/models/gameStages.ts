@@ -148,6 +148,7 @@ export class HandStage {
     }
 
     set smallBlindValue(value: number) {
+        if (value >= this._bigBlindValue) throw new Error('Small Blind value must be smaller than Big Blind value');
         this._smallBlindValue = value;
     }
 
@@ -156,6 +157,7 @@ export class HandStage {
     }
 
     set bigBlindValue(value: number) {
+        if (value < 2) throw new Error('BigBlind value must be 2 or higher');
         this._bigBlindValue = value;
     }
 
@@ -172,6 +174,7 @@ export class HandStage {
     }
 
     defineBlindsValues(bigBlindValue: number) {
+        if (bigBlindValue < 2) throw new Error('BigBlind value must be 2 or higher');
         this._bigBlindValue = bigBlindValue;
         this._smallBlindValue = Math.floor(bigBlindValue / 2);
     }
@@ -250,7 +253,8 @@ export class BettingStage {
         this._minimumRaise = value;
     }
 
-    reset(handStage: HandStage): void {
+    reset(game: Game): void {
+        const handStage = game.handStage;
         const stagesPlayedCount = handStage.stagesPlayed.length;
         
         this._stage = BettingStageTypeList[stagesPlayedCount];

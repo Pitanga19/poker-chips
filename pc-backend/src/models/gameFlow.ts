@@ -182,10 +182,9 @@ export class BettingStageValidator {
 
     startBettingStage(game: Game) {
         const bettingStage = game.bettingStage;
-        const handStage = game.handStage;
         const turnValidator = game.turnValidator;
 
-        bettingStage.reset(handStage);
+        bettingStage.reset(game);
         turnValidator.validate(game);
     }
 }
