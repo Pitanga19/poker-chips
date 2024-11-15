@@ -130,10 +130,8 @@ export class HandStageValidator {
         const arePlaying = playerList.filter( p => p.isPlaying );
         const areManyPlaying = arePlaying.length > 1;
         if (areManyPlaying) {
-            this.startHandStage(game);
             return HandStageValidationType.StartHandStage;
         } else {
-            this.endGame(game);
             return HandStageValidationType.EndGame;
         }
     }
@@ -163,10 +161,8 @@ export class BettingStageValidator {
         const riverPlayed = handStage.stagesPlayed.length === 4;
 
         if (areWinners || riverPlayed) {
-            this.endHand(game);
             return BettingStageValidationType.EndHandStage;
         } else {
-            this.startBettingStage(game)
             return BettingStageValidationType.StartBettingStage;
         }
     }
@@ -242,8 +238,6 @@ export class TurnValidator {
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
-        const bettingStage = game.bettingStage;
-        const handStage = game.handStage;
 
         const posibleActions = actionSelector.getOptions(game);
         const turnData = {
