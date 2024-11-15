@@ -16,13 +16,18 @@ const MainMenuScreen = () => {
         try {
             if (bigBlindValue === 0) throw new Error('Missing big blind value.');
 
+            if (isNaN(bigBlindValue) || bigBlindValue <= 0) throw new Error('Big blind value must be a positive number.');
+
             const response = await fetch(`http://${IP}:${PORT}/api/newGame`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ bigBlindValue })
             });
 
-            if (!response.ok) throw new Error('Failed to create new game.');
+            if (!response.ok){
+                const errorData = await response.json();
+                throw new Error(errorData?.message || 'Failed to create new game.');
+            }
 
             const data = await response.json();
             console.log('New game created:', data);
