@@ -46,59 +46,72 @@ export const currentGame = (req: Request, res: Response) => {
     };
 };
 
-export const avalibleActionsValidation = (req: Request, res: Response) => {
+export const currentToExecuteValidator = (req: Request, res: Response) => {
     try {
         if (!game) {
             res.status(404).json({ message: 'No active game found.' });
         } else {
-            let whileCount = 0;
+            console.log('Current validator:', toExecuteValidator);
 
-            while (toExecuteValidator != toExecuteValidatorType.ActionSelector && whileCount < 15) {
-                console.log('Current validator:', toExecuteValidator);
-                whileCount++;
+            switch (toExecuteValidator) {
+                case toExecuteValidatorType.GameOver:
+                    console.log('Game over');
+                    break
+                    
+                case toExecuteValidatorType.HandStageValidator:
+                    const handStageValidation: HandStageValidationType = game.handStageValidator.validate(game);
+                    if (handStageValidation === HandStageValidationType.EndGame) {
+                        toExecuteValidator = game.handStageValidator.endGame(game);
+                    } else if (handStageValidation === HandStageValidationType.StartHandStage) {
+                        toExecuteValidator = game.handStageValidator.startHandStage(game);
+                    }
+                    break
 
-                switch (toExecuteValidator) {
-                    case toExecuteValidatorType.GameOver:
-                        console.log('Game over');
-                        break
-                        
-                    case toExecuteValidatorType.HandStageValidator:
-                        const handStageValidation: HandStageValidationType = game.handStageValidator.validate(game);
-                        if (handStageValidation === HandStageValidationType.EndGame) {
-                            toExecuteValidator = game.handStageValidator.endGame(game);
-                        } else if (handStageValidation === HandStageValidationType.StartHandStage) {
-                            toExecuteValidator = game.handStageValidator.startHandStage(game);
-                        }
-                        break
+                case toExecuteValidatorType.BettingStageValidator:
+                    const bettingStageValidation: BettingStageValidationType = game.bettingStageValidator.validate(game);if (bettingStageValidation === BettingStageValidationType.EndHandStage) {
+                        toExecuteValidator = game.bettingStageValidator.endHand(game);
+                    } else if (bettingStageValidation === BettingStageValidationType.StartBettingStage) {
+                        toExecuteValidator = game.bettingStageValidator.startBettingStage(game);
+                    }
+                    break
 
-                    case toExecuteValidatorType.BettingStageValidator:
-                        const bettingStageValidation: BettingStageValidationType = game.bettingStageValidator.validate(game);if (bettingStageValidation === BettingStageValidationType.EndHandStage) {
-                            toExecuteValidator = game.bettingStageValidator.endHand(game);
-                        } else if (bettingStageValidation === BettingStageValidationType.StartBettingStage) {
-                            toExecuteValidator = game.bettingStageValidator.startBettingStage(game);
-                        }
-                        break
+                case toExecuteValidatorType.TurnValidator:
+                    const turnValidation: TurnValidationType = game.turnValidator.validate(game);
+                    if (turnValidation === TurnValidationType.EndBettingStage) {
+                        toExecuteValidator = game.turnValidator.endBettingStage(game);
+                    } else if (turnValidation === TurnValidationType.NextPlayer) {
+                        toExecuteValidator = game.turnValidator.nextPlayer(game);
+                    } else if (turnValidation === TurnValidationType.GiveActions) {
+                        toExecuteValidator = game.turnValidator.giveActions(game);
+                    }
+                    break
 
-                    case toExecuteValidatorType.TurnValidator:
-                        const turnValidation: TurnValidationType = game.turnValidator.validate(game);
-                        if (turnValidation === TurnValidationType.EndBettingStage) {
-                            toExecuteValidator = game.turnValidator.endBettingStage(game);
-                        } else if (turnValidation === TurnValidationType.NextPlayer) {
-                            toExecuteValidator = game.turnValidator.nextPlayer(game);
-                        } else if (turnValidation === TurnValidationType.GiveActions) {
-                            toExecuteValidator = game.turnValidator.giveActions(game);
-                        }
-                        break
-
-                    default:
-                        throw new Error('Unexpected validator type.');
-                };
+                default:
+                    throw new Error('Unexpected validator type.');
             };
 
+            console.log('Sending to execute validator:', toExecuteValidator)
+            res.status(200).json(toExecuteValidator);
+        };
+    } catch (error) {
+        console.error('Error processing toExecuteValidation:', error);
+        if (error instanceof Error) {
+            res.status(500).json({ message: 'Internal server error', error: error.message });
+        } else {
+            res.status(500).json({ message: 'Internal server error', error: 'Unknowd error.' });
+        };
+    };
+};
+
+export const avalibleActions = (req: Request, res: Response) => {
+    try {
+        if (!game) {
+            res.status(404).json({ message: 'No active game found.' });
+        } else {
             const avalibleActions = game.actionSelector.getOptions(game);
             console.log('Sending avalible actions:', avalibleActions)
             res.status(200).json(avalibleActions);
-        };
+        }
     } catch (error) {
         console.error('Error processing avalibleActionsValidation:', error);
         if (error instanceof Error) {
