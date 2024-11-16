@@ -4,6 +4,7 @@ import { Player } from '../models/chipHolders';
 import { ActionType, toExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 
 export let game: Game | null = null;
+export let toExecuteValidator: toExecuteValidatorType = toExecuteValidatorType.HandStageValidator;
 
 export const newGame = (req: Request, res: Response) => {
     game = new Game();
@@ -50,7 +51,6 @@ export const avalibleActionsValidation = (req: Request, res: Response) => {
         if (!game) {
             res.status(404).json({ message: 'No active game found.' });
         } else {
-            let toExecuteValidator: toExecuteValidatorType = toExecuteValidatorType.HandStageValidator;
             let whileCount = 0;
 
             while (toExecuteValidator != toExecuteValidatorType.ActionSelector && whileCount < 15) {
@@ -168,6 +168,7 @@ export const playerAction = (req: Request, res: Response) => {
                 return;
         };
 
+        toExecuteValidator = toExecuteValidatorType.TurnValidator;
         res.status(200).json({ updatedGame: game });
     };
 };
