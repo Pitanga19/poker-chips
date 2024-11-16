@@ -197,11 +197,17 @@ export class TurnValidator {
         const handStage = game.handStage;
         
         const arePlaying = playerList.filter(p => p.isPlaying);
-        const areEnoughPlaying = arePlaying.length > 1;
+        const arePlayingCount = arePlaying.length;
+        const areEnoughPlaying = arePlayingCount > 1;
         const isPlaying = currentPlayer.isPlaying;
+        const isRaiser = positionManager.turnIndex === positionManager.raiserIndex;
+        const doBBcheck = bettingStage.doBigBlindCheck;
+        const doEveryoneCheck = bettingStage.checkCount === arePlayingCount;
+        const doSomeoneBet = bettingStage.actualBetValue > 0;
+        const mustEqualBet = doSomeoneBet || currentPlayer.pendingChips < bettingStage.actualBetValue;
 
     
-        if (!areEnoughPlaying) {
+        if (!areEnoughPlaying || isRaiser || doBBcheck || doEveryoneCheck) {
             console.log('Ending betting stage.');
             return TurnValidationType.EndBettingStage;
         }
@@ -211,7 +217,7 @@ export class TurnValidator {
             return TurnValidationType.NextPlayer;
         }
     
-        if (isPlaying) {
+        if (isPlaying && ( !doSomeoneBet || mustEqualBet)) {
             console.log('Giving actions to current player.');
             return TurnValidationType.GiveActions;
         }

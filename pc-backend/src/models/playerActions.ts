@@ -97,7 +97,9 @@ export class PlayerActions {
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
+        const bettingStage = game.bettingStage;
 
+        bettingStage.checkCount += 1;
         positionManager.updateNextTurn(playerList);
     }
     
@@ -115,6 +117,7 @@ export class PlayerActions {
             positionManager.raiserIndex = positionManager.turnIndex;
             bettingStage.actualBetValue = amount;
             bettingStage.minimumRaise = amount * 2;
+            bettingStage.resetCheckCount();
             positionManager.updateNextTurn(playerList);
         } else {
             console.log('Invalid amount, bet must be equal or bigger than big blind.');
