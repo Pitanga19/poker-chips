@@ -1,6 +1,6 @@
 import { Game } from "./gameStages";
 import { Player } from "./chipHolders";
-import { BettingStageType, ExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
+import { BettingStageType, toExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 import { loopArrayManager } from '../utils/arrayManager';
 
 export class PositionManager {
@@ -136,19 +136,19 @@ export class HandStageValidator {
         }
     }
 
-    startHandStage(game: Game): ExecuteValidatorType {
+    startHandStage(game: Game): toExecuteValidatorType {
         const handStage = game.handStage;
 
         handStage.clearStages();
-        return ExecuteValidatorType.BettingStageValidator;
+        return toExecuteValidatorType.BettingStageValidator;
     }
 
-    endGame(game: Game): void {
+    endGame(game: Game): toExecuteValidatorType {
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
 
         playerList.forEach( p => p.stopPlaying() );
-        console.log('Game over');
+        return toExecuteValidatorType.GameOver;
     }
 }
 
@@ -167,7 +167,7 @@ export class BettingStageValidator {
         }
     }
 
-    endHand(game: Game): ExecuteValidatorType {
+    endHand(game: Game): toExecuteValidatorType {
         const pot = game.pot;
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
@@ -176,14 +176,14 @@ export class BettingStageValidator {
         pot.payWinners(playerList, positionManager);
         playerManager.resetIsPlaying();
         positionManager.updateNextHand(playerList);
-        return ExecuteValidatorType.HandStageValidator;
+        return toExecuteValidatorType.HandStageValidator;
     }
 
-    startBettingStage(game: Game):ExecuteValidatorType {
+    startBettingStage(game: Game):toExecuteValidatorType {
         const bettingStage = game.bettingStage;
 
         bettingStage.reset(game);
-        return ExecuteValidatorType.TurnValidator;
+        return toExecuteValidatorType.TurnValidator;
     }
 }
 
@@ -219,26 +219,26 @@ export class TurnValidator {
         }
     }
 
-    endBettingStage (game: Game): ExecuteValidatorType {
+    endBettingStage (game: Game): toExecuteValidatorType {
         const handStage = game.handStage;
         const bettingStage = game.bettingStage;
         const positionManager = game.positionManager;
 
         handStage.stagesPlayed.push(bettingStage.stage);
         positionManager.updateNextStage();
-        return ExecuteValidatorType.BettingStageValidator;
+        return toExecuteValidatorType.BettingStageValidator;
     }
 
-    giveActions (game: Game): ExecuteValidatorType {
-        return ExecuteValidatorType.actionSelector;
+    giveActions (game: Game): toExecuteValidatorType {
+        return toExecuteValidatorType.ActionSelector;
     }
 
-    nextPlayer (game: Game): ExecuteValidatorType {
+    nextPlayer (game: Game): toExecuteValidatorType {
         const positionManager = game.positionManager;
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
 
         positionManager.updateNextTurn(playerList);
-        return ExecuteValidatorType.TurnValidator;
+        return toExecuteValidatorType.TurnValidator;
     }
 }

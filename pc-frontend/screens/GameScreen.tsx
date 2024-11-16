@@ -37,7 +37,7 @@ const GameScreen = () => {
     const [playerManager, setPlayerManager] = useState<PlayerManager | null>(null);
     const [playerList, setPlayerList] = useState<Player[]>([]);
     const [positionManager, setPositionManager] = useState<PositionManager | null>(null);
-    const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([]);
+    const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([ActionType.Fold]);
     const [amount, setAmount] = useState<string>('');
 
     const fetchGameData = async () => {
@@ -46,7 +46,7 @@ const GameScreen = () => {
             const data = await response.json();
 
             console.log('Game data received:', data);
-            setPot(data.pot);
+            setPot(data);
             setPlayerManager(data.playerManager);
             setPlayerList(data.playerManager?.playerList);
             setPositionManager(data.positionManager);
@@ -55,8 +55,21 @@ const GameScreen = () => {
         };
     };
 
+    const fetchAvalibleActions = async () => {
+        try {
+            const response = await fetch(`http://${IP}:${PORT}/api/avalibleActionsValidation`);
+            const data = await response.json();
+
+            console.log('Avalible actions received:', data);
+            setAvalibleActions(data.pot);
+        } catch (error) {
+            console.error('Error fetching game:', error);
+        };
+    };
+
     useEffect(() => {
         fetchGameData();
+        fetchAvalibleActions();
     }, []);
 
     const renderPlayer = ({ item }: { item: Player}) => {

@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 import { Game } from '../models/gameStages';
 import { Player } from '../models/chipHolders';
-import { ActionType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
+import { ActionType, toExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 
-export let currentGame: Game | null = null;
+export let game: Game | null = null;
 
 export const newGame = (req: Request, res: Response) => {
-    currentGame = new Game();
+    game = new Game();
     const bigBlindValue = parseInt(req.body.bigBlindValue);
-    currentGame.handStage.defineBlindsValues(bigBlindValue);
-    res.status(201).json({ message: 'New game created successfully', game: currentGame.toJSON() });
+    game.handStage.defineBlindsValues(bigBlindValue);
+    res.status(201).json({ message: 'New game created successfully', game: game.toJSON() });
 };
 
 export const playerList = (req: Request, res: Response) => {
@@ -26,66 +26,139 @@ export const playerList = (req: Request, res: Response) => {
         return;
     };
 
-    if (currentGame instanceof Game) {
-        currentGame.playerManager.playerList = playerList;
-        currentGame.positionManager.initializePositions(playerList, -1);
-        console.log('Updated positions:', currentGame.positionManager);
+    if (game instanceof Game) {
+        game.playerManager.playerList = playerList;
+        game.positionManager.initializePositions(playerList, -1);
+        console.log('Updated positions:', game.positionManager);
     };
 
-    res.status(200).json({ message: 'Player list received successfully', playerList: currentGame?.playerManager.playerList });
+    res.status(200).json({ message: 'Player list received successfully', playerList: game?.playerManager.playerList });
+};
+
+export const currentGame = (req: Request, res: Response) => {
+    console.log('Game state before validation:', game);
+    if (!game) {
+        res.status(404).json({ message: 'No active game found.' });
+    } else {
+        const updatedGame = game.toJSON();
+        res.status(200).json(updatedGame);
+    };
+};
+
+export const avalibleActionsValidation = (req: Request, res: Response) => {
+    try {
+        if (!game) {
+            res.status(404).json({ message: 'No active game found.' });
+        } else {
+            let toExecuteValidator: toExecuteValidatorType = toExecuteValidatorType.HandStageValidator;
+            let whileCount = 0;
+
+            while (toExecuteValidator != toExecuteValidatorType.ActionSelector && whileCount < 5) {
+                console.log('Current validator:', toExecuteValidator);
+                switch (toExecuteValidator) {
+                    case toExecuteValidatorType.GameOver:
+                        console.log('Game over');
+                        break
+                        
+                    case toExecuteValidatorType.HandStageValidator:
+                        const handStageValidation: HandStageValidationType = game.handStageValidator.validate(game);
+                        if (handStageValidation === HandStageValidationType.EndGame) {
+                            toExecuteValidator = game.handStageValidator.endGame(game);
+                        } else if (handStageValidation === HandStageValidationType.StartHandStage) {
+                            toExecuteValidator = game.handStageValidator.startHandStage(game);
+                        }
+                        break
+
+                    case toExecuteValidatorType.BettingStageValidator:
+                        const bettingStageValidation: BettingStageValidationType = game.bettingStageValidator.validate(game);if (bettingStageValidation === BettingStageValidationType.EndHandStage) {
+                            toExecuteValidator = game.bettingStageValidator.endHand(game);
+                        } else if (bettingStageValidation === BettingStageValidationType.StartBettingStage) {
+                            toExecuteValidator = game.bettingStageValidator.startBettingStage(game);
+                        }
+                        break
+
+                    case toExecuteValidatorType.TurnValidator:
+                        const turnValidation: TurnValidationType = game.turnValidator.validate(game);
+                        if (turnValidation === TurnValidationType.EndBettingStage) {
+                            toExecuteValidator = game.turnValidator.endBettingStage(game);
+                        } else if (turnValidation === TurnValidationType.NextPlayer) {
+                            toExecuteValidator = game.turnValidator.nextPlayer(game);
+                            console.log('Turn validator: NextPlayer.')
+                            whileCount++;
+                        } else if (turnValidation === TurnValidationType.GiveActions) {
+                            toExecuteValidator = game.turnValidator.giveActions(game);
+                        }
+                        break
+
+                    default:
+                        throw new Error('Unexpected validator type.');
+                };
+            };
+
+            const avalibleActions = game.actionSelector.getOptions(game);
+            res.status(200).json(avalibleActions);
+        };
+    } catch (error) {
+        console.error('Error processing avalibleActionsValidation:', error);
+        if (error instanceof Error) {
+            res.status(500).json({ message: 'Internal server error', error: error.message });
+        } else {
+            res.status(500).json({ message: 'Internal server error', error: 'Unknowd error.' });
+        };
+    };
 };
 
 export const playerAction = (req: Request, res: Response) => {
-    if (!currentGame) {
+    if (!game) {
         res.status(404).json({ message: 'No active game found.' });
     } else {
         console.log('Received body:', req.body);
         const { action, amount } = req.body;
         console.log('Received action:', action);
         console.log('Received amount:',amount);
-        const playerActions = currentGame.playerActions;
-        const playerList = currentGame.playerManager.playerList;
-        const positionManager = currentGame.positionManager;
+        const playerActions = game.playerActions;
+        const playerList = game.playerManager.playerList;
+        const positionManager = game.positionManager;
 
         switch (action) {
             case ActionType.Bet:
-                playerActions.bet(currentGame, amount);
+                playerActions.bet(game, amount);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Call:
-                playerActions.call(currentGame);
+                playerActions.call(game);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Check:
-                playerActions.check(currentGame);
+                playerActions.check(game);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.CheckBigBlind:
-                playerActions.checkBigBlind(currentGame);
+                playerActions.checkBigBlind(game);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.CheckSmallBlind:
-                playerActions.checkSmallBlind(currentGame);
+                playerActions.checkSmallBlind(game);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Fold:
-                playerActions.fold(currentGame);
+                playerActions.fold(game);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.MustAllIn:
-                playerActions.mustAllIn(currentGame);
+                playerActions.mustAllIn(game);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.PutBigBlind:
-                playerActions.putBigBlind(currentGame);
+                playerActions.putBigBlind(game);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.PutSmallBlind:
-                playerActions.putSmallBlind(currentGame);
+                playerActions.putSmallBlind(game);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Raise:
-                playerActions.raise(currentGame, amount);
+                playerActions.raise(game, amount);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             default:
@@ -93,7 +166,7 @@ export const playerAction = (req: Request, res: Response) => {
                 return;
         };
 
-        res.status(200).json({ updatedGame: currentGame });
+        res.status(200).json({ updatedGame: game });
     };
 };
 

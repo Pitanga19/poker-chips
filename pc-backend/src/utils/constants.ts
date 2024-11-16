@@ -25,11 +25,12 @@ export const BettingStageTypeList: BettingStageType[] = [
     BettingStageType.River
 ];
 
-export enum ExecuteValidatorType {
+export enum toExecuteValidatorType {
     HandStageValidator = 'handStageValidator',
     BettingStageValidator = 'bettingStageValidator',
     TurnValidator = 'turnValidator',
-    actionSelector = 'actionSelector'
+    ActionSelector = 'actionSelector',
+    GameOver = 'gameOver'
 }
 
 export enum HandStageValidationType {
