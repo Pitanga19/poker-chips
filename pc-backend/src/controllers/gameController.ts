@@ -53,8 +53,10 @@ export const avalibleActionsValidation = (req: Request, res: Response) => {
             let toExecuteValidator: toExecuteValidatorType = toExecuteValidatorType.HandStageValidator;
             let whileCount = 0;
 
-            while (toExecuteValidator != toExecuteValidatorType.ActionSelector && whileCount < 5) {
+            while (toExecuteValidator != toExecuteValidatorType.ActionSelector && whileCount < 15) {
                 console.log('Current validator:', toExecuteValidator);
+                whileCount++;
+
                 switch (toExecuteValidator) {
                     case toExecuteValidatorType.GameOver:
                         console.log('Game over');
@@ -84,7 +86,6 @@ export const avalibleActionsValidation = (req: Request, res: Response) => {
                         } else if (turnValidation === TurnValidationType.NextPlayer) {
                             toExecuteValidator = game.turnValidator.nextPlayer(game);
                             console.log('Turn validator: NextPlayer.')
-                            whileCount++;
                         } else if (turnValidation === TurnValidationType.GiveActions) {
                             toExecuteValidator = game.turnValidator.giveActions(game);
                         }
@@ -96,6 +97,7 @@ export const avalibleActionsValidation = (req: Request, res: Response) => {
             };
 
             const avalibleActions = game.actionSelector.getOptions(game);
+            console.log('Sending avalible actions:', avalibleActions)
             res.status(200).json(avalibleActions);
         };
     } catch (error) {

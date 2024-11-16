@@ -192,31 +192,32 @@ export class TurnValidator {
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
+        const currentPlayer = playerList[positionManager.turnIndex]
         const bettingStage = game.bettingStage;
         const handStage = game.handStage;
-
-        const currentPlayer: Player = playerList[positionManager.turnIndex];
+        
         const arePlaying = playerList.filter(p => p.isPlaying);
-        const isAlone = arePlaying.length === 1;
-        const isRaiser = positionManager.turnIndex === positionManager.raiserIndex;
-        const doBigBlindCheck = bettingStage.doBigBlindCheck;
-        const doAllCheck = positionManager.turnIndex === positionManager.smallBlindIndex && bettingStage.doSmallBlindCheck;
-        const isEveryoneAllIn = arePlaying.filter(p => p.chips > 0).length == 1;
+        const areEnoughPlaying = arePlaying.length > 1;
         const isPlaying = currentPlayer.isPlaying;
-        const mustEqualBet = currentPlayer.pendingChips < bettingStage.actualBetValue;
-        const isBigBlindWithoutActionInPreFlop = (
-            positionManager.turnIndex === positionManager.bigBlindIndex &&
-            currentPlayer.pendingChips === handStage.bigBlindValue &&
-            bettingStage.stage === BettingStageType.PreFlop
-        );
 
-        if (isAlone || isRaiser || doBigBlindCheck || doAllCheck || isEveryoneAllIn) {
+    
+        if (!areEnoughPlaying) {
+            console.log('Ending betting stage.');
             return TurnValidationType.EndBettingStage;
-        } else if (isPlaying && (mustEqualBet || isBigBlindWithoutActionInPreFlop)) {
-            return TurnValidationType.GiveActions;
-        } else {
+        }
+    
+        if (!isPlaying) {
+            console.log('Skipping to next player.');
             return TurnValidationType.NextPlayer;
         }
+    
+        if (isPlaying) {
+            console.log('Giving actions to current player.');
+            return TurnValidationType.GiveActions;
+        }
+    
+        console.error('Unexpected state in TurnValidator.');
+        throw new Error('Unexpected state in TurnValidator');
     }
 
     endBettingStage (game: Game): toExecuteValidatorType {
