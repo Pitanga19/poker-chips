@@ -124,14 +124,14 @@ const GameScreen = () => {
                 console.error('Action error:', data.message);
             } else {
                 console.log('Action result:', data);
-
-                fetchGameData();
-                fetchAvalibleActions();
             }
             setAmount('');
         } catch(error) {
             console.error('Error processing action:', error);
-        }
+        };
+
+        console.log('Fetching update game after action press ...');
+        fetchUpdatedGame();
     };
 
     const renderAction = ({ item }: {item: ActionType}) => {
