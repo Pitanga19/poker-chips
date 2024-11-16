@@ -61,16 +61,18 @@ const GameScreen = () => {
             const data = await response.json();
 
             console.log('Avalible actions received:', data);
-            setAvalibleActions(data.pot);
+            setAvalibleActions(data);
         } catch (error) {
             console.error('Error fetching game:', error);
         };
     };
 
-    useEffect(() => {
+    const fetchUpdatedGame = () => {
         fetchGameData();
         fetchAvalibleActions();
-    }, []);
+    }
+
+    useEffect(() => { fetchUpdatedGame() }, []);
 
     const renderPlayer = ({ item }: { item: Player}) => {
         console.log('Rendering player:', item);
@@ -124,6 +126,7 @@ const GameScreen = () => {
                 console.log('Action result:', data);
 
                 fetchGameData();
+                fetchAvalibleActions();
             }
             setAmount('');
         } catch(error) {
