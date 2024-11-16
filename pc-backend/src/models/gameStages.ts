@@ -186,6 +186,7 @@ export class BettingStage {
     private _doBigBlindCheck: boolean;
     private _actualBetValue: number;
     private _minimumRaise: number;
+    private _checkCount: number;
 
     constructor() {
         this._stage = BettingStageType.PreFlop;
@@ -193,6 +194,7 @@ export class BettingStage {
         this._doBigBlindCheck = false;
         this._actualBetValue = 0;
         this._minimumRaise = 0;
+        this._checkCount = 0;
     }
 
     toJSON() {
@@ -201,7 +203,8 @@ export class BettingStage {
             doSmallBlindCheck: this.doSmallBlindCheck,
             doBigBlindCheck: this.doBigBlindCheck,
             actualBetValue: this._actualBetValue,
-            minimumRaise: this._minimumRaise
+            minimumRaise: this._minimumRaise,
+            checkCount: this._checkCount
         }
     }
     
@@ -251,6 +254,18 @@ export class BettingStage {
 
     set minimumRaise(value: number) {
         this._minimumRaise = value;
+    }
+
+    get checkCount(): number {
+        return this._checkCount;
+    }
+
+    set checkCount(value: number) {
+        this._checkCount = value;
+    }
+
+    resetCheckCount() {
+        this._checkCount = 0;
     }
 
     reset(game: Game): void {
