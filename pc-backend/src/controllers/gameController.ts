@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { Game } from '../models/gameStages';
 import { Player } from '../models/chipHolders';
 import { ActionType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
-import { executeValidators } from '../utils/validators';
 
 export let currentGame: Game | null = null;
 
@@ -34,25 +33,6 @@ export const playerList = (req: Request, res: Response) => {
     };
 
     res.status(200).json({ message: 'Player list received successfully', playerList: currentGame?.playerManager.playerList });
-};
-
-export const game = (req: Request, res: Response) => {
-    if (currentGame) {
-        executeValidators(currentGame);
-        res.status(200).json(currentGame);
-    } else {
-        res.status(404).json({ message: 'No active game found.' });
-    };
-};
-
-export const currentAvalibleActions = (req: Request, res: Response) => {
-    if (currentGame) {
-        const avalibleActions = currentGame.actionSelector.getOptions(currentGame);
-        console.log('Updated avalible actions:', avalibleActions)
-        res.status(200).json(avalibleActions);
-    } else {
-        res.status(404).json({ message: 'No active game found.' });
-    };
 };
 
 export const playerAction = (req: Request, res: Response) => {

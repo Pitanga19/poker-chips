@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { newGame, playerList, game, currentAvalibleActions, playerAction } from './controllers/gameController';
+import { newGame, playerList, playerAction } from './controllers/gameController';
 
 const app = express();
 const PORT = 3000;
@@ -12,10 +12,6 @@ app.use(express.json());
 app.post('/api/newGame', newGame);
 
 app.post('/api/playerList', playerList);
-
-app.get('/api/currentGame', game);
-
-app.get('/api/currentAvalibleActions', currentAvalibleActions);
 
 app.post('/api/playerAction', playerAction);
 
