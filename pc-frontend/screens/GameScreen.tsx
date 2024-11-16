@@ -46,7 +46,7 @@ const GameScreen = () => {
             const data = await response.json();
 
             console.log('Game data received:', data);
-            setPot(data);
+            setPot(data.pot);
             setPlayerManager(data.playerManager);
             setPlayerList(data.playerManager?.playerList);
             setPositionManager(data.positionManager);
