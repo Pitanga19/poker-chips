@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { Game } from '../models/gameStages';
 import { Player } from '../models/chipHolders';
 import { ActionType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
+import { executeValidators } from '../utils/validators';
 
-let currentGame: Game | null = null;
+export let currentGame: Game | null = null;
 
 export const newGame = (req: Request, res: Response) => {
     currentGame = new Game();
@@ -37,32 +38,7 @@ export const playerList = (req: Request, res: Response) => {
 
 export const game = (req: Request, res: Response) => {
     if (currentGame) {
-        console.log('Validating hand ...');
-        const handValidation: HandStageValidationType = currentGame.handStageValidator.validate(currentGame);
-        if (handValidation === HandStageValidationType.EndGame) {
-            currentGame.handStageValidator.endGame(currentGame);
-        } else if (handValidation === HandStageValidationType.StartHandStage) {
-            currentGame.handStageValidator.startHandStage(currentGame);
-        }
-
-        console.log('Validating betting stage');
-        const bettingStageValidation: BettingStageValidationType = currentGame.bettingStageValidator.validate(currentGame);
-        if (bettingStageValidation === BettingStageValidationType.EndHandStage) {
-            currentGame.bettingStageValidator.endHand(currentGame);
-        } else if (bettingStageValidation === BettingStageValidationType.StartBettingStage) {
-            currentGame.bettingStageValidator.startBettingStage(currentGame);
-        }
-
-        console.log('Validating turn');
-        const turnValidation: TurnValidationType = currentGame.turnValidator.validate(currentGame);
-        if (turnValidation === TurnValidationType.EndBettingStage) {
-            currentGame.turnValidator.endBettingStage(currentGame);
-        } else if (turnValidation === TurnValidationType.GiveActions) {
-            currentGame.turnValidator.giveActions(currentGame);
-        } else if (turnValidation === TurnValidationType.NextPlayer) {
-            currentGame.turnValidator.nextPlayer(currentGame);
-        }
-
+        executeValidators(currentGame);
         res.status(200).json(currentGame);
     } else {
         res.status(404).json({ message: 'No active game found.' });
