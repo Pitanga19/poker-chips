@@ -227,10 +227,21 @@ export class TurnValidator {
     }
 
     endBettingStage (game: Game): toExecuteValidatorType {
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+        const pot = game.pot;
         const handStage = game.handStage;
         const bettingStage = game.bettingStage;
         const positionManager = game.positionManager;
 
+        playerList.forEach(p => {
+            console.log(p.toJSON());
+            if (p.pendingChips > 0) {
+                p.transferChips(pot);
+                console.log('New player chips:', p.chips);
+                console.log('New pot chips:', pot.chips);
+            }
+        });
         handStage.stagesPlayed.push(bettingStage.stage);
         positionManager.updateNextStage();
         return toExecuteValidatorType.BettingStageValidator;

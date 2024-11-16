@@ -85,7 +85,6 @@ export const avalibleActionsValidation = (req: Request, res: Response) => {
                             toExecuteValidator = game.turnValidator.endBettingStage(game);
                         } else if (turnValidation === TurnValidationType.NextPlayer) {
                             toExecuteValidator = game.turnValidator.nextPlayer(game);
-                            console.log('Turn validator: NextPlayer.')
                         } else if (turnValidation === TurnValidationType.GiveActions) {
                             toExecuteValidator = game.turnValidator.giveActions(game);
                         }
