@@ -4,7 +4,7 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
-import { IP, PORT, ActionType } from '../constants/constants';
+import { IP, PORT, toExecuteValidatorType, ActionType } from '../constants/constants';
 
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
 
@@ -37,7 +37,8 @@ const GameScreen = () => {
     const [playerManager, setPlayerManager] = useState<PlayerManager | null>(null);
     const [playerList, setPlayerList] = useState<Player[]>([]);
     const [positionManager, setPositionManager] = useState<PositionManager | null>(null);
-    const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([ActionType.Fold]);
+    const [toExecuteValidator, setToExecuteValidator] = useState<toExecuteValidatorType>(toExecuteValidatorType.HandStageValidator);
+    const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([]);
     const [amount, setAmount] = useState<string>('');
 
     const fetchGameData = async () => {
@@ -45,7 +46,6 @@ const GameScreen = () => {
             const response = await fetch(`http://${IP}:${PORT}/api/currentGame`);
             const data = await response.json();
 
-            console.log('Game data received:', data);
             setPot(data.pot);
             setPlayerManager(data.playerManager);
             setPlayerList(data.playerManager?.playerList);
@@ -55,28 +55,36 @@ const GameScreen = () => {
         };
     };
 
-    const fetchAvalibleActions = async () => {
+    const fetchToExecuteValidatorData = async () =>{
         try {
-            const response = await fetch(`http://${IP}:${PORT}/api/avalibleActionsValidation`);
+            const response = await fetch(`http://${IP}:${PORT}/api/currentToExecuteValidator`);
             const data = await response.json();
 
-            console.log('Avalible actions received:', data);
-            setAvalibleActions(data);
+            console.log('To execute validator received:', data);
+            setToExecuteValidator(data);
         } catch (error) {
             console.error('Error fetching game:', error);
         };
     };
 
-    const fetchUpdatedGame = () => {
-        fetchGameData();
-        fetchAvalibleActions();
-    }
+    const fetchAvalibleActionsData = async () => {
+        try {
+            const response = await fetch(`http://${IP}:${PORT}/api/avalibleActions`);
+            const data = await response.json();
 
-    useEffect(() => { fetchUpdatedGame() }, []);
+            console.log('Avalible actions received:', data);
+            setAvalibleActions(data);
+        } catch (error) {
+            console.error('Error fetching avalible actions:', error);
+        };
+    };
+
+    useEffect(() => { fetchGameData() }, []);
 
     const renderPlayer = ({ item }: { item: Player}) => {
         console.log('Rendering player:', item);
         const isCurrentTurn = positionManager? item.id === playerManager?.playerList[positionManager.turnIndex].id : null;
+        
         return (
             <View style={ styles.container }>
                 <View style={ styles.container }>
@@ -131,7 +139,7 @@ const GameScreen = () => {
         };
 
         console.log('Fetching update game after action press ...');
-        fetchUpdatedGame();
+        fetchGameData();
     };
 
     const renderAction = ({ item }: {item: ActionType}) => {

@@ -1,6 +1,14 @@
 export const PORT = 3000;
 export const IP = 'localhost';
 
+export enum toExecuteValidatorType {
+    HandStageValidator = 'handStageValidator',
+    BettingStageValidator = 'bettingStageValidator',
+    TurnValidator = 'turnValidator',
+    ActionSelector = 'actionSelector',
+    GameOver = 'gameOver'
+}
+
 export enum ActionType {
     PutSmallBlind = 'putSmallBlind',
     PutBigBlind = 'putBigBlind',
