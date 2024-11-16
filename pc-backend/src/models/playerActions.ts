@@ -10,6 +10,12 @@ export class ActionSelector {
         const handStage = game.handStage;
         const bettingStage = game.bettingStage;
 
+        console.log('PLAYERS:');
+        playerList.forEach(p => console.log('Player:' + p.id + ', Chips:' + p.chips + ', Pending chips:' + p.pendingChips));
+        console.log(positionManager.toJSON());
+        console.log(handStage.toJSON());
+        console.log(bettingStage.toJSON());
+
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         const isPreFlop = bettingStage.stage === BettingStageType.PreFlop;
         const isSmallBlind = positionManager.turnIndex == positionManager.smallBlindIndex;
@@ -66,10 +72,11 @@ export class PlayerActions {
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         const bettingStage = game.bettingStage;
         const handStage = game.handStage;
+        const bigBlindValue = handStage.bigBlindValue;
 
-        bettingStage.actualBetValue = handStage.bigBlindValue;
-        bettingStage.minimumRaise = handStage.bigBlindValue * 2;
-        currentPlayer.prepareChips(handStage.bigBlindValue);
+        bettingStage.actualBetValue = bigBlindValue;
+        bettingStage.minimumRaise = bigBlindValue * 2;
+        currentPlayer.prepareChips(bigBlindValue);
         positionManager.updateNextTurn(playerList);
     }
     
