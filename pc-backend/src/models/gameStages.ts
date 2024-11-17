@@ -261,5 +261,6 @@ export class BettingStage {
         this._doBigBlindCheck = false;
         this._actualBetValue = 0;
         this._minimumRaise = 0;
+        this._checkCount = 0;
     }
 }
