@@ -220,6 +220,7 @@ export class TurnValidator {
         const arePlayingCount = arePlaying.length;
         const areEnoughPlaying = arePlayingCount > 1;
         const isPlaying = currentPlayer.isPlaying;
+        const hasChipsToBet = currentPlayer.chips > 0;
         const isRaiser = positionManager.turnIndex === positionManager.raiserIndex;
         const doBBcheck = bettingStage.doBigBlindCheck;
         const doEveryoneCheck = bettingStage.checkCount === arePlayingCount;
@@ -231,12 +232,12 @@ export class TurnValidator {
             return TurnValidationType.EndBettingStage;
         }
     
-        if (!isPlaying) {
+        if (!isPlaying || !hasChipsToBet) {
             console.log('Turn validation result: Skipping to next player ...');
             return TurnValidationType.NextPlayer;
         }
     
-        if (isPlaying && ( !doSomeoneBet || mustEqualBet)) {
+        if (isPlaying && hasChipsToBet && ( !doSomeoneBet || mustEqualBet)) {
             console.log('Turn validation result: Giving actions to current player ...');
             return TurnValidationType.GiveActions;
         }
