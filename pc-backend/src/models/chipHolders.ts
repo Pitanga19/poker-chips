@@ -174,6 +174,17 @@ export class Pot extends ChipHolder {
         this._activePlayerIds = activePlayerIds;
     }
 
+    getPlayingIds(game: Game) {
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+
+        playerList.forEach(player => {
+            if (player.isPlaying && player.chips > 0) {
+                this._activePlayerIds.push(player.id)
+            };
+        });
+    };
+
     getMaximumBetValue(game: Game): number {
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
