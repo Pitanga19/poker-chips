@@ -197,21 +197,24 @@ export class Pot extends ChipHolder {
 
         return maximumBetValue;
     }
+
+    checkEnoughPlaying(game: Game): void {
+        
+    }
     
     payWinners(game: Game): void {
         const positionManager = game.positionManager;
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
-        const winnerIndexLists = positionManager.winnerIndexList;
-        const thisWinnerIndexList = winnerIndexLists[this._id];
+        const winnerIndexList = positionManager.winnerIndexList;
 
-        const winnerCount: number = thisWinnerIndexList.length;
+        const winnerCount: number = winnerIndexList.length;
         const winnerReward: number = Math.floor(this._chips / winnerCount);
         
-        for (let i of thisWinnerIndexList) {
+        winnerIndexList.forEach(index => {
             this.prepareChips(winnerReward);
-            this.transferChips(playerList[i]);
-        }
+            this.transferChips(playerList[index]);
+        });
 
         if (this._chips > 0){
             const randomIndex = loopArrayManager.getRandomIndex(positionManager.winnerIndexList);

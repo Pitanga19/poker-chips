@@ -8,7 +8,7 @@ export class PositionManager {
     private _bigBlindIndex: number;
     private _turnIndex: number;
     private _raiserIndex: number;
-    private _winnerIndexList: number[][];
+    private _winnerIndexList: number[];
 
     constructor () {
         this._dealerIndex = -1;
@@ -16,7 +16,7 @@ export class PositionManager {
         this._bigBlindIndex = -1;
         this._turnIndex = -1;
         this._raiserIndex = -1;
-        this._winnerIndexList = [[]];
+        this._winnerIndexList = [];
     }
 
     toJSON() {
@@ -70,11 +70,11 @@ export class PositionManager {
         this._raiserIndex = index;
     }
 
-    get winnerIndexList(): number[][] {
+    get winnerIndexList(): number[] {
         return this._winnerIndexList;
     }
 
-    set winnerIndexList(indexList: number[][]) {
+    set winnerIndexList(indexList: number[]) {
         this._winnerIndexList = indexList;
     }
 
@@ -112,7 +112,7 @@ export class PositionManager {
             loopArrayManager.getNextIndex(playerList, this._smallBlindIndex));
         this._turnIndex = this._smallBlindIndex;
         this._raiserIndex = -1;
-        this._winnerIndexList = [[]];
+        this._winnerIndexList = [];
     }
 
     updateNextTurn(game: Game): void {
@@ -174,7 +174,7 @@ export class BettingStageValidator {
         const winnerIndexLists = positionManager.winnerIndexList;
         const handStage = game.handStage;
 
-        const areWinners = winnerIndexLists[0].length > 0;
+        const areWinners = winnerIndexLists.length > 0;
         const riverPlayed = handStage.stagesPlayed.length === 4;
 
         if (areWinners || riverPlayed) {
