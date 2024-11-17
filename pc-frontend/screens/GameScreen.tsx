@@ -10,11 +10,10 @@ type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamLi
 
 // models interfaces
 interface Pot {
+    id: number;
+    activePlayerIds: string[];
     chips: number;
     pendingChips: number;
-};
-interface PotManager {
-    potList: Pot[];
 };
 interface Player {
     id: string;
@@ -95,20 +94,15 @@ const GameScreen = () => {
     }, [handleFetching]);
 
     const renderPot = ({item}: {item: Pot}) => {
-        let potCount = 1;
-        console.log('Rendering pot:', potCount);
-        potCount += 1;
-
         return (
             <View style={ styles.container }>
-                <Text style={ styles.mainText }>Pot</Text>
-                <Text style={ styles.mainText }>Chips: {item.chips}</Text>
+                <Text style={ styles.mainText }>Pot { item.id + 1 }</Text>
+                <Text style={ styles.mainText }>Chips: { item.chips }</Text>
             </View>
         )
     }
 
     const renderPlayer = ({ item }: { item: Player}) => {
-        console.log('Rendering player:', item);
         const isCurrentTurn = positionManager? item.id === playerManager?.playerList[positionManager.turnIndex].id : null;
         
         return (
@@ -170,7 +164,6 @@ const GameScreen = () => {
     };
 
     const renderAction = ({ item }: {item: ActionType}) => {
-        console.log('Rendering action:', item);
         const isBet = item === ActionType.Bet;
         const isRaise = item === ActionType.Raise;
 
@@ -201,7 +194,7 @@ const GameScreen = () => {
                 <FlatList
                     data={ potList || [] }
                     renderItem={ renderPot }
-                    keyExtractor={ (_, index) => index.toString() }
+                    keyExtractor={ (item) => item.id.toString() }
                     style={ styles.listContainer }
                 />
             </View>
