@@ -9,6 +9,13 @@ import { IP, PORT, toExecuteValidatorType, ActionType } from '../constants/const
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
 
 // models interfaces
+interface Pot {
+    chips: number;
+    pendingChips: number;
+};
+interface PotManager {
+    potList: Pot[];
+};
 interface Player {
     id: string;
     chips: number;
@@ -17,10 +24,6 @@ interface Player {
 };
 interface PlayerManager {
     playerList: Player[];
-}
-interface Pot {
-    chips: number;
-    pendingChips: number;
 };
 interface PositionManager {
     dealerIndex: number;
@@ -29,11 +32,11 @@ interface PositionManager {
     turnIndex: number;
     raiserIndex: number;
     winnersIndex: number[];
-}
+};
 
 const GameScreen = () => {
     // fetch values
-    const [pot, setPot] = useState<Pot | null>(null);
+    const [potList, setPotList] = useState<Pot[]>([]);
     const [playerManager, setPlayerManager] = useState<PlayerManager | null>(null);
     const [playerList, setPlayerList] = useState<Player[]>([]);
     const [positionManager, setPositionManager] = useState<PositionManager | null>(null);
@@ -47,7 +50,7 @@ const GameScreen = () => {
             const response = await fetch(`http://${IP}:${PORT}/api/currentGame`);
             const data = await response.json();
 
-            setPot(data.pot);
+            setPotList(data.potManager?.potList);
             setPlayerManager(data.playerManager);
             setPlayerList(data.playerManager?.playerList);
             setPositionManager(data.positionManager);
@@ -90,6 +93,19 @@ const GameScreen = () => {
             fetchAvalibleActionsData() :
             fetchToExecuteValidatorData();
     }, [handleFetching]);
+
+    const renderPot = ({item}: {item: Pot}) => {
+        let potCount = 1;
+        console.log('Rendering pot:', potCount);
+        potCount += 1;
+
+        return (
+            <View style={ styles.container }>
+                <Text style={ styles.mainText }>Pot</Text>
+                <Text style={ styles.mainText }>Chips: {item.chips}</Text>
+            </View>
+        )
+    }
 
     const renderPlayer = ({ item }: { item: Player}) => {
         console.log('Rendering player:', item);
@@ -182,8 +198,12 @@ const GameScreen = () => {
     return (
         <View style={ styles.main }>
             <View style={ styles.container }>
-                <Text style={ styles.mainText }>Pot</Text>
-                <Text style={ styles.mainText }>Chips: {pot?.chips}</Text>
+                <FlatList
+                    data={ potList || [] }
+                    renderItem={ renderPot }
+                    keyExtractor={ (_, index) => index.toString() }
+                    style={ styles.listContainer }
+                />
             </View>
             <View style={ styles.container }>
                 <Text style={ styles.mainText }>Players</Text>
