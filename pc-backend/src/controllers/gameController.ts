@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Game } from '../models/gameStages';
 import { Player } from '../models/chipHolders';
 import { ActionType, toExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
+import { loopArrayManager } from '../utils/arrayManager';
 
 export let game: Game | null = null;
 export let toExecuteValidator: toExecuteValidatorType = toExecuteValidatorType.HandStageValidator;
@@ -37,10 +38,10 @@ export const playerList = (req: Request, res: Response) => {
 };
 
 export const currentGame = (req: Request, res: Response) => {
-    console.log('Game state before validation:', game);
     if (!game) {
         res.status(404).json({ message: 'No active game found.' });
     } else {
+        console.log('Sending updated game ...');
         const updatedGame = game.toJSON();
         res.status(200).json(updatedGame);
     };
@@ -126,50 +127,37 @@ export const playerAction = (req: Request, res: Response) => {
     if (!game) {
         res.status(404).json({ message: 'No active game found.' });
     } else {
-        console.log('Received body:', req.body);
+        console.log('Received data:', req.body);
         const { action, amount } = req.body;
-        console.log('Received action:', action);
-        console.log('Received amount:',amount);
         const playerActions = game.playerActions;
-        const playerList = game.playerManager.playerList;
-        const positionManager = game.positionManager;
 
         switch (action) {
             case ActionType.Bet:
                 playerActions.bet(game, amount);
-                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Call:
                 playerActions.call(game);
-                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Check:
                 playerActions.check(game);
-                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.CheckBigBlind:
                 playerActions.checkBigBlind(game);
-                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Fold:
                 playerActions.fold(game);
-                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.MustAllIn:
                 playerActions.mustAllIn(game);
-                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.PutBigBlind:
                 playerActions.putBigBlind(game);
-                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.PutSmallBlind:
                 playerActions.putSmallBlind(game);
-                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             case ActionType.Raise:
                 playerActions.raise(game, amount);
-                console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
             default:
                 res.status(400).json({ message: 'Invalid action specified.' });

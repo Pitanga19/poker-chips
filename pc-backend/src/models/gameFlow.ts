@@ -224,7 +224,6 @@ export class TurnValidator {
         const doSomeoneBet = bettingStage.actualBetValue > 0;
         const mustEqualBet = doSomeoneBet || currentPlayer.pendingChips < bettingStage.actualBetValue;
 
-    
         if (!areEnoughPlaying || isRaiser || doBBcheck || doEveryoneCheck) {
             console.log('Turn validation result: Ending betting stage ...');
             return TurnValidationType.EndBettingStage;
