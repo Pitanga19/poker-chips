@@ -40,6 +40,7 @@ const GameScreen = () => {
     const [toExecuteValidator, setToExecuteValidator] = useState<toExecuteValidatorType>(toExecuteValidatorType.HandStageValidator);
     const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([]);
     const [amount, setAmount] = useState<string>('');
+    const [handleFetching, setHandleFetching] = useState<boolean>(true);
 
     const fetchGameData = async () => {
         try {
@@ -65,6 +66,10 @@ const GameScreen = () => {
         } catch (error) {
             console.error('Error fetching game:', error);
         };
+
+        if (toExecuteValidator !== toExecuteValidatorType.ActionSelector){
+            setHandleFetching(!handleFetching);
+        }
     };
 
     const fetchAvalibleActionsData = async () => {
@@ -79,7 +84,12 @@ const GameScreen = () => {
         };
     };
 
-    useEffect(() => { fetchGameData() }, []);
+    useEffect(() => {
+        fetchGameData();
+        toExecuteValidator === toExecuteValidatorType.ActionSelector ?
+            fetchAvalibleActionsData() :
+            fetchToExecuteValidatorData();
+    }, [handleFetching]);
 
     const renderPlayer = ({ item }: { item: Player}) => {
         console.log('Rendering player:', item);
@@ -139,7 +149,7 @@ const GameScreen = () => {
         };
 
         console.log('Fetching update game after action press ...');
-        fetchGameData();
+        setHandleFetching(!handleFetching);
     };
 
     const renderAction = ({ item }: {item: ActionType}) => {
