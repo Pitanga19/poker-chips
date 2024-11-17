@@ -255,9 +255,15 @@ export class PotManager {
 
     needSidePotValidation(game: Game): boolean {
         const playerList = game.playerManager.playerList;
-        const firstPendingChipsValue:number = playerList[0].pendingChips;
-        const needSidePot = playerList.some(player => player.pendingChips !== firstPendingChipsValue);
 
+        const firstPendingChipsValue: number = playerList[0].pendingChips;
+        const areDifferentPendingChips: boolean = playerList.some(player => player.pendingChips !== firstPendingChipsValue);
+
+        const playingCount: number = playerList.filter(player => player.isPlaying).length;
+        const allInCount: number = playerList.filter(player => player.chips === 0).length;
+        const areEnoughPlaying: boolean = playingCount - allInCount > 1;
+
+        const needSidePot = areDifferentPendingChips && areEnoughPlaying
         return needSidePot;
     }
 
@@ -272,7 +278,7 @@ export class PotManager {
     createSidePot(game: Game): void {
         const minimumPendingChips: number = this.playingPot().getMaximumBetValue(game);
         this.collectToPlayingPot(game, minimumPendingChips);
-        
+
         this._potList.push(new Pot());
         this.playingPot().getPlayingIds(game);
     }
