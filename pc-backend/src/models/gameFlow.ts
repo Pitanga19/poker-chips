@@ -155,7 +155,9 @@ export class HandStageValidator {
 
     startHandStage(game: Game): toExecuteValidatorType {
         const handStage = game.handStage;
+        const currentPot: Pot = game.potManager.playingPot();
 
+        currentPot.getPlayingIds(game);
         handStage.clearStages();
         return toExecuteValidatorType.BettingStageValidator;
     }

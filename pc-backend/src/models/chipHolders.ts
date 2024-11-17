@@ -290,10 +290,14 @@ export class PotManager {
 
     collectToPlayingPot(game: Game, amount: number = -1): void {
         const playerList = game.playerManager.playerList;
-
-        amount === -1 ?
-            playerList.forEach(player => player.transferChips(this.playingPot())) :
-            playerList.forEach(player => player.transferChips(this.playingPot(), amount));
+        
+        playerList.forEach(player => {
+            if (player.pendingChips > 0) {
+            amount === -1 ?
+                playerList.forEach(player => player.transferChips(this.playingPot())) :
+                playerList.forEach(player => player.transferChips(this.playingPot(), amount));
+            }
+        })
     }
 
     createSidePot(game: Game): void {
