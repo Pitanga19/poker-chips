@@ -1,4 +1,5 @@
 import { Game } from "./gameStages";
+import { Pot } from "./chipHolders";
 import { toExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 import { loopArrayManager } from '../utils/arrayManager';
 
@@ -192,6 +193,7 @@ export class BettingStageValidator {
         const playerManager = game.playerManager;
         const positionManager = game.positionManager;
         
+        potList.forEach(pot => pot.defineWinners(game));
         potList.forEach(pot => pot.payWinners(game));
         potManager.resetPotList();
         playerManager.resetIsPlaying();
@@ -210,15 +212,16 @@ export class BettingStageValidator {
 
 export class TurnValidator {
     validate(game: Game): TurnValidationType {
+        const currentPot: Pot = game.potManager.playingPot();
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
         const currentPlayer = playerList[positionManager.turnIndex];
         const bettingStage = game.bettingStage;
         
+        const areEnoughPlaying = currentPot.areEnoughPlayingValidation();
         const arePlaying = playerList.filter(p => p.isPlaying);
         const arePlayingCount = arePlaying.length;
-        const areEnoughPlaying = arePlayingCount > 1;
         const isPlaying = currentPlayer.isPlaying;
         const hasChipsToBet = currentPlayer.chips > 0;
         const isRaiser = positionManager.turnIndex === positionManager.raiserIndex;
@@ -248,22 +251,17 @@ export class TurnValidator {
 
     endBettingStage (game: Game): toExecuteValidatorType {
         const potManager = game.potManager;
-        const potList = potManager.potList;
-        const playerManager = game.playerManager;
-        const playerList = playerManager.playerList;
         const handStage = game.handStage;
         const bettingStage = game.bettingStage;
         const positionManager = game.positionManager;
 
-        console.log('Collecting chips to pots ...');
-        playerList.forEach(player => {
-            console.log(player.toJSON());
-            if (player.pendingChips > 0) {
-                player.transferChips(potList[potList.length - 1]);
-                console.log('New player chips:', player.chips);
-            }
-            potList.forEach(pot => console.log('New pot chips:', pot.chips));
-        });
+        console.log('Creating side pots validation ...');
+        while (potManager.needSidePotValidation(game)) {
+            potManager.createSidePot(game)
+        }
+
+        console.log('Collecting chips to current pot ...');
+        potManager.collectToPlayingPot(game);
         handStage.stagesPlayed.push(bettingStage.stage);
         positionManager.updateNextStage();
         return toExecuteValidatorType.BettingStageValidator;
