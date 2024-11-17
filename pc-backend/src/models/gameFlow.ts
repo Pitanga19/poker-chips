@@ -130,8 +130,10 @@ export class HandStageValidator {
         const arePlaying = playerList.filter( p => p.isPlaying );
         const areManyPlaying = arePlaying.length > 1;
         if (areManyPlaying) {
+            console.log('Hand stage validation result: Starting new hand stage ...');
             return HandStageValidationType.StartHandStage;
         } else {
+            console.log('Hand stage validation result: Ending game ...');
             return HandStageValidationType.EndGame;
         }
     }
@@ -161,8 +163,10 @@ export class BettingStageValidator {
         const riverPlayed = handStage.stagesPlayed.length === 4;
 
         if (areWinners || riverPlayed) {
+            console.log('Betting stage validation result: Ending hand ...');
             return BettingStageValidationType.EndHandStage;
         } else {
+            console.log('Betting stage validation result: Starting new betting stage ...');
             return BettingStageValidationType.StartBettingStage;
         }
     }
@@ -208,22 +212,22 @@ export class TurnValidator {
 
     
         if (!areEnoughPlaying || isRaiser || doBBcheck || doEveryoneCheck) {
-            console.log('Ending betting stage.');
+            console.log('Turn validation result: Ending betting stage ...');
             return TurnValidationType.EndBettingStage;
         }
     
         if (!isPlaying) {
-            console.log('Skipping to next player.');
+            console.log('Turn validation result: Skipping to next player ...');
             return TurnValidationType.NextPlayer;
         }
     
         if (isPlaying && ( !doSomeoneBet || mustEqualBet)) {
-            console.log('Giving actions to current player.');
+            console.log('Turn validation result: Giving actions to current player ...');
             return TurnValidationType.GiveActions;
         }
     
-        console.error('Unexpected state in TurnValidator.');
-        throw new Error('Unexpected state in TurnValidator');
+        console.error('Unexpected state in TurnValidator (console.error)');
+        throw new Error('Unexpected state in TurnValidator (throw new Error)');
     }
 
     endBettingStage (game: Game): toExecuteValidatorType {
@@ -234,6 +238,7 @@ export class TurnValidator {
         const bettingStage = game.bettingStage;
         const positionManager = game.positionManager;
 
+        console.log('Collecting chips to pot ...')
         playerList.forEach(p => {
             console.log(p.toJSON());
             if (p.pendingChips > 0) {
