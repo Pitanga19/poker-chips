@@ -246,4 +246,23 @@ export class PotManager {
     resetPotList(): void {
         this._potList = [new Pot()];
     }
+
+    getPlayingPot(): Pot {
+        const potListCount = this._potList.length;
+        const playingPotIndex = potListCount - 1;
+
+        return this._potList[playingPotIndex];
+    }
+
+    needSidePotValidation(game: Game): boolean {
+        const playerList = game.playerManager.playerList;
+        const firstPendingChipsValue:number = playerList[0].pendingChips;
+        const needSidePot = playerList.some(player => player.pendingChips !== firstPendingChipsValue);
+
+        return needSidePot;
+    }
+
+    createSidePot(game: Game): void {
+        
+    }
 }
