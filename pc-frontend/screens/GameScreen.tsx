@@ -149,6 +149,7 @@ const GameScreen = () => {
         };
 
         console.log('Fetching update game after action press ...');
+        setToExecuteValidator(toExecuteValidatorType.TurnValidator);
         setHandleFetching(!handleFetching);
     };
 
