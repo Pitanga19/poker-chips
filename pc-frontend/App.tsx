@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, SafeAreaView, Platform, StatusBar as RNStatusBar } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, Platform, StatusBar as RNStatusBar } from 'react-native';
 // import screens:
 import AppNavigator from './navigation/AppNavigator';
 
@@ -7,7 +7,9 @@ export default function App() {
   return (
     <SafeAreaView style={ styles.safeArea }>
       <StatusBar style='light' />
-      <AppNavigator />
+        <ScrollView>
+          <AppNavigator />
+        </ScrollView>
     </SafeAreaView>
   );
 };
