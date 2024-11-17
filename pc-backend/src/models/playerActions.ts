@@ -1,4 +1,4 @@
-import { Player } from './chipHolders'
+import { Player, Pot } from './chipHolders'
 import { Game } from './gameStages';
 import { ActionType, BettingStageType } from '../utils/constants';
 
@@ -155,12 +155,14 @@ export class PlayerActions {
     }
     
     fold(game: Game): void {
-        const playerManager = game.playerManager;
-        const playerList = playerManager.playerList;
+        const playerList = game.playerManager.playerList;
         const positionManager = game.positionManager;
         const currentPlayer: Player = playerList[positionManager.turnIndex];
+        const potManager = game.potManager;
+        const currentPot: Pot = potManager.playingPot();
         
         currentPlayer.stopPlaying();
+        currentPot.removeActiveById(currentPlayer.id);
         positionManager.updateNextTurn(game);
     }
 }
