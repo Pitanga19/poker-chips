@@ -188,6 +188,18 @@ export class Pot extends ChipHolder {
         });
     };
 
+    removeActiveById(idToRemove: string): void {
+        const index = this._activePlayerIds.findIndex(id => id === idToRemove);
+        index !== -1 ? this._activePlayerIds.splice(index, 1) : console.log('Id not found:', idToRemove);
+    }
+
+    areEnoughPlayingValidation(): boolean {
+        const arePlayingCount: number = this._activePlayerIds.length;
+        const areEnoughPlaying: boolean = arePlayingCount > 1;
+
+        return areEnoughPlaying;
+    }
+
     getMaximumBetValue(game: Game): number {
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
@@ -198,8 +210,14 @@ export class Pot extends ChipHolder {
         return maximumBetValue;
     }
 
-    checkEnoughPlaying(game: Game): void {
-        
+    defineWinners(game: Game): void {
+        const playerList = game.playerManager.playerList;
+        const positionManager = game.positionManager;
+
+        const winnerIndexList: number[] = []
+        this._activePlayerIds.forEach(id => winnerIndexList.push(playerList.findIndex(player => player.id == id)));;
+
+        positionManager.winnerIndexList = winnerIndexList;
     }
     
     payWinners(game: Game): void {
