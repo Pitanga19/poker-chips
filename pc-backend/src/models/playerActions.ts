@@ -58,7 +58,7 @@ export class PlayerActions {
         const currentPlayer: Player = playerList[positionManager.turnIndex];
 
         currentPlayer.prepareChips(handStage.smallBlindValue);
-        positionManager.updateNextTurn(playerList);
+        positionManager.updateNextTurn(game);
     }
     
     putBigBlind(game: Game): void {
@@ -73,27 +73,23 @@ export class PlayerActions {
         bettingStage.actualBetValue = bigBlindValue;
         bettingStage.minimumRaise = bigBlindValue * 2;
         currentPlayer.prepareChips(bigBlindValue);
-        positionManager.updateNextTurn(playerList);
+        positionManager.updateNextTurn(game);
     }
     
     checkBigBlind(game: Game): void {
-        const playerManager = game.playerManager;
-        const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
         const bettingStage = game.bettingStage;
 
         bettingStage.setBigBlindCheck();
-        positionManager.updateNextTurn(playerList);
+        positionManager.updateNextTurn(game);
     }
     
     check(game: Game): void {
-        const playerManager = game.playerManager;
-        const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
         const bettingStage = game.bettingStage;
 
         bettingStage.checkCount += 1;
-        positionManager.updateNextTurn(playerList);
+        positionManager.updateNextTurn(game);
     }
     
     bet(game: Game, amount: number): void {
@@ -111,7 +107,7 @@ export class PlayerActions {
             bettingStage.actualBetValue = amount;
             bettingStage.minimumRaise = amount * 2;
             bettingStage.resetCheckCount();
-            positionManager.updateNextTurn(playerList);
+            positionManager.updateNextTurn(game);
         } else {
             console.log('Invalid amount, bet must be equal or bigger than big blind.');
         };
@@ -125,7 +121,7 @@ export class PlayerActions {
         const bettingStage = game.bettingStage;
         
         currentPlayer.prepareChips(bettingStage.actualBetValue - currentPlayer.pendingChips);
-        positionManager.updateNextTurn(playerList);
+        positionManager.updateNextTurn(game);
     }
     
     raise(game: Game, amount: number): void {
@@ -142,7 +138,7 @@ export class PlayerActions {
             positionManager.raiserIndex = positionManager.turnIndex;
             bettingStage.actualBetValue = amount;
             bettingStage.minimumRaise = bettingStage.actualBetValue + raiseValue;
-            positionManager.updateNextTurn(playerList);
+            positionManager.updateNextTurn(game);
         } else {
             console.log('Invalid amount, raise must be equal or bigger than last one.');
         };
@@ -155,7 +151,7 @@ export class PlayerActions {
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         
         currentPlayer.prepareChips(currentPlayer.chips);
-        positionManager.updateNextTurn(playerList);
+        positionManager.updateNextTurn(game);
     }
     
     fold(game: Game): void {
@@ -165,6 +161,6 @@ export class PlayerActions {
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         
         currentPlayer.stopPlaying();
-        positionManager.updateNextTurn(playerList);
+        positionManager.updateNextTurn(game);
     }
 }

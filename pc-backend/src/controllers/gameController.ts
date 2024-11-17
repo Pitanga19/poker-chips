@@ -29,7 +29,7 @@ export const playerList = (req: Request, res: Response) => {
 
     if (game instanceof Game) {
         game.playerManager.playerList = playerList;
-        game.positionManager.initializePositions(playerList, -1);
+        game.positionManager.initializePositions(game, -1);
         console.log('Updated positions:', game.positionManager);
     };
 

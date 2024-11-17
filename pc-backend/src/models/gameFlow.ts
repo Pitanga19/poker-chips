@@ -79,35 +79,47 @@ export class PositionManager {
         this._winnersIndex = indexList;
     }
 
-    checkIsPlaying(playerList: Player[], index: number): boolean {
+    checkIsPlaying(game: Game, index: number): boolean {
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+
         return playerList[index].isPlaying && playerList[index].chips > 0;
     }
 
-    findFirstPlayingIndex(playerList: Player[], index: number): number {
-        let firstPlayingDealerIndex = index;
+    findFirstPlayingIndex(game: Game, index: number): number {
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+
+        let firstPlayingIndex = index;
         let checkedPlayingCount = 0;
 
-        while (!this.checkIsPlaying(playerList, firstPlayingDealerIndex) && checkedPlayingCount < playerList.length) {
-            firstPlayingDealerIndex = loopArrayManager.getNextIndex(playerList, firstPlayingDealerIndex);
+        while (!this.checkIsPlaying(game, firstPlayingIndex) && checkedPlayingCount < playerList.length) {
+            firstPlayingIndex = loopArrayManager.getNextIndex(playerList, firstPlayingIndex);
             checkedPlayingCount++;
         }
         
-        return firstPlayingDealerIndex;
+        return firstPlayingIndex;
     }
 
-    initializePositions(playerList: Player[], dealerIndex: number): void {
+    initializePositions(game: Game, dealerIndex: number): void {
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+
         dealerIndex = dealerIndex === -1 ? loopArrayManager.getRandomIndex(playerList) : dealerIndex;
-        this._dealerIndex =  this.findFirstPlayingIndex(playerList, dealerIndex);
-        this._smallBlindIndex = this.findFirstPlayingIndex(playerList,
+        this._dealerIndex =  this.findFirstPlayingIndex(game, dealerIndex);
+        this._smallBlindIndex = this.findFirstPlayingIndex(game,
             loopArrayManager.getNextIndex(playerList, this._dealerIndex));
-        this._bigBlindIndex = this.findFirstPlayingIndex(playerList,
+        this._bigBlindIndex = this.findFirstPlayingIndex(game,
             loopArrayManager.getNextIndex(playerList, this._smallBlindIndex));
         this._turnIndex = this._smallBlindIndex;
         this._raiserIndex = -1;
         this._winnersIndex = [];
     }
 
-    updateNextTurn(playerList: Player[]): void {
+    updateNextTurn(game: Game): void {
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+
         this._turnIndex = loopArrayManager.getNextIndex(playerList, this._turnIndex);
     }
 
@@ -116,9 +128,12 @@ export class PositionManager {
         this._raiserIndex = -1;
     }
 
-    updateNextHand(playerList: Player[]): void {
+    updateNextHand(game: Game): void {
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+
         const nextDealer = loopArrayManager.getNextIndex(playerList, this._dealerIndex);
-        this.initializePositions(playerList, nextDealer);
+        this.initializePositions(game, nextDealer);
     }
 }
 
@@ -179,7 +194,7 @@ export class BettingStageValidator {
 
         pot.payWinners(playerList, positionManager);
         playerManager.resetIsPlaying();
-        positionManager.updateNextHand(playerList);
+        positionManager.updateNextHand(game);
         return toExecuteValidatorType.HandStageValidator;
     }
 
@@ -198,7 +213,6 @@ export class TurnValidator {
         const positionManager = game.positionManager;
         const currentPlayer = playerList[positionManager.turnIndex]
         const bettingStage = game.bettingStage;
-        const handStage = game.handStage;
         
         const arePlaying = playerList.filter(p => p.isPlaying);
         const arePlayingCount = arePlaying.length;
@@ -258,10 +272,8 @@ export class TurnValidator {
 
     nextPlayer (game: Game): toExecuteValidatorType {
         const positionManager = game.positionManager;
-        const playerManager = game.playerManager;
-        const playerList = playerManager.playerList;
 
-        positionManager.updateNextTurn(playerList);
+        positionManager.updateNextTurn(game);
         return toExecuteValidatorType.TurnValidator;
     }
 }
