@@ -91,9 +91,8 @@ export class Player extends ChipHolder {
     toJSON() {
         return {
             id: this._id,
-            chips: this._chips,
-            pendingChips: this._pendingChips,
-            isPlaying: this._isPlaying
+            isPlaying: this._isPlaying,
+            ... super.toJSON(),
         }
     }
 
@@ -127,7 +126,7 @@ export class PlayerManager {
 
     toJSON() {
         return {
-            playerList: this._playerList,
+            playerList: this._playerList.map(p => p.toJSON()),
         }
     }
 
@@ -155,8 +154,7 @@ export class Pot extends ChipHolder {
 
     toJSON() {
         return {
-            chips: this._chips,
-            pendingChips: this._pendingChips
+            ... super.toJSON(),
         }
     }
     
