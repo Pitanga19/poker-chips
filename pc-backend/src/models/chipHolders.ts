@@ -188,12 +188,13 @@ export class Pot extends ChipHolder {
         const positionManager = game.positionManager;
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
-        const winnerIndexList = positionManager.winnerIndexList[this._id]
+        const winnerIndexLists = positionManager.winnerIndexList;
+        const thisWinnerIndexList = winnerIndexLists[this._id];
 
-        const winnerCount: number = winnerIndexList.length;
+        const winnerCount: number = thisWinnerIndexList.length;
         const winnerReward: number = Math.floor(this._chips / winnerCount);
         
-        for (let i of winnerIndexList) {
+        for (let i of thisWinnerIndexList) {
             this.prepareChips(winnerReward);
             this.transferChips(playerList[i]);
         }

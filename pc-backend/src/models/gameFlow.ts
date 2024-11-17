@@ -112,7 +112,7 @@ export class PositionManager {
             loopArrayManager.getNextIndex(playerList, this._smallBlindIndex));
         this._turnIndex = this._smallBlindIndex;
         this._raiserIndex = -1;
-        this._winnerIndexList = [];
+        this._winnerIndexList = [[]];
     }
 
     updateNextTurn(game: Game): void {
@@ -171,9 +171,10 @@ export class HandStageValidator {
 export class BettingStageValidator {
     validate(game: Game): BettingStageValidationType {
         const positionManager = game.positionManager;
+        const winnerIndexLists = positionManager.winnerIndexList;
         const handStage = game.handStage;
 
-        const areWinners = positionManager.winnerIndexList.length > 0;
+        const areWinners = winnerIndexLists[0].length > 0;
         const riverPlayed = handStage.stagesPlayed.length === 4;
 
         if (areWinners || riverPlayed) {
@@ -191,10 +192,11 @@ export class BettingStageValidator {
         const playerManager = game.playerManager;
         const positionManager = game.positionManager;
         
-        potList.forEach(p => p.payWinners(game));
+        potList.forEach(pot => pot.payWinners(game));
         potManager.resetPotList();
         playerManager.resetIsPlaying();
         positionManager.updateNextHand(game);
+
         return toExecuteValidatorType.HandStageValidator;
     }
 
@@ -211,7 +213,7 @@ export class TurnValidator {
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
-        const currentPlayer = playerList[positionManager.turnIndex]
+        const currentPlayer = playerList[positionManager.turnIndex];
         const bettingStage = game.bettingStage;
         
         const arePlaying = playerList.filter(p => p.isPlaying);
@@ -252,7 +254,7 @@ export class TurnValidator {
         const bettingStage = game.bettingStage;
         const positionManager = game.positionManager;
 
-        console.log('Collecting chips to pots ...')
+        console.log('Collecting chips to pots ...');
         playerList.forEach(player => {
             console.log(player.toJSON());
             if (player.pendingChips > 0) {
