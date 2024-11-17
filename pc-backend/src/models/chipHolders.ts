@@ -1,5 +1,4 @@
 import { Game } from "./gameStages";
-import { PositionManager } from "./gameFlow";
 import { loopArrayManager } from "../utils/arrayManager";
 
 export class ChipHolder {
@@ -193,8 +192,8 @@ export class Pot extends ChipHolder {
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
         
-        const activePlayerList = playerList.filter(p => this._activePlayerIds.includes(p.id));
-        const maximumBetValue = Math.min(... activePlayerList.map(p => p.chips + p.pendingChips))
+        const activePlayerList: Player[] = playerList.filter(p => this._activePlayerIds.includes(p.id));
+        const maximumBetValue: number = Math.min(... activePlayerList.map(p => p.getTotalChips()));
 
         return maximumBetValue;
     }
@@ -247,7 +246,7 @@ export class PotManager {
         this._potList = [new Pot()];
     }
 
-    getPlayingPot(): Pot {
+    playingPot(): Pot {
         const potListCount = this._potList.length;
         const playingPotIndex = potListCount - 1;
 
@@ -262,7 +261,19 @@ export class PotManager {
         return needSidePot;
     }
 
+    collectToPlayingPot(game: Game, amount: number = -1): void {
+        const playerList = game.playerManager.playerList;
+
+        amount === -1 ?
+            playerList.forEach(player => player.transferChips(this.playingPot())) :
+            playerList.forEach(player => player.transferChips(this.playingPot(), amount));
+    }
+
     createSidePot(game: Game): void {
+        const minimumPendingChips: number = this.playingPot().getMaximumBetValue(game);
+        this.collectToPlayingPot(game, minimumPendingChips);
         
+        this._potList.push(new Pot());
+        this.playingPot().getPlayingIds(game);
     }
 }
