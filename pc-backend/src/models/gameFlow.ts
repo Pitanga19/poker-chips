@@ -253,14 +253,14 @@ export class TurnValidator {
         const bettingStage = game.bettingStage;
         const positionManager = game.positionManager;
 
-        console.log('Collecting chips to potManager ...')
-        playerList.forEach(p => {
-            console.log(p.toJSON());
-            if (p.pendingChips > 0) {
-                p.transferChips(potList[potList.length - 1]);
-                console.log('New player chips:', p.chips);
+        console.log('Collecting chips to pots ...')
+        playerList.forEach(player => {
+            console.log(player.toJSON());
+            if (player.pendingChips > 0) {
+                player.transferChips(potList[potList.length - 1]);
+                console.log('New player chips:', player.chips);
             }
-            potList.forEach(p => console.log('New pot chips:', p.chips));
+            potList.forEach(pot => console.log('New pot chips:', pot.chips));
         });
         handStage.stagesPlayed.push(bettingStage.stage);
         positionManager.updateNextStage();

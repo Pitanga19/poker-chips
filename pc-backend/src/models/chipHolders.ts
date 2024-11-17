@@ -188,7 +188,7 @@ export class PotManager {
     }
 
     get potList(): Pot[] {
-        return this.potList;
+        return this._potList;
     }
 
     set potList(potList: Pot[]) {
