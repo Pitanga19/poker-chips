@@ -23,7 +23,7 @@ export class ActionSelector {
         const isBetting = currentPlayer.pendingChips > 0;
         const isBettingBigBlind = currentPlayer.pendingChips === handStage.bigBlindValue;
         const mustEqualBet = currentPlayer.pendingChips < bettingStage.actualBetValue;
-        const mustAllIn = currentPlayer.chips + currentPlayer.pendingChips < bettingStage.actualBetValue;
+        const mustAllIn = currentPlayer.getTotalChips() < bettingStage.actualBetValue;
 
         if (isPreFlop) {
             if (isSmallBlind && !isBetting) {

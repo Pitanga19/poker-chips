@@ -58,6 +58,10 @@ export class ChipHolder {
         this._pendingChips -= amount;
     }
 
+    getTotalChips(): number {
+        return this._chips + this._pendingChips;
+    }
+
     prepareChips(amount: number = this.chips): void {
         if (amount < 0) throw new Error('Amount cannot be negative');
         this.incrementPendingChips(amount);
