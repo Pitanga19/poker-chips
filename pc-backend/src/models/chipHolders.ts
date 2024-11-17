@@ -1,3 +1,4 @@
+import { Game } from "./gameStages";
 import { PositionManager } from "./gameFlow";
 import { loopArrayManager } from "../utils/arrayManager";
 
@@ -148,26 +149,57 @@ export class PlayerManager {
 }
 
 export class Pot extends ChipHolder {
-    constructor() {
+    private _id: number;
+    private _activePlayerIds: string[];
+
+    constructor(id: number = 0) {
         super();
+        this._id = id;
+        this._activePlayerIds = [];
     }
 
     toJSON() {
         return {
+            id: this._id,
+            activePlayerIds: this._activePlayerIds,
             ... super.toJSON(),
         }
     }
+
+    get activePlayerIds() {
+        return this._activePlayerIds;
+    }
+
+    set activePlayerIds(activePlayerIds: string[]) {
+        this._activePlayerIds = activePlayerIds;
+    }
+
+    getMaximumBetValue(game: Game): number {
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+        
+        const activePlayerList = playerList.filter(p => this._activePlayerIds.includes(p.id));
+        const maximumBetValue = Math.min(... activePlayerList.map(p => p.chips + p.pendingChips))
+
+        return maximumBetValue;
+    }
     
-    payWinners(playerList: Player[], positionManager: PositionManager): void {
-        const winnersCount: number = positionManager.winnersIndex.length;
-        const winnersReward: number = Math.floor(this._chips / winnersCount);
-        for (let i of positionManager.winnersIndex) {
-            this.prepareChips(winnersReward);
+    payWinners(game: Game): void {
+        const positionManager = game.positionManager;
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+        const winnerIndexList = positionManager.winnerIndexList[this._id]
+
+        const winnerCount: number = winnerIndexList.length;
+        const winnerReward: number = Math.floor(this._chips / winnerCount);
+        
+        for (let i of winnerIndexList) {
+            this.prepareChips(winnerReward);
             this.transferChips(playerList[i]);
         }
 
         if (this._chips > 0){
-            const randomIndex = loopArrayManager.getRandomIndex(positionManager.winnersIndex);
+            const randomIndex = loopArrayManager.getRandomIndex(positionManager.winnerIndexList);
             this.prepareChips(this._chips);
             this.transferChips(playerList[randomIndex])
         }

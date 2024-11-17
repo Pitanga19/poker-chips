@@ -8,7 +8,7 @@ export class PositionManager {
     private _bigBlindIndex: number;
     private _turnIndex: number;
     private _raiserIndex: number;
-    private _winnersIndex: number[];
+    private _winnerIndexList: number[][];
 
     constructor () {
         this._dealerIndex = -1;
@@ -16,7 +16,7 @@ export class PositionManager {
         this._bigBlindIndex = -1;
         this._turnIndex = -1;
         this._raiserIndex = -1;
-        this._winnersIndex = [];
+        this._winnerIndexList = [[]];
     }
 
     toJSON() {
@@ -26,7 +26,7 @@ export class PositionManager {
             bigBlindIndex: this._bigBlindIndex,
             turnIndex: this._turnIndex,
             raiserIndex: this._raiserIndex,
-            winnersIndex: this._winnersIndex
+            winnerIndexList: this._winnerIndexList
         }
     }
 
@@ -70,12 +70,12 @@ export class PositionManager {
         this._raiserIndex = index;
     }
 
-    get winnersIndex(): number[] {
-        return this._winnersIndex;
+    get winnerIndexList(): number[][] {
+        return this._winnerIndexList;
     }
 
-    set winnersIndex(indexList: number[]) {
-        this._winnersIndex = indexList;
+    set winnerIndexList(indexList: number[][]) {
+        this._winnerIndexList = indexList;
     }
 
     checkIsPlaying(game: Game, index: number): boolean {
@@ -112,7 +112,7 @@ export class PositionManager {
             loopArrayManager.getNextIndex(playerList, this._smallBlindIndex));
         this._turnIndex = this._smallBlindIndex;
         this._raiserIndex = -1;
-        this._winnersIndex = [];
+        this._winnerIndexList = [];
     }
 
     updateNextTurn(game: Game): void {
@@ -173,7 +173,7 @@ export class BettingStageValidator {
         const positionManager = game.positionManager;
         const handStage = game.handStage;
 
-        const areWinners = positionManager.winnersIndex.length > 0;
+        const areWinners = positionManager.winnerIndexList.length > 0;
         const riverPlayed = handStage.stagesPlayed.length === 4;
 
         if (areWinners || riverPlayed) {
@@ -189,10 +189,9 @@ export class BettingStageValidator {
         const potManager = game.potManager;
         const potList = potManager.potList;
         const playerManager = game.playerManager;
-        const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
         
-        potList.forEach(p => p.payWinners(playerList, positionManager));
+        potList.forEach(p => p.payWinners(game));
         potManager.resetPotList();
         playerManager.resetIsPlaying();
         positionManager.updateNextHand(game);
