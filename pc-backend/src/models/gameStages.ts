@@ -1,11 +1,11 @@
 import { BettingStageType, BettingStageTypeList } from "../utils/constants";
-import { PlayerManager, Pot } from "./chipHolders";
+import { PlayerManager, PotManager } from "./chipHolders";
 import { PositionManager, HandStageValidator, BettingStageValidator, TurnValidator } from "./gameFlow";
 import { ActionSelector, PlayerActions } from "./playerActions";
 
 export class Game {
     private _playerManager: PlayerManager;
-    private _pot: Pot;
+    private _potManager: PotManager;
     private _positionManager: PositionManager;
     private _handStageValidator: HandStageValidator;
     private _handStage: HandStage;
@@ -17,7 +17,7 @@ export class Game {
 
     constructor () {
         this._playerManager = new PlayerManager();
-        this._pot = new Pot();
+        this._potManager = new PotManager();
         this._positionManager = new PositionManager();
         this._handStageValidator = new HandStageValidator();
         this._handStage = new HandStage();
@@ -31,7 +31,7 @@ export class Game {
     toJSON() {
         return {
             playerManager: this._playerManager,
-            pot: this._pot,
+            potManager: this._potManager,
             positionManager: this._positionManager,
             handStageValidator: this._handStageValidator,
             handStage: this._handStage,
@@ -51,12 +51,12 @@ export class Game {
         this._playerManager = playerManager;
     }
 
-    get pot(): Pot {
-        return this._pot;
+    get potManager(): PotManager {
+        return this._potManager;
     }
 
-    set pot(pot: Pot) {
-        this._pot = pot;
+    set potManager(potManager: PotManager) {
+        this._potManager = potManager;
     }
 
     get positionManager(): PositionManager {

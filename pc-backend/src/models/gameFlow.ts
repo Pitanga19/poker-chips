@@ -1,6 +1,5 @@
 import { Game } from "./gameStages";
-import { Player } from "./chipHolders";
-import { BettingStageType, toExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
+import { toExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 import { loopArrayManager } from '../utils/arrayManager';
 
 export class PositionManager {
@@ -187,12 +186,14 @@ export class BettingStageValidator {
     }
 
     endHand(game: Game): toExecuteValidatorType {
-        const pot = game.pot;
+        const potManager = game.potManager;
+        const potList = potManager.potList;
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
-
-        pot.payWinners(playerList, positionManager);
+        
+        potList.forEach(p => p.payWinners(playerList, positionManager));
+        potManager.resetPotList();
         playerManager.resetIsPlaying();
         positionManager.updateNextHand(game);
         return toExecuteValidatorType.HandStageValidator;
@@ -244,21 +245,22 @@ export class TurnValidator {
     }
 
     endBettingStage (game: Game): toExecuteValidatorType {
+        const potManager = game.potManager;
+        const potList = potManager.potList;
         const playerManager = game.playerManager;
         const playerList = playerManager.playerList;
-        const pot = game.pot;
         const handStage = game.handStage;
         const bettingStage = game.bettingStage;
         const positionManager = game.positionManager;
 
-        console.log('Collecting chips to pot ...')
+        console.log('Collecting chips to potManager ...')
         playerList.forEach(p => {
             console.log(p.toJSON());
             if (p.pendingChips > 0) {
-                p.transferChips(pot);
+                p.transferChips(potList[potList.length - 1]);
                 console.log('New player chips:', p.chips);
-                console.log('New pot chips:', pot.chips);
             }
+            potList.forEach(p => console.log('New pot chips:', p.chips));
         });
         handStage.stagesPlayed.push(bettingStage.stage);
         positionManager.updateNextStage();

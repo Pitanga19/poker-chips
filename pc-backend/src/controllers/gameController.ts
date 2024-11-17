@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { Game } from '../models/gameStages';
 import { Player } from '../models/chipHolders';
 import { ActionType, toExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
-import { loopArrayManager } from '../utils/arrayManager';
 
 export let game: Game | null = null;
 export let toExecuteValidator: toExecuteValidatorType = toExecuteValidatorType.HandStageValidator;

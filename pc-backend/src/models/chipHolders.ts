@@ -173,3 +173,29 @@ export class Pot extends ChipHolder {
         }
     }
 }
+
+export class PotManager {
+    private _potList: Pot[];
+
+    constructor() {
+        this._potList = [new Pot()];
+    }
+
+    toJSON() {
+        return {
+            potList: this._potList,
+        }
+    }
+
+    get potList(): Pot[] {
+        return this.potList;
+    }
+
+    set potList(potList: Pot[]) {
+        this._potList = potList;
+    }
+
+    resetPotList(): void {
+        this._potList = [new Pot()];
+    }
+}
