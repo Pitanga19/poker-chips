@@ -182,7 +182,6 @@ export class HandStage {
 
 export class BettingStage {
     private _stage: BettingStageType;
-    private _doSmallBlindCheck: boolean;
     private _doBigBlindCheck: boolean;
     private _actualBetValue: number;
     private _minimumRaise: number;
@@ -190,7 +189,6 @@ export class BettingStage {
 
     constructor() {
         this._stage = BettingStageType.PreFlop;
-        this._doSmallBlindCheck = false;
         this._doBigBlindCheck = false;
         this._actualBetValue = 0;
         this._minimumRaise = 0;
@@ -200,7 +198,6 @@ export class BettingStage {
     toJSON() {
         return {
             stage: this._stage,
-            doSmallBlindCheck: this.doSmallBlindCheck,
             doBigBlindCheck: this.doBigBlindCheck,
             actualBetValue: this._actualBetValue,
             minimumRaise: this._minimumRaise,
@@ -214,18 +211,6 @@ export class BettingStage {
 
     set stage(stage: BettingStageType) {
         this._stage = stage;
-    }
-
-    get doSmallBlindCheck(): boolean {
-        return this._doSmallBlindCheck
-    }
-
-    setSmallBlindCheck(): void {
-        this._doSmallBlindCheck = true;
-    }
-
-    removeSmallBlindCheck(): void {
-        this._doSmallBlindCheck = false;
     }
 
     get doBigBlindCheck(): boolean {
@@ -273,7 +258,6 @@ export class BettingStage {
         const stagesPlayedCount = handStage.stagesPlayed.length;
         
         this._stage = BettingStageTypeList[stagesPlayedCount];
-        this._doSmallBlindCheck = false;
         this._doBigBlindCheck = false;
         this._actualBetValue = 0;
         this._minimumRaise = 0;

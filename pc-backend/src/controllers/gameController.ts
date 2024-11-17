@@ -151,10 +151,6 @@ export const playerAction = (req: Request, res: Response) => {
                 playerActions.checkBigBlind(game);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);
                 break;
-            case ActionType.CheckSmallBlind:
-                playerActions.checkSmallBlind(game);
-                console.log('Update player data:', playerList[positionManager.turnIndex]);
-                break;
             case ActionType.Fold:
                 playerActions.fold(game);
                 console.log('Update player data:', playerList[positionManager.turnIndex]);

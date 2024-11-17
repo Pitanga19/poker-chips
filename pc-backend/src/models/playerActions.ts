@@ -37,10 +37,6 @@ export class ActionSelector {
             }
         }
         
-        if (isSmallBlind && !isBetting) {
-            return [ActionType.CheckSmallBlind];
-        }
-        
         if (mustEqualBet) {
             return [ActionType.Call, ActionType.Raise, ActionType.Fold];
         }
@@ -77,16 +73,6 @@ export class PlayerActions {
         bettingStage.actualBetValue = bigBlindValue;
         bettingStage.minimumRaise = bigBlindValue * 2;
         currentPlayer.prepareChips(bigBlindValue);
-        positionManager.updateNextTurn(playerList);
-    }
-    
-    checkSmallBlind(game: Game): void {
-        const playerManager = game.playerManager;
-        const playerList = playerManager.playerList;
-        const positionManager = game.positionManager;
-        const bettingStage = game.bettingStage;
-
-        bettingStage.setSmallBlindCheck();
         positionManager.updateNextTurn(playerList);
     }
     
