@@ -7,7 +7,7 @@ export default function App() {
   return (
     <SafeAreaView style={ styles.safeArea }>
       <StatusBar style='light' />
-        <ScrollView>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <AppNavigator />
         </ScrollView>
     </SafeAreaView>
