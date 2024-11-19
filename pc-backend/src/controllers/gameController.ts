@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Game } from '../models/gameStages';
-import { Player } from '../models/chipHolders';
+import { Player, PotManager } from '../models/chipHolders';
 import { ActionType, toExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 
 export let game: Game | null = null;
@@ -169,12 +169,31 @@ export const playerAction = (req: Request, res: Response) => {
 };
 
 export const winnerSelect = (req: Request, res: Response) => {
+    console.log('Received data for winner winner select:', req.body);
+    const { winnerListPerPot } = req.body;
+    /*
+    if (!winnerListPerPot || !Array.isArray(winnerListPerPot)) {
+        return res.status(400).json({ message: 'Invalid data format for winnerListPerPot.' });
+    }
+    */
     if (!game) {
         res.status(404).json({ message: 'No active game found.' });
     } else {
-        console.log('Received data:', req.body);
-        const { potList } = req.body;
+        const potManager = game.potManager;
+        const potList = game.potManager.potList;
+        const playerManager = game.playerManager;
+        const positionManager = game.positionManager;
 
-        res.status(200).json({ potList: potList });
+        for (let i in potList) {
+            potList[i].activePlayerIds = winnerListPerPot[i];
+            potList[i].defineWinners(game);
+            potList[i].payWinners(game);
+        };
+
+        potManager.resetPotList();
+        playerManager.resetIsPlaying();
+        positionManager.updateNextHand(game);
     };
+
+    res.status(200).json({ winnerListPerPot: winnerListPerPot });
 };
