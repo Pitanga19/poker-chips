@@ -6,6 +6,7 @@ export enum toExecuteValidatorType {
     BettingStageValidator = 'bettingStageValidator',
     TurnValidator = 'turnValidator',
     ActionSelector = 'actionSelector',
+    WinnerSelector = 'winnerSelector',
     GameOver = 'gameOver'
 }
 

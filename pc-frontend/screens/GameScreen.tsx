@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TextInput, Pressable } from 'react-native';
+import { View, Text, FlatList, TextInput, Pressable, Alert } from 'react-native';
 import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
@@ -62,11 +62,45 @@ const GameScreen = () => {
         };
     };
 
+    const winnerSelect = async () =>{
+        try {
+            if (!potList || potList.length === 0) {
+                Alert.alert('Error', 'Not pot founded.');
+                return;
+            }
+
+            const response = await fetch(`http://${IP}:${PORT}/api/winnerSelect`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ potList })
+            });
+
+            if (!response.ok){
+                const errorData = await response.json();
+                throw new Error(errorData?.message || 'Failed to set a winner selection.');
+            };
+
+            const data = await response.json();
+            console.log('Pots waiting for winners:', data);
+            navigation.navigate('WinnerSelect');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                Alert.alert('¡Error!', error.message);
+            } else {
+                Alert.alert('¡Error!', 'Unknown error.');
+            };
+        };
+    }
+
     useEffect(() => {
         fetchGameData();
-        toExecuteValidator === toExecuteValidatorType.ActionSelector ?
-            fetchAvalibleActionsData() :
+        if (toExecuteValidator === toExecuteValidatorType.ActionSelector) {
+            fetchAvalibleActionsData();
+        } else if (toExecuteValidator === toExecuteValidatorType.WinnerSelector) {
+            winnerSelect();
+        } else {
             fetchToExecuteValidatorData();
+        };
     }, [handleFetching]);
 
     const renderPot = ({item}: {item: Pot}) => {
