@@ -18,6 +18,7 @@ const GameScreen = () => {
     const [toExecuteValidator, setToExecuteValidator] = useState<toExecuteValidatorType>(toExecuteValidatorType.HandStageValidator);
     const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([]);
     const [amount, setAmount] = useState<string>('');
+    const [handleFetching, setHandleFetching] = useState<boolean>(true);
 
     const fetchGameData = async () => {
         try {
@@ -42,6 +43,10 @@ const GameScreen = () => {
             setToExecuteValidator(data);
         } catch (error) {
             console.error('Error fetching game:', error);
+        };
+
+        if (toExecuteValidator !== toExecuteValidatorType.ActionSelector){
+            setHandleFetching(!handleFetching);
         };
     };
 
@@ -96,7 +101,7 @@ const GameScreen = () => {
         } else {
             fetchToExecuteValidatorData();
         };
-    }, [toExecuteValidator]);
+    }, [handleFetching]);
 
     const renderPot = ({item}: {item: Pot}) => {
         return (
@@ -165,6 +170,7 @@ const GameScreen = () => {
 
         console.log('Fetching update game after action press ...');
         setToExecuteValidator(toExecuteValidatorType.TurnValidator);
+        setHandleFetching(!handleFetching);
     };
 
     const renderAction = ({ item }: {item: ActionType}) => {
