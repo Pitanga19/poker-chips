@@ -261,7 +261,7 @@ export class TurnValidator {
         while (potManager.needSidePotValidation(game)) {
             potManager.createSidePot(game)
         }
-
+        
         console.log('Collecting chips to current pot ...');
         potManager.collectToPlayingPot(game);
         handStage.stagesPlayed.push(bettingStage.stage);
