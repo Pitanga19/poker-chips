@@ -25,7 +25,7 @@ const MainMenuScreen = () => {
             if (!response.ok){
                 const errorData = await response.json();
                 throw new Error(errorData?.message || 'Failed to create new game.');
-            }
+            };
 
             const data = await response.json();
             console.log('New game created:', data);
@@ -35,9 +35,9 @@ const MainMenuScreen = () => {
                 Alert.alert('¡Error!', error.message);
             } else {
                 Alert.alert('¡Error!', 'Unknown error.');
-            }
-        }
-    }
+            };
+        };
+    };
 
     const handleBigBlindValue = (value: string) => { setBigBlindValue(value)};
 
@@ -56,6 +56,6 @@ const MainMenuScreen = () => {
             </Pressable>
         </View>
     );
-}
+};
 
 export default MainMenuScreen;

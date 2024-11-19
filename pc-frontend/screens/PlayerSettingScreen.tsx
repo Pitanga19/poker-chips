@@ -50,14 +50,14 @@ const PlayerSettingScreen = () => {
                 <Text style={ styles.mainText }>ID: {item.id}</Text>
                 <Text style={ styles.mainText }>Chips: {item.chips}</Text>
             </View>
-        )
+        );
     };
 
     const sendPlayerList = async () => {
         if (playerList.length === 0) {
             Alert.alert('¡Invalid list!', 'No players listed.');
             return;
-        }
+        };
 
         try {
             const response = await fetch(`http://${IP}:${PORT}/api/playerList`, {
@@ -70,7 +70,7 @@ const PlayerSettingScreen = () => {
 
             if (!response.ok) {
                 throw new Error('Failed to send player list.');
-            }
+            };
 
             const data = await response.json();
             Alert.alert('¡Succes!', 'Player list sent succesfully.');
@@ -80,9 +80,9 @@ const PlayerSettingScreen = () => {
                 Alert.alert('¡Error!', error.message);
             } else {
                 Alert.alert('¡Error!', 'Unknown error.');
-            }
-        }
-    }
+            };
+        };
+    };
 
     return (
         <View style={ styles.main }>
@@ -129,6 +129,6 @@ const PlayerSettingScreen = () => {
             </View>
         </View>
     );
-}
+};
 
 export default PlayerSettingScreen;

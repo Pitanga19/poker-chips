@@ -4,36 +4,12 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
-import { IP, PORT, toExecuteValidatorType, ActionType } from '../constants/constants';
+import { IP, PORT, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager } from '../constants/constants';
 
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
 
-// models interfaces
-interface Pot {
-    id: number;
-    activePlayerIds: string[];
-    chips: number;
-    pendingChips: number;
-};
-interface Player {
-    id: string;
-    chips: number;
-    pendingChips: number;
-    isPlaying: boolean;
-};
-interface PlayerManager {
-    playerList: Player[];
-};
-interface PositionManager {
-    dealerIndex: number;
-    smallBlindIndex: number;
-    bigBlindIndex: number;
-    turnIndex: number;
-    raiserIndex: number;
-    winnersIndex: number[];
-};
-
 const GameScreen = () => {
+    const navigation = useNavigation<GameScreenScreenNavigationProp>();
     // fetch values
     const [potList, setPotList] = useState<Pot[]>([]);
     const [playerManager, setPlayerManager] = useState<PlayerManager | null>(null);
@@ -71,7 +47,7 @@ const GameScreen = () => {
 
         if (toExecuteValidator !== toExecuteValidatorType.ActionSelector){
             setHandleFetching(!handleFetching);
-        }
+        };
     };
 
     const fetchAvalibleActionsData = async () => {
@@ -99,8 +75,8 @@ const GameScreen = () => {
                 <Text style={ styles.mainText }>Pot { item.id + 1 }</Text>
                 <Text style={ styles.mainText }>Chips: { item.chips }</Text>
             </View>
-        )
-    }
+        );
+    };
 
     const renderPlayer = ({ item }: { item: Player}) => {
         const isCurrentTurn = positionManager? item.id === playerManager?.playerList[positionManager.turnIndex].id : null;
@@ -134,7 +110,7 @@ const GameScreen = () => {
         const payload = {
             action: action,
             amount: isBet || isRaise ? parseInt(amount) : undefined
-        }
+        };
 
         try {
             const response = await fetch(`http://${IP}:${PORT}/api/playerAction`, {
@@ -152,7 +128,7 @@ const GameScreen = () => {
                 console.error('Action error:', data.message);
             } else {
                 console.log('Action result:', data);
-            }
+            };
             setAmount('');
         } catch(error) {
             console.error('Error processing action:', error);

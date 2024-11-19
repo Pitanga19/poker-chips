@@ -4,11 +4,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MainMenuScreen from "../screens/MainMenuScreen";
 import PlayerSettingScreen from "../screens/PlayerSettingScreen";
 import GameScreen from "../screens/GameScreen";
+import WinnerSelectScreen from "../screens/WinnerSelectScreen";
 
 export type RootStackParamList = {
     MainMenu: undefined;
     PlayerSetting: undefined;
     Game: undefined;
+    WinnerSelect: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -19,6 +21,7 @@ const AppNavigator = () => (
             <Stack.Screen name="MainMenu" component={MainMenuScreen} options={{ title: 'Main Menu' }} />
             <Stack.Screen name="PlayerSetting" component={PlayerSettingScreen} options={{ title: 'Player Settings' }} />
             <Stack.Screen name="Game" component={GameScreen} options={{ title: 'Game' }} />
+            <Stack.Screen name="WinnerSelect" component={WinnerSelectScreen} options={{ title: 'Winner Select' }} />
         </Stack.Navigator>
     </NavigationContainer>
 );

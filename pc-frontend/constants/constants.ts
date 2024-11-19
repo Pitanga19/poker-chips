@@ -28,3 +28,28 @@ enum BettingStageType {
     Turn = 'turn',
     River = 'river'
 }
+
+// models interfaces
+export interface Pot {
+    id: number;
+    activePlayerIds: string[];
+    chips: number;
+    pendingChips: number;
+};
+export interface Player {
+    id: string;
+    chips: number;
+    pendingChips: number;
+    isPlaying: boolean;
+};
+export interface PlayerManager {
+    playerList: Player[];
+};
+export interface PositionManager {
+    dealerIndex: number;
+    smallBlindIndex: number;
+    bigBlindIndex: number;
+    turnIndex: number;
+    raiserIndex: number;
+    winnersIndex: number[];
+};
