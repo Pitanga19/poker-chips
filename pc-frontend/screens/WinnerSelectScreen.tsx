@@ -11,7 +11,7 @@ type WinnerSelectScreenNavigationProp = NativeStackNavigationProp<RootStackParam
 const WinnerSelectScreen = () => {
     const navigation = useNavigation<WinnerSelectScreenNavigationProp>();
     const [potList, setPotList] = useState<Pot[]>([]);
-    const [winnerPerPotList, setWinnerPerPotList] = useState<string[][]>([]);
+    const [selectedWinners, setSelectedWinners] = useState<Record<number, string[]>>({});
 
     const fetchGameData = async () => {
         try {
@@ -19,14 +19,39 @@ const WinnerSelectScreen = () => {
             const data = await response.json();
 
             setPotList(data.potManager?.potList);
+            initializeSelectedWinners(data.potManager?.potList);
         } catch (error) {
             console.error('Error fetching game:', error);
         };
     };
 
+    const initializeSelectedWinners = (potList: Pot[]) => {
+        const initialWinnerPerPot: Record<number, string[]> = {};
+        potList.forEach(pot => {
+            initialWinnerPerPot[pot.id] = []
+        });
+
+        setSelectedWinners(initialWinnerPerPot);
+    };
+
     useEffect(() => {
         fetchGameData();
-    }, [])
+    }, []);
+
+    const toggleSelection = (potId: number, playerId: string) => {
+        setSelectedWinners(prev => {
+            const updated = { ... prev };
+            const currentWinnerList = updated[potId] || [];
+
+            if (currentWinnerList.includes(playerId)) {
+                updated[potId] = currentWinnerList.filter(id => id !== playerId);
+            } else {
+                updated[potId] = [ ... currentWinnerList, playerId];
+            }
+
+            return updated;
+        });
+    };
 
     const renderPot = ({item}: {item: Pot}) => {
         return (
@@ -34,24 +59,29 @@ const WinnerSelectScreen = () => {
                 <Text style={ styles.mainText }>Pot: {item.id}</Text>
                     <FlatList 
                         data={ item.activePlayerIds }
-                        renderItem={ renderPlayer }
-                        keyExtractor={ (item) => item }
+                        renderItem={ ({ item: playerId }) => renderPlayer(item.id, playerId) }
+                        keyExtractor={ playerId => playerId }
                         style={ styles.listContainer }
                     />
             </View>
         );
     };
 
-    const renderPlayer = ({item}: {item: string}) => {
+    const renderPlayer = ( potId: number, playerId: string) => {
+        const isSelected: boolean = selectedWinners[potId].includes(playerId);
+        const buttonStyle = [styles.button, isSelected && styles.selected];
+        
         return (
-            <View style={ styles.container }>
-                <Text style={ styles.mainText }>{item}</Text>
-            </View>
+            <Pressable style={ buttonStyle } onPress={ () => toggleSelection(potId, playerId) }>
+                <Text style={ styles.mainText }>{playerId}</Text>
+            </Pressable>
         );
     };
 
     const sendWinnerSelection = async () => {
-        if (winnerPerPotList.length === 0) {
+        const winnerListPerPot = potList.map(pot => selectedWinners[pot.id] || []);
+
+        if (winnerListPerPot.every(winners => winners.length === 0)) {
             Alert.alert('¡Invalid list!', 'No winners listed.');
             return;
         };
@@ -62,7 +92,7 @@ const WinnerSelectScreen = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(winnerPerPotList)
+                body: JSON.stringify({ winnerListPerPot: winnerListPerPot }),
             });
 
             if (!response.ok) {
