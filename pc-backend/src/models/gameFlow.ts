@@ -190,6 +190,7 @@ export class BettingStageValidator {
     }
 
     endHand(game: Game): toExecuteValidatorType {
+        /*
         const potManager = game.potManager;
         const potList = potManager.potList;
         const playerManager = game.playerManager;
@@ -200,8 +201,8 @@ export class BettingStageValidator {
         potManager.resetPotList();
         playerManager.resetIsPlaying();
         positionManager.updateNextHand(game);
-
-        return toExecuteValidatorType.HandStageValidator;
+        */
+        return toExecuteValidatorType.WinnerSelector;
     }
 
     startBettingStage(game: Game):toExecuteValidatorType {

@@ -169,12 +169,12 @@ export const playerAction = (req: Request, res: Response) => {
 };
 
 export const winnerSelect = (req: Request, res: Response) => {
-    
     if (!game) {
         res.status(404).json({ message: 'No active game found.' });
     } else {
         console.log('Received data:', req.body);
-        const potPlayerList = req.body;
-        const playerList = game.playerManager.playerList;
+        const { potList } = req.body;
+
+        res.status(200).json({ potList: potList });
     };
 };
