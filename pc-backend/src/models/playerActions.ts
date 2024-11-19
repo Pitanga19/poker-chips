@@ -99,7 +99,7 @@ export class PlayerActions {
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         const handStage = game.handStage;
         const bettingStage = game.bettingStage;
-        const isValidAmount: boolean = amount > handStage.bigBlindValue;
+        const isValidAmount: boolean = amount >= handStage.bigBlindValue;
 
         if (isValidAmount) {
             currentPlayer.prepareChips(amount);
