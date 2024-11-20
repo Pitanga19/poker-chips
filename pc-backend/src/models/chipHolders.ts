@@ -182,7 +182,7 @@ export class Pot extends ChipHolder {
         const playerList = playerManager.playerList;
 
         playerList.forEach(player => {
-            if (player.isPlaying && player.chips > 0) {
+            if (player.isPlaying && player.getTotalChips() > 0) {
                 this._activePlayerIds.push(player.id)
             };
         });
@@ -287,32 +287,38 @@ export class PotManager {
         const activePlayersIds = this.playingPot().activePlayerIds;
         const activePlayerList: Player[] = playerList.filter(p => activePlayersIds.includes(p.id));
 
+        const activePlayerCount = activePlayerList.length;
+        if (activePlayerCount === 0) return false;
+
         const firstPendingChipsValue: number = activePlayerList[0].pendingChips;
         const areDifferentPendingChips: boolean = activePlayerList.some(player => player.pendingChips !== firstPendingChipsValue);
-        console.log('are diff pending:', areDifferentPendingChips)
+        console.log('are diff pending:', areDifferentPendingChips, 'actuve count:', activePlayerCount)
         
-        const playingCount: number = playerList.filter(player => player.isPlaying).length;
-        const allInCount: number = playerList.filter(player => player.chips === 0).length;
-        const areEnoughPlaying: boolean = playingCount - allInCount > 1;
-        console.log('are enough playing:', areEnoughPlaying)
-
-        const needSidePot = areDifferentPendingChips && areEnoughPlaying
-        return needSidePot;
+        if (activePlayerCount === 2) {
+            const finalBet = this.playingPot().getMaximumPosibleBetValue(game);
+            activePlayerList.forEach(p => p.refundChips(p.pendingChips - finalBet));
+            return false;
+        };
+        return areDifferentPendingChips;
     }
 
     collectToPlayingPot(game: Game, amount: number = -1): void {
         const playerList = game.playerManager.playerList;
+        console.log('collecting to playing pot - amount received:', amount)
         
         playerList.forEach(player => {
             if (player.pendingChips > 0) {
-                console.log(player.id,'transfering:',player.pendingChips)
+                console.log(player.id,'transfering ...')
                 amount === -1 ?
-                    player.transferChips(this.playingPot()) :
-                    player.transferChips(this.playingPot(), amount);
+                console.log('transfering: total pendindg') :
+                console.log('transfering:', amount);
+                amount === -1 ?
+                player.transferChips(this.playingPot()) :
+                player.transferChips(this.playingPot(), amount);
             }
         })
     }
-
+    
     createSidePot(game: Game): void {
         const newPotId = this._potList.length;
         const collectAmount: number = this.playingPot().getMaximumPosibleBetValue(game);
@@ -321,6 +327,5 @@ export class PotManager {
         this._potList.push(new Pot(newPotId));
         this.playingPot().getPlayingIds(game);
         console.log('New pot created with players:', this.playingPot().activePlayerIds)
-        this.collectToPlayingPot(game);
     }
 }
