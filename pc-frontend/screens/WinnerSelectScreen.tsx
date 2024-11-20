@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Alert, View, Text, FlatList, Pressable } from 'react-native';
-import styles from './styles';
+import styles from '../utils/styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
-import { IP, PORT, Pot } from '../constants/constants';
+import { IP, PORT, Pot } from '../utils/constants';
 
 type WinnerSelectScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'WinnerSelect'>;
 
