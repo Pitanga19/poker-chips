@@ -293,9 +293,9 @@ export class PotManager {
         const firstPendingChipsValue: number = activePlayerList[0].pendingChips;
         const areDifferentPendingChips: boolean = activePlayerList.some(player => player.pendingChips !== firstPendingChipsValue);
         console.log('are diff pending:', areDifferentPendingChips, 'actuve count:', activePlayerCount)
-        
+
         if (activePlayerCount === 2) {
-            const finalBet = this.playingPot().getMaximumPosibleBetValue(game);
+            const finalBet = this.playingPot().getMinimumPendingChips(game);
             activePlayerList.forEach(p => p.refundChips(p.pendingChips - finalBet));
             return false;
         };
