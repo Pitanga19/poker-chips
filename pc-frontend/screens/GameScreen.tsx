@@ -3,14 +3,14 @@ import { View, Text, FlatList, TextInput, Pressable, Alert } from 'react-native'
 import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { IP, PORT, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager } from '../constants/constants';
 
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
 
 const GameScreen = () => {
     const navigation = useNavigation<GameScreenScreenNavigationProp>();
-    // fetch values
+    const isFocused = useIsFocused();
     const [potList, setPotList] = useState<Pot[]>([]);
     const [playerManager, setPlayerManager] = useState<PlayerManager | null>(null);
     const [playerList, setPlayerList] = useState<Player[]>([]);
@@ -74,6 +74,7 @@ const GameScreen = () => {
 
     useEffect(() => {
         fetchGameData();
+
         if (toExecuteValidator === toExecuteValidatorType.ActionSelector) {
             fetchAvalibleActionsData();
         } else if (toExecuteValidator === toExecuteValidatorType.WinnerSelector) {
@@ -82,6 +83,14 @@ const GameScreen = () => {
             fetchToExecuteValidatorData();
         };
     }, [handleFetching]);
+
+    useEffect(() => {
+        setToExecuteValidator(toExecuteValidatorType.HandStageValidator);
+        
+        if (isFocused) {
+            setHandleFetching(!handleFetching);
+        }
+    }, [isFocused]);
 
     const renderPot = ({item}: {item: Pot}) => {
         return (
