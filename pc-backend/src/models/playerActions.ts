@@ -16,14 +16,19 @@ export class ActionSelector {
         console.log(handStage.toJSON());
         console.log(bettingStage.toJSON());
 
+        const bigBlindValue = handStage.bigBlindValue;
+        const actualBetValue = bettingStage.actualBetValue;
+        const minimumRaise = bettingStage.minimumRaise;
+
         const currentPlayer: Player = playerList[positionManager.turnIndex];
         const isPreFlop = bettingStage.stage === BettingStageType.PreFlop;
         const isSmallBlind = positionManager.turnIndex == positionManager.smallBlindIndex;
         const isBigBlind = positionManager.turnIndex == positionManager.bigBlindIndex;
         const isBetting = currentPlayer.pendingChips > 0;
-        const isBettingBigBlind = currentPlayer.pendingChips === handStage.bigBlindValue;
-        const mustEqualBet = currentPlayer.pendingChips < bettingStage.actualBetValue;
-        const mustAllIn = currentPlayer.getTotalChips() < bettingStage.actualBetValue;
+        const isBettingBigBlind = currentPlayer.pendingChips === bigBlindValue;
+        const mustEqualBet = currentPlayer.pendingChips < actualBetValue;
+        const mustAllIn = currentPlayer.getTotalChips() < actualBetValue;
+        const canRaise = currentPlayer.getTotalChips() > minimumRaise;
 
         if (isPreFlop) {
             if (isSmallBlind && !isBetting) {
@@ -37,12 +42,16 @@ export class ActionSelector {
             }
         }
         
-        if (mustEqualBet) {
-            return [ActionType.Call, ActionType.Raise, ActionType.Fold];
-        }
-        
         if (mustAllIn) {
             return [ActionType.MustAllIn, ActionType.Fold];
+        }
+        
+        if (mustEqualBet) {
+            if (canRaise) {
+                return [ActionType.Call, ActionType.Raise, ActionType.Fold];
+            } else {
+                return [ActionType.Call, ActionType.MustAllIn, ActionType.Fold];
+            }
         }
         
         return [ActionType.Check, ActionType.Bet];
@@ -149,8 +158,16 @@ export class PlayerActions {
         const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
         const currentPlayer: Player = playerList[positionManager.turnIndex];
+        const bettingStage = game.bettingStage;
+        const canRaise = currentPlayer.getTotalChips() > bettingStage.minimumRaise;
+        const raiseValue = currentPlayer.getTotalChips() - bettingStage.actualBetValue;
         
         currentPlayer.prepareChips(currentPlayer.chips);
+        if (!canRaise) {
+            positionManager.raiserIndex = positionManager.turnIndex;
+            bettingStage.actualBetValue = currentPlayer.getTotalChips();
+            bettingStage.minimumRaise = bettingStage.actualBetValue + raiseValue;
+        }
         positionManager.updateNextTurn(game);
     }
     
