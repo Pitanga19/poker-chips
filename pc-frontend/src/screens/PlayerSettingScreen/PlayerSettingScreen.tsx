@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Alert, View, Text, FlatList, TextInput, Pressable } from 'react-native';
-import styles from '../utils/styles';
+import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/AppNavigator';
+import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
-import { IP, PORT } from '../utils/constants';
+import { IP, PORT } from '../../utils/constants';
 
 type PlayerSettingScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PlayerSetting'>;
 
