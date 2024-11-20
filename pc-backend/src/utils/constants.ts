@@ -11,6 +11,7 @@ export enum ActionType {
     Call = 'call',
     Raise = 'raise',
     MustAllIn = 'allIn',
+    RaiseAllIn = 'raiseAllIn',
     Fold = 'fold'
 }
 

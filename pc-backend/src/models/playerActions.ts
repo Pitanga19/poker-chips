@@ -50,7 +50,7 @@ export class ActionSelector {
             if (canRaise) {
                 return [ActionType.Call, ActionType.Raise, ActionType.Fold];
             } else {
-                return [ActionType.Call, ActionType.MustAllIn, ActionType.Fold];
+                return [ActionType.Call, ActionType.RaiseAllIn, ActionType.Fold];
             }
         }
         
@@ -158,16 +158,23 @@ export class PlayerActions {
         const playerList = playerManager.playerList;
         const positionManager = game.positionManager;
         const currentPlayer: Player = playerList[positionManager.turnIndex];
-        const bettingStage = game.bettingStage;
-        const canRaise = currentPlayer.getTotalChips() > bettingStage.minimumRaise;
-        const raiseValue = currentPlayer.getTotalChips() - bettingStage.actualBetValue;
         
         currentPlayer.prepareChips(currentPlayer.chips);
-        if (!canRaise) {
-            positionManager.raiserIndex = positionManager.turnIndex;
-            bettingStage.actualBetValue = currentPlayer.getTotalChips();
-            bettingStage.minimumRaise = bettingStage.actualBetValue + raiseValue;
-        }
+        positionManager.updateNextTurn(game);
+    }
+    
+    raiseAllIn(game: Game): void {
+        const playerManager = game.playerManager;
+        const playerList = playerManager.playerList;
+        const positionManager = game.positionManager;
+        const currentPlayer: Player = playerList[positionManager.turnIndex];
+        const bettingStage = game.bettingStage;
+        const raiseValue = currentPlayer.getTotalChips() - bettingStage.actualBetValue;
+
+        positionManager.raiserIndex = positionManager.turnIndex;
+        bettingStage.actualBetValue = currentPlayer.getTotalChips();
+        bettingStage.minimumRaise = bettingStage.actualBetValue + raiseValue;
+        currentPlayer.prepareChips(currentPlayer.chips);
         positionManager.updateNextTurn(game);
     }
     
@@ -175,11 +182,10 @@ export class PlayerActions {
         const playerList = game.playerManager.playerList;
         const positionManager = game.positionManager;
         const currentPlayer: Player = playerList[positionManager.turnIndex];
-        const potManager = game.potManager;
-        const currentPot: Pot = potManager.playingPot();
+        const potList: Pot[] = game.potManager.potList;
         
         currentPlayer.stopPlaying();
-        currentPot.removeActiveById(currentPlayer.id);
+        potList.forEach(pot => pot.removeActiveById(currentPlayer.id));
         positionManager.updateNextTurn(game);
     }
 }

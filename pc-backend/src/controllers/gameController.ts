@@ -158,6 +158,9 @@ export const playerAction = (req: Request, res: Response) => {
             case ActionType.Raise:
                 playerActions.raise(game, amount);
                 break;
+            case ActionType.RaiseAllIn:
+                playerActions.raiseAllIn(game);
+                break;
             default:
                 res.status(400).json({ message: 'Invalid action specified.' });
                 return;
