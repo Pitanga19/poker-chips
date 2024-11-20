@@ -169,8 +169,7 @@ export const playerAction = (req: Request, res: Response) => {
 };
 
 export const winnerSelect = (req: Request, res: Response) => {
-    console.log('Received data for winner winner select:', req.body);
-    const { winnerListPerPot } = req.body;
+    const winnerListPerPot = req.body.winnerListPerPot;
     /*
     if (!winnerListPerPot || !Array.isArray(winnerListPerPot)) {
         return res.status(400).json({ message: 'Invalid data format for winnerListPerPot.' });
@@ -193,7 +192,8 @@ export const winnerSelect = (req: Request, res: Response) => {
         potManager.resetPotList();
         playerManager.resetIsPlaying();
         positionManager.updateNextHand(game);
+        toExecuteValidator = toExecuteValidatorType.HandStageValidator;
     };
 
-    res.status(200).json({ winnerListPerPot: winnerListPerPot });
+    res.status(200).json({ updatedGame: game });
 };

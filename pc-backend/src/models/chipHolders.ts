@@ -232,10 +232,8 @@ export class Pot extends ChipHolder {
     
     payWinners(game: Game): void {
         const positionManager = game.positionManager;
-        const playerManager = game.playerManager;
-        const playerList = playerManager.playerList;
+        const playerList = game.playerManager.playerList;
         const winnerIndexList = positionManager.winnerIndexList;
-
         const winnerCount: number = winnerIndexList.length;
         const winnerReward: number = Math.floor(this._chips / winnerCount);
         
