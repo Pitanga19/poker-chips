@@ -223,8 +223,9 @@ export class TurnValidator {
         const bettingStage = game.bettingStage;
         
         const areEnoughPlaying = currentPot.areEnoughPlayingValidation();
-        const arePlayingWithChips = playerList.filter(p => p.isPlaying && p.chips > 0);
+        const arePlayingWithChips = playerList.filter(p => p.getTotalChips() > 0);
         const arePlayingWithChipsCount = arePlayingWithChips.length;
+        const areEnoughPlayingWithChips = arePlayingWithChipsCount <= 1;
         const isPlaying = currentPlayer.isPlaying;
         const hasChipsToBet = currentPlayer.chips > 0;
         const isRaiser = positionManager.turnIndex === positionManager.raiserIndex;
@@ -233,7 +234,7 @@ export class TurnValidator {
         const doSomeoneBet = bettingStage.actualBetValue > 0;
         const mustEqualBet = doSomeoneBet || currentPlayer.pendingChips < bettingStage.actualBetValue;
 
-        if (!areEnoughPlaying || isRaiser || doBBcheck || doEveryoneCheck) {
+        if (!areEnoughPlaying || isRaiser || doBBcheck || doEveryoneCheck || areEnoughPlayingWithChips) {
             console.log('Turn validation result: Ending betting stage ...');
             return TurnValidationType.EndBettingStage;
         }
