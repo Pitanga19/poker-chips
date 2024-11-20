@@ -315,7 +315,9 @@ export class PotManager {
 
     createSidePot(game: Game): void {
         const newPotId = this._potList.length;
-        
+        const collectAmount: number = this.playingPot().getMaximumPosibleBetValue(game);
+
+        this.collectToPlayingPot(game, collectAmount);
         this._potList.push(new Pot(newPotId));
         this.playingPot().getPlayingIds(game);
         console.log('New pot created with players:', this.playingPot().activePlayerIds)
