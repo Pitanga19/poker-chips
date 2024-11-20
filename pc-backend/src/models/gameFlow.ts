@@ -223,13 +223,13 @@ export class TurnValidator {
         const bettingStage = game.bettingStage;
         
         const areEnoughPlaying = currentPot.areEnoughPlayingValidation();
-        const arePlaying = playerList.filter(p => p.isPlaying);
-        const arePlayingCount = arePlaying.length;
+        const arePlayingWithChips = playerList.filter(p => p.isPlaying && p.chips > 0);
+        const arePlayingWithChipsCount = arePlayingWithChips.length;
         const isPlaying = currentPlayer.isPlaying;
         const hasChipsToBet = currentPlayer.chips > 0;
         const isRaiser = positionManager.turnIndex === positionManager.raiserIndex;
         const doBBcheck = bettingStage.doBigBlindCheck;
-        const doEveryoneCheck = bettingStage.checkCount === arePlayingCount;
+        const doEveryoneCheck = bettingStage.checkCount === arePlayingWithChipsCount;
         const doSomeoneBet = bettingStage.actualBetValue > 0;
         const mustEqualBet = doSomeoneBet || currentPlayer.pendingChips < bettingStage.actualBetValue;
 
