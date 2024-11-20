@@ -1,10 +1,9 @@
 import express from 'express';
 import cors from 'cors';
+import { PORT, IP } from './utils/constants';
 import { newGame, playerList, currentGame, currentToExecuteValidator, avalibleActions, playerAction, winnerSelect } from './controllers/gameController';
 
 const app = express();
-const PORT = 3000;
-const IP = 'localhost';
 
 app.use(cors());
 app.use(express.json());
