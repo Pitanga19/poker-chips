@@ -223,7 +223,7 @@ export class TurnValidator {
         const bettingStage = game.bettingStage;
         
         const areEnoughPlaying = currentPot.areEnoughPlayingValidation();
-        const arePlayingWithChips = playerList.filter(p => p.getTotalChips() > 0);
+        const arePlayingWithChips = playerList.filter(p => p.isPlaying && p.getTotalChips() > 0);
         const arePlayingWithChipsCount = arePlayingWithChips.length;
         const areEnoughPlayingWithChips = arePlayingWithChipsCount <= 1;
         const isPlaying = currentPlayer.isPlaying;
