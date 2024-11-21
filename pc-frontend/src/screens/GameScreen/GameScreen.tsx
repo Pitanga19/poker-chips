@@ -94,7 +94,7 @@ const GameScreen = () => {
 
     const renderPot = ({item}: {item: Pot}) => {
         return (
-            <View style={ styles.container }>
+            <View style={ styles.potListElementContainer }>
                 <Text style={ styles.mainText }>Pot { item.id + 1 }</Text>
                 <Text style={ styles.mainText }>Chips: { item.chips }</Text>
             </View>
@@ -105,22 +105,23 @@ const GameScreen = () => {
         const isCurrentTurn = positionManager? item.id === playerManager?.playerList[positionManager.turnIndex].id : null;
         
         return (
-            <View style={ styles.container }>
-                <View style={ styles.container }>
-                    <Text style={ styles.mainText }>Player info</Text>
-                    <Text style={ styles.mainText }>ID: {item.id}</Text>
+            <View style={ styles.playerListElementContainer }>
+                <View style={ styles.playerItemContainer }>
+                    <Text style={ styles.playerItemTitle }>{item.id}</Text>
                     <Text style={ styles.mainText }>Chips: {item.chips}</Text>
                     <Text style={ styles.mainText }>Pending chips: {item.pendingChips}</Text>
                 </View>
-                {isCurrentTurn && (
-                    <FlatList 
-                        data={ avalibleActions }
-                        renderItem={ renderAction }
-                        keyExtractor={ (item) => item }
-                        style={ styles.listContainer }
-                    />
-                    )
-                }
+                <View style={ styles.playerItemContainer }>
+                    {isCurrentTurn && (
+                        <FlatList 
+                            data={ avalibleActions }
+                            renderItem={ renderAction }
+                            keyExtractor={ (item) => item }
+                            style={ styles.listContainer }
+                        />
+                        )
+                    }
+                </View>
             </View>
         );
     };
@@ -165,14 +166,13 @@ const GameScreen = () => {
     const renderAction = ({ item }: {item: ActionType}) => {
         const isBet = item === ActionType.Bet;
         const isRaise = item === ActionType.Raise;
-
         const handleAmountChange = (amount: string) => {setAmount(amount)};
         
         return (
-            <View style={ styles.container }>
+            <View style={ styles.actionListElementContainer }>
                 {(isBet || isRaise) && (
                     <TextInput
-                        style={ styles.input }
+                        style={ styles.actionItemInput }
                         placeholder="amount"
                         placeholderTextColor= {'#888'}
                         value={amount}
@@ -180,16 +180,17 @@ const GameScreen = () => {
                         keyboardType="numeric"
                     />
                 )}
-                <Pressable style={ styles.button } onPress={ () => handleActionPress(item) }>
-                    <Text style={ styles.mainText }>{item}</Text>
+                <Pressable style={ styles.actionItemButton } onPress={ () => handleActionPress(item) }>
+                    <Text style={ styles.actionItemButtonText }>{item}</Text>
                 </Pressable>
             </View>
         );
     };
 
     return (
-        <View style={ styles.main }>
-            <View style={ styles.container }>
+        <View style={ styles.mainContainer }>
+            <View style={ styles.sectionContainer }>
+            <Text style={ styles.sectionTitle }>Pots</Text>
                 <FlatList
                     data={ potList || [] }
                     renderItem={ renderPot }
@@ -197,8 +198,8 @@ const GameScreen = () => {
                     style={ styles.listContainer }
                 />
             </View>
-            <View style={ styles.container }>
-                <Text style={ styles.mainText }>Players</Text>
+            <View style={ styles.sectionContainer }>
+                <Text style={ styles.sectionTitle }>Players</Text>
                 <FlatList
                     data={ playerList || [] }
                     renderItem={ renderPlayer }

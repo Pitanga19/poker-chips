@@ -1,4 +1,9 @@
 import { StyleSheet } from "react-native";
+import globalStyles from "../../styles/global";
+import containerStyles from "../../styles/container";
+import inputStyles from "../../styles/input";
+import buttonStyles from "../../styles/button";
+import listStyles from "../../styles/list";
 
 const styles = StyleSheet.create({
     main: {
@@ -66,4 +71,60 @@ const styles = StyleSheet.create({
     },
 });
 
-export default styles
+const gameStyles = StyleSheet.create({
+    ... globalStyles,
+
+    mainContainer: {
+        ... containerStyles.main,
+    },
+
+    mainText: {
+        ... globalStyles.text,
+    },
+
+    sectionContainer: {
+        ... containerStyles.container,
+    },
+
+    sectionTitle: {
+        ... globalStyles.title,
+    },
+
+    listContainer: {
+        ... listStyles.listContainer,
+    },
+
+    potListElementContainer: {
+        ... listStyles.listElementContainer,
+    },
+
+    playerListElementContainer: {
+        ... listStyles.listElementContainer,
+    },
+
+    playerItemContainer: {
+        ... containerStyles.container,
+    },
+
+    playerItemTitle: {
+        ... globalStyles.title,
+    },
+
+    actionListElementContainer: {
+        ... listStyles.listElementContainer,
+    },
+
+    actionItemInput: {
+        ... inputStyles.textInput,
+    },
+
+    actionItemButton: {
+        ... buttonStyles.button
+    },
+
+    actionItemButtonText: {
+        ... buttonStyles.buttonText,
+    },
+});
+
+export default gameStyles
