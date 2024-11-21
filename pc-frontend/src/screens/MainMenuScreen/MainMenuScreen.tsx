@@ -5,6 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
 import { IP, PORT } from '../../utils/constants';
+import { isNumericString, getFloorFromString } from '../../utils/functions';
 
 type MainMenuScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'MainMenu'>;
 
@@ -39,7 +40,11 @@ const MainMenuScreen = () => {
         };
     };
 
-    const handleBigBlindValue = (value: string) => { setBigBlindValue(value)};
+    const handleBigBlindValue = (value: string) => {
+        isNumericString(value) ?
+        setBigBlindValue(getFloorFromString(value)) :
+        Alert.alert('¡Error!', 'BB must be numeric.');
+    };
 
     return (
         <View style={ styles.mainContainer }>
