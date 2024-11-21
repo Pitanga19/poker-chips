@@ -41,25 +41,34 @@ const MainMenuScreen = () => {
     };
 
     const handleBigBlindValue = (value: string) => {
-        isNumericString(value) ?
-        setBigBlindValue(getFloorFromString(value)) :
-        Alert.alert('¡Error!', 'BB must be numeric.');
+        if (value === '') {
+            setBigBlindValue('');
+            return;
+        };
+    
+        if (isNumericString(value) || value === '') {
+            setBigBlindValue(getFloorFromString(value));
+        } else {
+            Alert.alert('¡Error!', 'BB must be numeric.');
+        };
     };
 
     return (
-        <View style={ styles.mainContainer }>
+        <View style={ styles.main }>
             <View style={ styles.menuContainer }>
-                <TextInput
-                    style={ styles.menuInput }
-                    placeholder="Input BB value"
-                    placeholderTextColor= {'#888'}
-                    value={ bigBlindValue }
-                    onChangeText={ handleBigBlindValue }
-                    keyboardType="numeric"
-                    />
-                <Pressable style={ styles.menuButton } onPress={ createNewGame }>
-                    <Text style={ styles.menuButtonText }>Start Game</Text>
-                </Pressable>
+                <View style={ styles.menuElementContainer }>
+                    <TextInput
+                        style={ styles.menuInput }
+                        placeholder="Input BB value"
+                        placeholderTextColor= {'#888'}
+                        value={ bigBlindValue }
+                        onChangeText={ handleBigBlindValue }
+                        keyboardType="numeric"
+                        />
+                    <Pressable style={ styles.menuButton } onPress={ createNewGame }>
+                        <Text style={ styles.menuButtonText }>Start Game</Text>
+                    </Pressable>
+                </View>
             </View>
         </View>
     );

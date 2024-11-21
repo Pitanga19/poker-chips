@@ -5,26 +5,40 @@ import inputStyles from "../../styles/input";
 import buttonStyles from "../../styles/button";
 
 const mainMenuStyles = StyleSheet.create({
-    ... globalStyles,
-
-    mainContainer: {
-        ... containerStyles.main,
+    main: {
+        ... globalStyles.main,
+        paddingTop: 48,
     },
 
     menuContainer: {
         ... containerStyles.container,
+        padding: 24,
+    },
+
+    menuElementContainer: {
+        ... containerStyles.container,
+        backgroundColor: 'rgb(1, 1, 1, 0)',
+        margin: 0,
+        padding: 0,
+        gap: 4,
     },
 
     menuInput: {
         ... inputStyles.textInput,
+        paddingVertical: 4,
+        width: 120,
     },
 
     menuButton: {
-        ... buttonStyles.button
+        ... buttonStyles.button,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        width: 160,
     },
 
     menuButtonText: {
-        ... buttonStyles.buttonText
+        ... buttonStyles.buttonText,
+        fontSize: 20,
     },
 });
 
