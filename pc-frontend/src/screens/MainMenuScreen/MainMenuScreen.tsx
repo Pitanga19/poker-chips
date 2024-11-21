@@ -42,18 +42,20 @@ const MainMenuScreen = () => {
     const handleBigBlindValue = (value: string) => { setBigBlindValue(value)};
 
     return (
-        <View style={ styles.main }>
-            <Pressable style={ styles.button } onPress={ createNewGame }>
+        <View style={ styles.mainContainer }>
+            <View style={ styles.menuContainer }>
                 <TextInput
-                    style={ styles.input }
-                    placeholder="big blind value"
+                    style={ styles.menuInput }
+                    placeholder="Input BB value"
                     placeholderTextColor= {'#888'}
                     value={ bigBlindValue }
                     onChangeText={ handleBigBlindValue }
                     keyboardType="numeric"
-                />
-                <Text style={ styles.mainText }>New Game</Text>
-            </Pressable>
+                    />
+                <Pressable style={ styles.menuButton } onPress={ createNewGame }>
+                    <Text style={ styles.menuButtonText }>Start Game</Text>
+                </Pressable>
+            </View>
         </View>
     );
 };

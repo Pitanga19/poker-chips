@@ -1,5 +1,5 @@
 export const PORT = 3000;
-export const IP = 'localhost';
+export const IP = '192.168.0.8';
 
 export enum ActionType {
     PutSmallBlind = 'putSmallBlind',

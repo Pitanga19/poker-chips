@@ -1,69 +1,31 @@
 import { StyleSheet } from "react-native";
+import globalStyles from "../../styles/global";
+import containerStyles from "../../styles/container";
+import inputStyles from "../../styles/input";
+import buttonStyles from "../../styles/button";
 
-const styles = StyleSheet.create({
-    main: {
-        flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-        backgroundColor: '#222',
+const mainMenuStyles = StyleSheet.create({
+    ... globalStyles,
+
+    mainContainer: {
+        ... containerStyles.main,
     },
 
-    container: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        backgroundColor: '233',
-        margin: 10,
-        padding: 10,
+    menuContainer: {
+        ... containerStyles.container,
     },
 
-    mainText: {
-        color: '#fff'
+    menuInput: {
+        ... inputStyles.textInput,
     },
 
-    listContainer: {
-        flexGrow: 0,
+    menuButton: {
+        ... buttonStyles.button
     },
 
-    listElementContainer: {
-        flexDirection: 'row',
-        borderWidth: 2,
-        borderColor: '#fff',
-        margin: 10,
-        padding: 10,
-    },
-
-    userContainer: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        margin: 10,
-        padding: 10,
-    },
-
-    button: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        margin: 10,
-        padding: 10,
-    },
-
-    actionContainer: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        margin: 10,
-        padding: 10,
-    },
-
-    input: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        margin: 10,
-        padding: 10,
-        color: '#fff'
-    },
-
-    selected: {
-        backgroundColor: '#afa'
+    menuButtonText: {
+        ... buttonStyles.buttonText
     },
 });
 
-export default styles
+export default mainMenuStyles
