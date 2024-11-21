@@ -7,9 +7,15 @@ const globalStyles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#222', // Fondo base
     },
+
+    title: {
+        color: '#fff',
+        fontSize: 16,
+    },
+
     text: {
         color: '#fff', // Color de texto por defecto
-        fontSize: 16,
+        fontSize: 12,
     },
 });
 

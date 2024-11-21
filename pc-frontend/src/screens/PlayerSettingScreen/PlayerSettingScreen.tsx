@@ -20,7 +20,6 @@ const PlayerSettingScreen = () => {
     const [playerID, setPlayerID] = useState('');
     const [startingChips, setStartingChips] = useState('');
     const [playerList, setPlayerList] = useState<Player[]>([]);
-
     const alreadyExistingID = playerList.some(p => p.id === playerID);
 
     const validateAddPlayer = () => {
@@ -44,9 +43,9 @@ const PlayerSettingScreen = () => {
         setStartingChips('');
     };
 
-    const renderItem = ({ item }: { item: Player }) => {
+    const renderPlayer = ({ item }: { item: Player }) => {
         return (
-            <View style={ styles.container }>
+            <View style={ styles.playerListElementContainer }>
                 <Text style={ styles.mainText }>ID: {item.id}</Text>
                 <Text style={ styles.mainText }>Chips: {item.chips}</Text>
             </View>
@@ -85,12 +84,12 @@ const PlayerSettingScreen = () => {
     };
 
     return (
-        <View style={ styles.main }>
-            <View style={ styles.container }>
-                <Text style={ styles.mainText }>Player Settings</Text>
+        <View style={ styles.mainContainer }>
+            <View style={ styles.sectionContainer }>
+                <Text style={ styles.sectionTitle }>Player Settings</Text>
 
                 <TextInput
-                    style={ styles.input }
+                    style={ styles.newPlayerInput }
                     placeholder="Player ID"
                     placeholderTextColor= {'#888'}
                     value={playerID}
@@ -98,7 +97,7 @@ const PlayerSettingScreen = () => {
                 />
 
                 <TextInput
-                    style={ styles.input }
+                    style={ styles.newPlayerInput }
                     placeholder="Starting chips"
                     placeholderTextColor= {'#888'}
                     value={startingChips}
@@ -106,25 +105,25 @@ const PlayerSettingScreen = () => {
                     keyboardType="numeric"
                 />
 
-                <Pressable style={ styles.button} onPress={ validateAddPlayer }>
-                    <Text style={ styles.mainText }>Add Player</Text>
+                <Pressable style={ styles.newPlayerButton} onPress={ validateAddPlayer }>
+                    <Text style={ styles.newPlayerButtonText }>Add Player</Text>
                 </Pressable>
             </View>
 
-            <View style={ styles.container }>
-                <Text style={ styles.mainText }>Players</Text>
+            <View style={ styles.sectionContainer }>
+                <Text style={ styles.sectionTitle }>Players</Text>
 
                 <FlatList
                     data={ playerList }
-                    renderItem={ renderItem }
+                    renderItem={ renderPlayer }
                     keyExtractor={(item) => item.id}
-                    style={ styles.listContainer}
+                    style={ styles.playerListContainer}
                 />
             </View>
 
             <View>
-                <Pressable style={ styles.button} onPress={ sendPlayerList }>
-                    <Text style={ styles.mainText }>Send Players List</Text>
+                <Pressable style={ styles.submitButton} onPress={ sendPlayerList }>
+                    <Text style={ styles.submitButtonText }>Send Players List</Text>
                 </Pressable>
             </View>
         </View>
