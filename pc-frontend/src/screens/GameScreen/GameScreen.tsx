@@ -117,7 +117,7 @@ const GameScreen = () => {
                             data={ avalibleActions }
                             renderItem={ renderAction }
                             keyExtractor={ (item) => item }
-                            style={ styles.listContainer }
+                            style={ styles.actionListContainer }
                         />
                         )
                     }
@@ -195,7 +195,7 @@ const GameScreen = () => {
                     data={ potList || [] }
                     renderItem={ renderPot }
                     keyExtractor={ (item) => item.id.toString() }
-                    style={ styles.listContainer }
+                    style={ styles.potListContainer }
                 />
             </View>
             <View style={ styles.sectionContainer }>
@@ -204,7 +204,7 @@ const GameScreen = () => {
                     data={ playerList || [] }
                     renderItem={ renderPlayer }
                     keyExtractor={ (item) => item.id }
-                    style={ styles.listContainer }
+                    style={ styles.playerListContainer }
                 />
             </View>
         </View>

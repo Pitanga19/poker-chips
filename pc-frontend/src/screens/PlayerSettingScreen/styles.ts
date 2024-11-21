@@ -53,4 +53,4 @@ const playerSelectStyles = StyleSheet.create({
     },
 })
 
-export default playerSelectStyles
+export default playerSelectStyles;

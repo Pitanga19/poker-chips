@@ -28,4 +28,4 @@ const mainMenuStyles = StyleSheet.create({
     },
 });
 
-export default mainMenuStyles
+export default mainMenuStyles;

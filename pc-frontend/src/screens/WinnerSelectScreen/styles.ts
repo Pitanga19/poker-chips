@@ -1,69 +1,63 @@
 import { StyleSheet } from "react-native";
+import globalStyles from "../../styles/global";
+import containerStyles from "../../styles/container";
+import listStyles from "../../styles/list";
+import buttonStyles from "../../styles/button";
 
-const styles = StyleSheet.create({
-    main: {
-        flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-        backgroundColor: '#222',
-    },
+const winnerSelectStyles = StyleSheet.create({
+    ... globalStyles,
 
-    container: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        backgroundColor: '233',
-        margin: 10,
-        padding: 10,
+    mainContainer: {
+        ... containerStyles.main,
     },
 
     mainText: {
-        color: '#fff'
+        ... globalStyles.text,
     },
 
-    listContainer: {
-        flexGrow: 0,
+    sectionContainer: {
+        ... containerStyles.container,
     },
 
-    listElementContainer: {
-        flexDirection: 'row',
-        borderWidth: 2,
-        borderColor: '#fff',
-        margin: 10,
-        padding: 10,
+    sectionTitle: {
+        ... globalStyles.title,
     },
 
-    userContainer: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        margin: 10,
-        padding: 10,
+    potListContainer: {
+        ... listStyles.listContainer,
     },
 
-    button: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        margin: 10,
-        padding: 10,
+    potListElementContainer: {
+        ... listStyles.listElementContainer,
     },
 
-    actionContainer: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        margin: 10,
-        padding: 10,
+    potListItemTitle: {
+        ... globalStyles.title,
     },
 
-    input: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        margin: 10,
-        padding: 10,
-        color: '#fff'
+    playerListContainer: {
+        ... listStyles.listContainer,
     },
 
-    selected: {
-        backgroundColor: '#afa'
+    playerListButton: {
+        ... buttonStyles.button,
+    },
+
+    playerListSelectedButton: {
+        ... buttonStyles.selected,
+    },
+
+    playerListButtonText: {
+        ... buttonStyles.buttonText,
+    },
+
+    submitButton: {
+        ... buttonStyles.button,
+    },
+
+    submitButtonText: {
+        ... buttonStyles.buttonText,
     },
 });
 
-export default styles
+export default winnerSelectStyles

@@ -55,13 +55,13 @@ const WinnerSelectScreen = () => {
 
     const renderPot = ({item}: {item: Pot}) => {
         return (
-            <View style={ styles.container }>
-                <Text style={ styles.mainText }>Pot: {item.id}</Text>
+            <View style={ styles.potListElementContainer }>
+                <Text style={ styles.potListItemTitle }>Pot {item.id +1 }: {item.chips}</Text>
                     <FlatList 
                         data={ item.activePlayerIds }
                         renderItem={ ({ item: playerId }) => renderPlayer(item.id, playerId) }
                         keyExtractor={ playerId => playerId }
-                        style={ styles.listContainer }
+                        style={ styles.playerListContainer }
                     />
             </View>
         );
@@ -69,11 +69,11 @@ const WinnerSelectScreen = () => {
 
     const renderPlayer = ( potId: number, playerId: string) => {
         const isSelected: boolean = selectedWinners[potId].includes(playerId);
-        const buttonStyle = [styles.button, isSelected && styles.selected];
+        const buttonStyle = [styles.playerListButton, isSelected && styles.playerListSelectedButton];
         
         return (
             <Pressable style={ buttonStyle } onPress={ () => toggleSelection(potId, playerId) }>
-                <Text style={ styles.mainText }>{playerId}</Text>
+                <Text style={ styles.playerListButtonText }>{playerId}</Text>
             </Pressable>
         );
     };
@@ -112,19 +112,21 @@ const WinnerSelectScreen = () => {
     };
 
     return (
-        <View style={ styles.main }>
-            <Text style={ styles.mainText }>Pot List</Text>
+        <View style={ styles.mainContainer }>
+            <View style={ styles.sectionContainer }>
+                <Text style={ styles.sectionTitle }>Pot List</Text>
 
-            <FlatList 
-                data={ potList }
-                renderItem={ renderPot }
-                keyExtractor={ (item) => item.id.toString() }
-                style={ styles.listContainer }
-            />
-            
-            <Pressable style={ styles.button } onPress={ sendWinnerSelection }>
-                <Text style={ styles.mainText }>Send Winner Selection</Text>
-            </Pressable>
+                <FlatList 
+                    data={ potList }
+                    renderItem={ renderPot }
+                    keyExtractor={ (item) => item.id.toString() }
+                    style={ styles.potListContainer }
+                />
+                
+                <Pressable style={ styles.submitButton } onPress={ sendWinnerSelection }>
+                    <Text style={ styles.submitButtonText }>Send Winner Selection</Text>
+                </Pressable>
+            </View>
         </View>
     );
 };
