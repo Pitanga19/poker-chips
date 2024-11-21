@@ -38,15 +38,18 @@ export interface Pot {
     chips: number;
     pendingChips: number;
 };
+
 export interface Player {
     id: string;
     chips: number;
     pendingChips: number;
     isPlaying: boolean;
 };
+
 export interface PlayerManager {
     playerList: Player[];
 };
+
 export interface PositionManager {
     dealerIndex: number;
     smallBlindIndex: number;

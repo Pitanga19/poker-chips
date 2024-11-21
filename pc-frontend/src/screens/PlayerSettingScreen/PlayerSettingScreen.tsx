@@ -4,16 +4,9 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
-import { IP, PORT } from '../../utils/constants';
+import { IP, PORT, Player } from '../../utils/constants';
 
 type PlayerSettingScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PlayerSetting'>;
-
-interface Player {
-    id: string;
-    chips: number;
-    pendingChips: number;
-    isPlaying: boolean;
-};
 
 const PlayerSettingScreen = () => {
     const navigation = useNavigation<PlayerSettingScreenNavigationProp>();
@@ -46,7 +39,7 @@ const PlayerSettingScreen = () => {
     const renderPlayer = ({ item }: { item: Player }) => {
         return (
             <View style={ styles.playerListElementContainer }>
-                <Text style={ styles.mainText }>ID: {item.id}</Text>
+                <Text style={ styles.playerListTitle }>{item.id}</Text>
                 <Text style={ styles.mainText }>Chips: {item.chips}</Text>
             </View>
         );

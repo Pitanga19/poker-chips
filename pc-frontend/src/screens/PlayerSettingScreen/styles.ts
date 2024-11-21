@@ -44,6 +44,10 @@ const playerSelectStyles = StyleSheet.create({
         ... listStyles.listElementContainer,
     },
 
+    playerListTitle: {
+        ... globalStyles.title,
+    },
+
     submitButton: {
         ... buttonStyles.button,
     },
