@@ -182,6 +182,7 @@ const gameStyles = StyleSheet.create({
         padding: 8,
         alignItems: 'center',
         justifyContent: 'center',
+        flexGrow: 1,
     },
 
     playerActionContainer: {
