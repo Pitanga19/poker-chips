@@ -4,7 +4,7 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { IP, PORT, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager, BettingStage, BettingStageType } from '../../utils/constants';
+import { IP, PORT, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager, HandStage, BettingStage, BettingStageType } from '../../utils/constants';
 import { isNumericString, getFloorFromString } from '../../utils/functions';
 
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
@@ -16,6 +16,7 @@ const GameScreen = () => {
     const [playerManager, setPlayerManager] = useState<PlayerManager | null>(null);
     const [playerList, setPlayerList] = useState<Player[]>([]);
     const [positionManager, setPositionManager] = useState<PositionManager | null>(null);
+    const [handStage, setHandStage] = useState<HandStage | null>(null);
     const [bettingStage, setBettingStage] = useState<BettingStage | null>(null);
     const [toExecuteValidator, setToExecuteValidator] = useState<toExecuteValidatorType>(toExecuteValidatorType.HandStageValidator);
     const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([]);
@@ -31,6 +32,7 @@ const GameScreen = () => {
             setPlayerManager(data.playerManager);
             setPlayerList(data.playerManager?.playerList);
             setPositionManager(data.positionManager);
+            setHandStage(data.handStage);
             setBettingStage(data.bettingStage);
         } catch (error) {
             console.error('Error fetching game:', error);
@@ -101,7 +103,7 @@ const GameScreen = () => {
         return (
             <View style={ styles.potListElementContainer }>
                 <Text style={ styles.potListTitle }>
-                    Pot { item.id + 1 }: { item.chips }
+                    Pot { item.chips }
                 </Text>
             </View>
         );
@@ -233,25 +235,52 @@ const GameScreen = () => {
     
     const riverCardStyle = [styles.sectionCardItem, bettingStage?.stage === BettingStageType.River && styles.sectionShowedCardItem];
 
+    const cardStyles = [flopCardStyle, flopCardStyle, flopCardStyle, turnCardStyle, riverCardStyle ]
+
     return (
         <View style={ styles.main }>
-            <View style={ styles.sectionContainer }>
-            <Text style={ styles.sectionTitle }>{bettingStage?.stage}</Text>
-            <View style={ styles.sectionCardContainer }>
-                <View style={ flopCardStyle }/>
-                <View style={ flopCardStyle }/>
-                <View style={ flopCardStyle }/>
-                <View style={ turnCardStyle }/>
-                <View style={ riverCardStyle }/>
+            <View style={ styles.sectionHandInfoContainer }>
+                <View style={ styles.sectionStageContainer }>
+                    <Text style={ styles.sectionTitle }>{bettingStage?.stage}</Text>
+                    <View style={ styles.sectionCardContainer }>
+                    {cardStyles.map((style, index) => (
+                        <View key={index} style={style} />
+                    ))}
+                    </View>
+                </View>
+                <View style={ styles.sectionPotListContainer }>
+                    <FlatList
+                        data={ potList || [] }
+                        renderItem={ renderPot }
+                        keyExtractor={ (item) => item.id.toString() }
+                        style={ styles.potListContainer }
+                    />
+                </View>
+                <View style={ styles.sectionValuesContainer }>
+                    <View style={ styles.sectionValuesItem }>
+                        <Text style={ styles.sectionValuesText }>BB value
+                        </Text>
+                        <Text style={ styles.sectionValuesTitle }>
+                            { handStage?.bigBlindValue }
+                        </Text>
+                    </View>
+                    <View style={ styles.sectionValuesItem }>
+                        <Text style={ styles.sectionValuesText }>Actual bet
+                        </Text>
+                        <Text style={ styles.sectionValuesTitle }>
+                            { bettingStage?.actualBetValue }
+                        </Text>
+                    </View>
+                    <View style={ styles.sectionValuesItem }>
+                        <Text style={ styles.sectionValuesText }>Min Raise
+                        </Text>
+                        <Text style={ styles.sectionValuesTitle }>
+                            { bettingStage?.minimumRaise }
+                        </Text>
+                    </View>
+                </View>
             </View>
-                <FlatList
-                    data={ potList || [] }
-                    renderItem={ renderPot }
-                    keyExtractor={ (item) => item.id.toString() }
-                    style={ styles.potListContainer }
-                />
-            </View>
-            <View style={ styles.sectionContainer }>
+            <View style={ styles.sectionPlayerListContainer }>
                 <FlatList
                     data={ playerList || [] }
                     renderItem={ renderPlayer }

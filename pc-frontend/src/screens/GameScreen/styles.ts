@@ -16,12 +16,15 @@ const gameStyles = StyleSheet.create({
         ... globalStyles.text,
     },
 
-    sectionContainer: {
+    sectionHandInfoContainer: {
+        flexDirection: 'row',
+        width: 360,
+        gap: 8,
+    },
+
+    sectionStageContainer: {
         ... containerStyles.container,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
-        flexDirection: 'column',
-        gap: 4,
+        padding: 8,
     },
 
     sectionTitle: {
@@ -45,9 +48,15 @@ const gameStyles = StyleSheet.create({
         backgroundColor: '#c22',
     },
 
+    sectionPotListContainer: {
+        ... containerStyles.container,
+        padding: 12,
+        width: 112,
+    },
+
     potListContainer: {
         ... listStyles.listContainer,
-        minWidth: 160,
+        flexGrow: 1,
     },
 
     potListElementContainer: {
@@ -64,8 +73,45 @@ const gameStyles = StyleSheet.create({
         fontSize: 12,
     },
 
+    sectionValuesContainer: {
+        ... containerStyles.container,
+        paddingHorizontal: 12,
+        paddingVertical: 4,
+        alignItems: 'stretch',
+        flexGrow: 1,
+    },
+
+    sectionValuesItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+    },
+
+    sectionValuesText: {
+        ... globalStyles.text,
+        gap: 4,
+    },
+
+    sectionValuesTitle: {
+        ... globalStyles.title,
+        flexGrow: 1,
+        textAlign: 'right',
+        paddingLeft: 2,
+        fontSize: 14,
+    },
+
+    sectionPlayerListContainer: {
+        ... containerStyles.container,
+        width: 360,
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        flexDirection: 'column',
+        gap: 4,
+    },
+
     playerListContainer: {
         ... listStyles.listContainer,
+        width: '100%',
     },
 
     playerListElementContainer: {
@@ -80,6 +126,7 @@ const gameStyles = StyleSheet.create({
         justifyContent: 'center',
         padding: 8,
         gap: 4,
+        width: '50%',
     },
 
     playerItemTitleContainer: {
@@ -143,6 +190,7 @@ const gameStyles = StyleSheet.create({
         paddingRight: 8,
         alignItems: 'center',
         justifyContent: 'center',
+        width: '50%',
     },
 
     actionListContainer: {

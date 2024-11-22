@@ -59,6 +59,12 @@ export interface PositionManager {
     winnersIndex: number[];
 };
 
+export interface HandStage {
+    smallBlindValue: number;
+    bigBlindValue: number;
+    stagesPlayed: BettingStageType[];
+}
+
 export interface BettingStage {
     stage: BettingStageType,
     doBigBlindCheck: boolean,
