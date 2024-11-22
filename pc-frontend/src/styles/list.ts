@@ -6,7 +6,6 @@ const listStyles = StyleSheet.create({
     },
 
     listElementContainer: {
-        flexDirection: 'row',
         borderColor: '#fff',
         borderRadius: 5,
     },

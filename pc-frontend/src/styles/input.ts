@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const inputStyles = StyleSheet.create({
     textInput: {
         color: '#fff',
-        backgroundColor: '#333',
+        backgroundColor: 'rgb(44, 44, 44)',
         borderRadius: 4,
         textAlign: 'center',
     },

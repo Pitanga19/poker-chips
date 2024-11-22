@@ -5,7 +5,7 @@ const globalStyles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
-        backgroundColor: '#222', // Fondo base
+        backgroundColor: '#222',
     },
 
     title: {
@@ -16,7 +16,7 @@ const globalStyles = StyleSheet.create({
     },
 
     text: {
-        color: '#fff', // Color de texto por defecto
+        color: '#fff',
         fontSize: 12,
     },
 });

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TextInput, Pressable, Alert } from 'react-native';
+import { View, Text, FlatList, TextInput, Pressable, Alert, Image } from 'react-native';
 import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { IP, PORT, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager } from '../../utils/constants';
+import { IP, PORT, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager, BettingStage } from '../../utils/constants';
+import { isNumericString, getFloorFromString } from '../../utils/functions';
 
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
 
@@ -15,6 +16,7 @@ const GameScreen = () => {
     const [playerManager, setPlayerManager] = useState<PlayerManager | null>(null);
     const [playerList, setPlayerList] = useState<Player[]>([]);
     const [positionManager, setPositionManager] = useState<PositionManager | null>(null);
+    const [bettingStage, setBettingStage] = useState<BettingStage | null>(null);
     const [toExecuteValidator, setToExecuteValidator] = useState<toExecuteValidatorType>(toExecuteValidatorType.HandStageValidator);
     const [avalibleActions, setAvalibleActions] = useState<ActionType[]>([]);
     const [amount, setAmount] = useState<string>('');
@@ -29,6 +31,7 @@ const GameScreen = () => {
             setPlayerManager(data.playerManager);
             setPlayerList(data.playerManager?.playerList);
             setPositionManager(data.positionManager);
+            setBettingStage(data.bettingStage);
         } catch (error) {
             console.error('Error fetching game:', error);
         };
@@ -95,8 +98,9 @@ const GameScreen = () => {
     const renderPot = ({item}: {item: Pot}) => {
         return (
             <View style={ styles.potListElementContainer }>
-                <Text style={ styles.mainText }>Pot { item.id + 1 }</Text>
-                <Text style={ styles.mainText }>Chips: { item.chips }</Text>
+                <Text style={ styles.potListTitle }>
+                    Pot { item.id + 1 }: { item.chips }
+                </Text>
             </View>
         );
     };
@@ -106,12 +110,24 @@ const GameScreen = () => {
         
         return (
             <View style={ styles.playerListElementContainer }>
-                <View style={ styles.playerItemContainer }>
+                <View style={ styles.playerContainer }>
                     <Text style={ styles.playerItemTitle }>{item.id}</Text>
-                    <Text style={ styles.mainText }>Chips: {item.chips}</Text>
-                    <Text style={ styles.mainText }>Pending chips: {item.pendingChips}</Text>
+                    <View style={ styles.playerInfoContainer}>
+                        <View style={ styles.playerImageContainer }>
+                                <Image
+                                    style={ styles.playerImage }
+                                    source={require('../../assets/default-user.png')
+                                }/>
+                        </View>
+                        <View style={ styles.playerChips }>
+                            <View>
+                                <Text style={ styles.playerItemText }>Chips: {item.chips}</Text>
+                                <Text style={ styles.playerItemText }>Betting: {item.pendingChips}</Text>
+                            </View>
+                        </View>
+                    </View>
                 </View>
-                <View style={ styles.playerItemContainer }>
+                <View style={ styles.playerActionContainer }>
                     {isCurrentTurn && (
                         <FlatList 
                             data={ avalibleActions }
@@ -166,31 +182,49 @@ const GameScreen = () => {
     const renderAction = ({ item }: {item: ActionType}) => {
         const isBet = item === ActionType.Bet;
         const isRaise = item === ActionType.Raise;
-        const handleAmountChange = (amount: string) => {setAmount(amount)};
+        const handleAmountChange = (amount: string): void => {
+            if (amount === '') {
+                setAmount('');
+                return;
+            };
+        
+            if (isNumericString(amount) || amount === '') {
+                setAmount(getFloorFromString(amount));
+            } else {
+                Alert.alert('¡Error!', 'Chips must be numeric.');
+            };
+        };
         
         return (
             <View style={ styles.actionListElementContainer }>
                 {(isBet || isRaise) && (
-                    <TextInput
-                        style={ styles.actionItemInput }
-                        placeholder="amount"
-                        placeholderTextColor= {'#888'}
-                        value={amount}
-                        onChangeText={handleAmountChange}
-                        keyboardType="numeric"
-                    />
+                    <View style={ styles.actionItemSection }>
+                        <TextInput
+                            style={ styles.actionItemInput }
+                            placeholder="amount"
+                            placeholderTextColor= {'#888'}
+                            value={amount}
+                            onChangeText={handleAmountChange}
+                            keyboardType="numeric"
+                        />
+                    </View>
                 )}
-                <Pressable style={ styles.actionItemButton } onPress={ () => handleActionPress(item) }>
-                    <Text style={ styles.actionItemButtonText }>{item}</Text>
-                </Pressable>
+                <View style={ styles.actionItemSection }>
+                    <Pressable
+                        style={ styles.actionItemButton }
+                        onPress={ () => handleActionPress(item) }
+                    >
+                        <Text style={ styles.actionItemButtonText }>{item}</Text>
+                    </Pressable>
+                </View>
             </View>
         );
     };
 
     return (
-        <View style={ styles.mainContainer }>
+        <View style={ styles.main }>
             <View style={ styles.sectionContainer }>
-            <Text style={ styles.sectionTitle }>Pots</Text>
+            <Text style={ styles.sectionTitle }>Stage: {bettingStage?.stage}</Text>
                 <FlatList
                     data={ potList || [] }
                     renderItem={ renderPot }
@@ -199,7 +233,6 @@ const GameScreen = () => {
                 />
             </View>
             <View style={ styles.sectionContainer }>
-                <Text style={ styles.sectionTitle }>Players</Text>
                 <FlatList
                     data={ playerList || [] }
                     renderItem={ renderPlayer }

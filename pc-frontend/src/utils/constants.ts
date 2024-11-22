@@ -58,3 +58,11 @@ export interface PositionManager {
     raiserIndex: number;
     winnersIndex: number[];
 };
+
+export interface BettingStage {
+    stage: BettingStageType,
+    doBigBlindCheck: boolean,
+    actualBetValue: number,
+    minimumRaise: number,
+    checkCount: number
+}

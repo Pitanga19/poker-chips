@@ -25,6 +25,7 @@ const playerSelectStyles = StyleSheet.create({
 
     mainText: {
         ... globalStyles.text,
+        fontSize: 14,
     },
 
     sectionContainer: {
@@ -35,6 +36,7 @@ const playerSelectStyles = StyleSheet.create({
 
     sectionTitle: {
         ... globalStyles.title,
+        fontSize: 14,
     },
 
     playerListContainer: {
