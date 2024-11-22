@@ -260,7 +260,7 @@ export class BettingStage {
         this._stage = BettingStageTypeList[stagesPlayedCount];
         this._doBigBlindCheck = false;
         this._actualBetValue = 0;
-        this._minimumRaise = 0;
+        this._minimumRaise = handStage.bigBlindValue;
         this._checkCount = 0;
     }
 }
