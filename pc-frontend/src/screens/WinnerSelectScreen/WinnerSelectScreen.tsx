@@ -82,7 +82,7 @@ const WinnerSelectScreen = () => {
     const sendWinnerSelection = async () => {
         const winnerListPerPot = potList.map(pot => selectedWinners[pot.id] || []);
 
-        if (winnerListPerPot.every(winners => winners.length === 0)) {
+        if (winnerListPerPot.some(winners => winners.length === 0)) {
             Alert.alert('¡Invalid list!', 'No winners listed.');
             return;
         };
