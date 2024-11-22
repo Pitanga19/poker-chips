@@ -59,27 +59,27 @@ const playerSelectStyles = StyleSheet.create({
 
     newPlayerUserInput: {
         ... inputStyles.textInput,
-        width: 240,
+        margin: 0,
+        width: '100%',
     },
 
     newPlayerChipSection: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        width: '100%',
         gap: 10,
     },
 
     newPlayerChipInput: {
         ... inputStyles.textInput,
-        width: 105,
+        minWidth: 112,
     },
 
     newPlayerButton: {
         ... buttonStyles.button,
         justifyContent: 'center',
-        width: 125,
+        flexGrow: 1,
         paddingVertical: 4,
         paddingHorizontal: 16,
-        borderRadius: 4
     },
 
     newPlayerButtonText: {
