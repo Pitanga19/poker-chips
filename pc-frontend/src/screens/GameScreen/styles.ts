@@ -28,6 +28,7 @@ const gameStyles = StyleSheet.create({
 
     potListContainer: {
         ... listStyles.listContainer,
+        minWidth: 160,
     },
 
     potListElementContainer: {
@@ -99,9 +100,9 @@ const gameStyles = StyleSheet.create({
     playerActionContainer: {
         minWidth: 160,
         paddingVertical: 8,
+        paddingRight: 8,
         alignItems: 'center',
         justifyContent: 'center',
-        
     },
 
     actionListContainer: {
@@ -125,6 +126,7 @@ const gameStyles = StyleSheet.create({
 
     actionItemInput: {
         ... inputStyles.textInput,
+        backgroundColor: 'rgb(56, 56, 56)',
         justifyContent: 'center',
         height: '100%',
         padding: 0,
