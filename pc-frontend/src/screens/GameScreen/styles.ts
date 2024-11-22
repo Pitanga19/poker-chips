@@ -126,7 +126,7 @@ const gameStyles = StyleSheet.create({
 
     actionItemInput: {
         ... inputStyles.textInput,
-        backgroundColor: 'rgb(56, 56, 56)',
+        backgroundColor: 'rgb(64, 64, 64)',
         justifyContent: 'center',
         height: '100%',
         padding: 0,
