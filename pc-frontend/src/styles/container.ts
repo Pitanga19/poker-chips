@@ -1,20 +1,14 @@
 import { StyleSheet } from 'react-native';
 
 const containerStyles = StyleSheet.create({
-    main: {
-        flex: 1,
-        flexDirection: 'column',
+    container: {
         alignItems: 'center',
-        backgroundColor: '#222',
+        backgroundColor: 'rgba(250, 250, 250, 0.1)',
+        borderRadius: 8,
     },
 
-    container: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        backgroundColor: '#222',
-        margin: 10,
-        padding: 10,
-        borderRadius: 5,
+    sectionContainer: {
+        padding: 24,
     },
 
     listContainer: {

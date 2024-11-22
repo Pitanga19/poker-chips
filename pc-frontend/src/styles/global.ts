@@ -10,7 +10,9 @@ const globalStyles = StyleSheet.create({
 
     title: {
         color: '#fff',
+        textTransform: 'uppercase',
         fontSize: 16,
+        fontWeight: 'bold',
     },
 
     text: {

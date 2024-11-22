@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Alert, View, Text, FlatList, TextInput, Pressable } from 'react-native';
+import { Alert, View, Text, FlatList, TextInput, Pressable, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
 import { IP, PORT, Player } from '../../utils/constants';
+import { isAlphanumericString, isNumericString, getFloorFromString } from '../../utils/functions';
 
 type PlayerSettingScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PlayerSetting'>;
 
@@ -14,6 +15,33 @@ const PlayerSettingScreen = () => {
     const [startingChips, setStartingChips] = useState('');
     const [playerList, setPlayerList] = useState<Player[]>([]);
     const alreadyExistingID = playerList.some(p => p.id === playerID);
+
+    const handlePlayerID = (value: string): void => {
+        if (value === '') {
+            setPlayerID('');
+            return;
+        };
+    
+        if (isAlphanumericString(value) || value === '') {
+            setPlayerID(value);
+        } else {
+            Alert.alert('¡Error!', 'Username must be alpha-numeric.');
+        };
+    };
+
+
+    const handleStartingChips = (value: string): void => {
+        if (value === '') {
+            setStartingChips('');
+            return;
+        };
+    
+        if (isNumericString(value) || value === '') {
+            setStartingChips(getFloorFromString(value));
+        } else {
+            Alert.alert('¡Error!', 'Chips must be numeric.');
+        };
+    };
 
     const validateAddPlayer = () => {
         if (!playerID) {
@@ -33,7 +61,7 @@ const PlayerSettingScreen = () => {
 
         setPlayerList(prevList => [...prevList, newPlayer]);
         setPlayerID('');
-        setStartingChips('');
+        handleStartingChips('');
     };
 
     const renderPlayer = ({ item }: { item: Player }) => {
@@ -77,49 +105,55 @@ const PlayerSettingScreen = () => {
     };
 
     return (
-        <View style={ styles.mainContainer }>
-            <View style={ styles.sectionContainer }>
-                <Text style={ styles.sectionTitle }>Player Settings</Text>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={ styles.main }>
+            <View style={ styles.mainContainer }>
+                <View style={ styles.sectionContainer }>
+                    <Text style={ styles.sectionTitle }>Add new player</Text>
 
-                <TextInput
-                    style={ styles.newPlayerInput }
-                    placeholder="Player ID"
-                    placeholderTextColor= {'#888'}
-                    value={playerID}
-                    onChangeText={setPlayerID}
-                />
+                    <TextInput
+                        style={ styles.newPlayerUserInput }
+                        placeholder="Username"
+                        placeholderTextColor= {'#888'}
+                        value={ playerID }
+                        onChangeText={ handlePlayerID }
+                    />
 
-                <TextInput
-                    style={ styles.newPlayerInput }
-                    placeholder="Starting chips"
-                    placeholderTextColor= {'#888'}
-                    value={startingChips}
-                    onChangeText={setStartingChips}
-                    keyboardType="numeric"
-                />
+                    <View style={ styles.newPlayerChipSection }>
+                        <TextInput
+                            style={ styles.newPlayerChipInput }
+                            placeholder="Starting chips"
+                            placeholderTextColor= {'#888'}
+                            value={ startingChips }
+                            onChangeText={ handleStartingChips }
+                            keyboardType="numeric"
+                        />
 
-                <Pressable style={ styles.newPlayerButton} onPress={ validateAddPlayer }>
-                    <Text style={ styles.newPlayerButtonText }>Add Player</Text>
-                </Pressable>
+                        <Pressable style={ styles.newPlayerButton} onPress={ validateAddPlayer }>
+                            <Text style={ styles.newPlayerButtonText }>Add Player</Text>
+                        </Pressable>
+                    </View>
+                </View>
+
+                <View style={ styles.sectionContainer }>
+                    <Text style={ styles.sectionTitle }>Player List</Text>
+
+                    <FlatList
+                        data={ playerList }
+                        renderItem={ renderPlayer }
+                        keyExtractor={(item) => item.id}
+                        style={ styles.playerListContainer}
+                    />
+                </View>
             </View>
 
-            <View style={ styles.sectionContainer }>
-                <Text style={ styles.sectionTitle }>Players</Text>
-
-                <FlatList
-                    data={ playerList }
-                    renderItem={ renderPlayer }
-                    keyExtractor={(item) => item.id}
-                    style={ styles.playerListContainer}
-                />
-            </View>
-
-            <View>
+            <View style={ styles.mainContainer }>
                 <Pressable style={ styles.submitButton} onPress={ sendPlayerList }>
-                    <Text style={ styles.submitButtonText }>Send Players List</Text>
+                    <Text style={ styles.submitButtonText }>Send Player List</Text>
                 </Pressable>
             </View>
         </View>
+        </TouchableWithoutFeedback>
     );
 };
 

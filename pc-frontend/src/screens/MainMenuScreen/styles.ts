@@ -12,14 +12,12 @@ const mainMenuStyles = StyleSheet.create({
 
     menuContainer: {
         ... containerStyles.container,
-        padding: 24,
+        ... containerStyles.sectionContainer,
     },
 
     menuElementContainer: {
         ... containerStyles.container,
         backgroundColor: 'rgb(1, 1, 1, 0)',
-        margin: 0,
-        padding: 0,
         gap: 4,
     },
 
@@ -31,14 +29,13 @@ const mainMenuStyles = StyleSheet.create({
 
     menuButton: {
         ... buttonStyles.button,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        width: 160,
+        ... buttonStyles.mainButton,
+        width: 180,
     },
 
     menuButtonText: {
         ... buttonStyles.buttonText,
-        fontSize: 20,
+        ... buttonStyles.mainButtonText,
     },
 });
 

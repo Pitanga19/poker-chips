@@ -2,18 +2,24 @@ import { StyleSheet } from 'react-native';
 
 const buttonStyles = StyleSheet.create({
     button: {
-        borderWidth: 2,
-        borderColor: '#fff',
-        backgroundColor: '#444',
-        margin: 10,
-        padding: 10,
-        borderRadius: 5,
+        backgroundColor: '#c22',
+        borderRadius: 8,
         alignItems: 'center',
+    },
+
+    mainButton: {
+        paddingVertical: 8,
+        paddingHorizontal: 20,
     },
 
     buttonText: {
         color: '#fff',
-        fontSize: 16,
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
+    },
+
+    mainButtonText: {
+        fontSize: 20,
     },
 
     selected: {
