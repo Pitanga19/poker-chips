@@ -55,6 +55,9 @@ const MainMenuScreen = () => {
 
     return (
         <View style={ styles.main }>
+            <View style={ styles.titleContainer }>
+                <Text style={ styles.titleText }>Poker Chips</Text>
+            </View>
             <View style={ styles.menuContainer }>
                 <View style={ styles.menuElementContainer }>
                     <TextInput
@@ -69,6 +72,9 @@ const MainMenuScreen = () => {
                         <Text style={ styles.menuButtonText }>Start Game</Text>
                     </Pressable>
                 </View>
+            </View>
+            <View style={ styles.signatureContainer }>
+                <Text style={ styles.signatureText }>By Pitanga</Text>
             </View>
         </View>
     );

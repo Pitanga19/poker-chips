@@ -8,6 +8,16 @@ const mainMenuStyles = StyleSheet.create({
     main: {
         ... globalStyles.main,
         paddingTop: 48,
+        gap: 24
+    },
+
+    titleContainer: {
+    },
+
+    titleText: {
+        ... globalStyles.title,
+        fontSize: 36,
+        color: 'rgb(204, 163, 82)',
     },
 
     menuContainer: {
@@ -36,6 +46,15 @@ const mainMenuStyles = StyleSheet.create({
     menuButtonText: {
         ... buttonStyles.buttonText,
         ... buttonStyles.mainButtonText,
+    },
+
+    signatureContainer: {
+    },
+
+    signatureText: {
+        ... globalStyles.text,
+        fontSize: 12,
+        color: 'rgb(204, 163, 82)',
     },
 });
 
