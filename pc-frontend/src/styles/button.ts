@@ -22,8 +22,15 @@ const buttonStyles = StyleSheet.create({
         fontSize: 20,
     },
 
-    selected: {
-        backgroundColor: '#679',
+    unselected: {
+        backgroundColor: '#245',
+        alignItems: 'center',
+    },
+
+    unselectedText: {
+        color: '#ddd',
+        fontWeight: 'bold',
+        textTransform: 'uppercase',
     },
 });
 

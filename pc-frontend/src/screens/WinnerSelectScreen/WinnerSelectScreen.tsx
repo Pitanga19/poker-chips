@@ -70,10 +70,11 @@ const WinnerSelectScreen = () => {
     const renderPlayer = ( potId: number, playerId: string) => {
         const isSelected: boolean = selectedWinners[potId].includes(playerId);
         const buttonStyle = [styles.playerListButton, isSelected && styles.playerListSelectedButton];
+        const textStyle = [styles.playerListButtonText, isSelected && styles.playerListSelectedButtonText];
         
         return (
             <Pressable style={ buttonStyle } onPress={ () => toggleSelection(potId, playerId) }>
-                <Text style={ styles.playerListButtonText }>{playerId}</Text>
+                <Text style={ textStyle }>{playerId}</Text>
             </Pressable>
         );
     };
@@ -112,9 +113,9 @@ const WinnerSelectScreen = () => {
     };
 
     return (
-        <View style={ styles.mainContainer }>
+        <View style={ styles.main }>
             <View style={ styles.sectionContainer }>
-                <Text style={ styles.sectionTitle }>Pot List</Text>
+                <Text style={ styles.sectionTitle }>Select winners</Text>
 
                 <FlatList 
                     data={ potList }
@@ -122,11 +123,11 @@ const WinnerSelectScreen = () => {
                     keyExtractor={ (item) => item.id.toString() }
                     style={ styles.potListContainer }
                 />
-                
-                <Pressable style={ styles.submitButton } onPress={ sendWinnerSelection }>
-                    <Text style={ styles.submitButtonText }>Send Winner Selection</Text>
-                </Pressable>
             </View>
+                
+            <Pressable style={ styles.submitButton } onPress={ sendWinnerSelection }>
+                <Text style={ styles.submitButtonText }>Send Winner Selection</Text>
+            </Pressable>
         </View>
     );
 };

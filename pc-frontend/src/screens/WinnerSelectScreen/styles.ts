@@ -5,10 +5,11 @@ import listStyles from "../../styles/list";
 import buttonStyles from "../../styles/button";
 
 const winnerSelectStyles = StyleSheet.create({
-    ... globalStyles,
-
-    mainContainer: {
-        ... containerStyles.main,
+    main: {
+        ... globalStyles.main,
+        paddingVertical: 12,
+        gap: 12,
+        justifyContent: 'space-between',
     },
 
     mainText: {
@@ -17,6 +18,8 @@ const winnerSelectStyles = StyleSheet.create({
 
     sectionContainer: {
         ... containerStyles.container,
+        padding: 12,
+        minWidth: 240,
     },
 
     sectionTitle: {
@@ -25,10 +28,16 @@ const winnerSelectStyles = StyleSheet.create({
 
     potListContainer: {
         ... listStyles.listContainer,
+        width: '100%',
     },
 
     potListElementContainer: {
         ... listStyles.listElementContainer,
+        marginVertical: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        alignItems: 'center',
+        backgroundColor: 'rgb(44, 44, 44)'
     },
 
     potListItemTitle: {
@@ -40,23 +49,32 @@ const winnerSelectStyles = StyleSheet.create({
     },
 
     playerListButton: {
-        ... buttonStyles.button,
+        ... buttonStyles.unselected,
+        marginVertical: 4,
+        paddingVertical: 4,
+        paddingHorizontal: 12,
     },
 
     playerListSelectedButton: {
-        ... buttonStyles.selected,
+        ... buttonStyles.button,
     },
 
     playerListButtonText: {
+        ... buttonStyles.unselectedText,
+    },
+
+    playerListSelectedButtonText: {
         ... buttonStyles.buttonText,
     },
 
     submitButton: {
         ... buttonStyles.button,
+        ... buttonStyles.mainButton,
     },
 
     submitButtonText: {
         ... buttonStyles.buttonText,
+        ... buttonStyles.mainButtonText,
     },
 });
 
