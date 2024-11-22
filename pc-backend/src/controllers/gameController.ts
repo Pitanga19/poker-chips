@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Game } from '../models/gameStages';
-import { Player, PotManager } from '../models/chipHolders';
+import { Player } from '../models/chipHolders';
 import { ActionType, toExecuteValidatorType, HandStageValidationType, BettingStageValidationType, TurnValidationType } from "../utils/constants";
 
 export let game: Game | null = null;
@@ -8,6 +8,7 @@ export let toExecuteValidator: toExecuteValidatorType = toExecuteValidatorType.H
 
 export const newGame = (req: Request, res: Response) => {
     game = new Game();
+    toExecuteValidator = toExecuteValidatorType.HandStageValidator;
     const bigBlindValue = parseInt(req.body.bigBlindValue);
     game.handStage.defineBlindsValues(bigBlindValue);
     res.status(201).json({ message: 'New game created successfully', game: game.toJSON() });
