@@ -24,7 +24,7 @@ export enum ActionType {
     Fold = 'fold'
 }
 
-enum BettingStageType {
+export enum BettingStageType {
     PreFlop = 'preFlop',
     Flop = 'flop',
     Turn = 'turn',

@@ -20,10 +20,29 @@ const gameStyles = StyleSheet.create({
         ... containerStyles.container,
         paddingVertical: 8,
         paddingHorizontal: 12,
+        flexDirection: 'column',
+        gap: 4,
     },
 
     sectionTitle: {
         ... globalStyles.title,
+    },
+
+    sectionCardContainer: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: 4,
+    },
+
+    sectionCardItem: {
+        height: 24,
+        width: 16,
+        borderRadius: 2,
+        backgroundColor: 'rgb(44, 44, 44)',
+    },
+
+    sectionShowedCardItem: {
+        backgroundColor: '#c22',
     },
 
     potListContainer: {
@@ -63,8 +82,29 @@ const gameStyles = StyleSheet.create({
         gap: 4,
     },
 
+    playerItemTitleContainer: {
+        flexDirection: 'row',
+    },
+
     playerItemTitle: {
         ... globalStyles.title,
+    },
+
+    playerDealerChip: {
+        flex: 0,
+        height: 22,
+        width: 22,
+        borderRadius: 50,
+        marginLeft: 4,
+        backgroundColor: '#c22',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
+    playerDealerChipText: {
+        ... globalStyles.title,
+        textAlign: 'center',
+        fontSize: 12,
     },
 
     playerItemText: {

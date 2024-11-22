@@ -4,7 +4,7 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { IP, PORT, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager, BettingStage } from '../../utils/constants';
+import { IP, PORT, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager, BettingStage, BettingStageType } from '../../utils/constants';
 import { isNumericString, getFloorFromString } from '../../utils/functions';
 
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
@@ -108,12 +108,20 @@ const GameScreen = () => {
     };
 
     const renderPlayer = ({ item }: { item: Player}) => {
+        const isDealer = playerList.findIndex(p => p.id ===item.id) === positionManager?.dealerIndex;
         const isCurrentTurn = positionManager? item.id === playerManager?.playerList[positionManager.turnIndex].id : null;
         
         return (
             <View style={ styles.playerListElementContainer }>
                 <View style={ styles.playerContainer }>
-                    <Text style={ styles.playerItemTitle }>{item.id}</Text>
+                    <View style={ styles.playerItemTitleContainer }>
+                        <Text style={ styles.playerItemTitle }>
+                            { item.id }
+                        </Text>
+                        { isDealer && (<View style={ styles.playerDealerChip }>
+                            <Text style={ styles.playerDealerChipText }>D</Text>
+                        </View>)}
+                    </View>
                     <View style={ styles.playerInfoContainer}>
                         <View style={ styles.playerImageContainer }>
                                 <Image
@@ -219,10 +227,23 @@ const GameScreen = () => {
         );
     };
 
+    const flopCardStyle = [styles.sectionCardItem, bettingStage?.stage === BettingStageType.Flop && styles.sectionShowedCardItem];
+    
+    const turnCardStyle = [styles.sectionCardItem, bettingStage?.stage === BettingStageType.Turn && styles.sectionShowedCardItem];
+    
+    const riverCardStyle = [styles.sectionCardItem, bettingStage?.stage === BettingStageType.River && styles.sectionShowedCardItem];
+
     return (
         <View style={ styles.main }>
             <View style={ styles.sectionContainer }>
-            <Text style={ styles.sectionTitle }>Stage: {bettingStage?.stage}</Text>
+            <Text style={ styles.sectionTitle }>{bettingStage?.stage}</Text>
+            <View style={ styles.sectionCardContainer }>
+                <View style={ flopCardStyle }/>
+                <View style={ flopCardStyle }/>
+                <View style={ flopCardStyle }/>
+                <View style={ turnCardStyle }/>
+                <View style={ riverCardStyle }/>
+            </View>
                 <FlatList
                     data={ potList || [] }
                     renderItem={ renderPot }
