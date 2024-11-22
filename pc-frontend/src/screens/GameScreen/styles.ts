@@ -117,18 +117,12 @@ const gameStyles = StyleSheet.create({
         gap: 4,
     },
 
-    actionItemSection: {
-        ... inputStyles.textInput,
-        flex: 1,
-        padding: 0,
-        height: 24,
-    },
-
     actionItemInput: {
         ... inputStyles.textInput,
+        height: 24,
         backgroundColor: 'rgb(64, 64, 64)',
         justifyContent: 'center',
-        height: '100%',
+        width: 68,
         padding: 0,
         fontSize: 12,
         textAlign: 'center',
@@ -136,9 +130,9 @@ const gameStyles = StyleSheet.create({
 
     actionItemButton: {
         ... buttonStyles.button,
-        padding: 0,
+        height: 24,
+        flexGrow: 1,
         justifyContent: 'center',
-        height: '100%',
     },
 
     actionItemButtonText: {

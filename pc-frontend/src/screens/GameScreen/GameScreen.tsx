@@ -82,6 +82,8 @@ const GameScreen = () => {
             fetchAvalibleActionsData();
         } else if (toExecuteValidator === toExecuteValidatorType.WinnerSelector) {
             winnerSelect();
+        } else if (toExecuteValidator === toExecuteValidatorType.GameOver) {
+            navigation.navigate('MainMenu');
         } else {
             fetchToExecuteValidatorData();
         };
@@ -198,7 +200,6 @@ const GameScreen = () => {
         return (
             <View style={ styles.actionListElementContainer }>
                 {(isBet || isRaise) && (
-                    <View style={ styles.actionItemSection }>
                         <TextInput
                             style={ styles.actionItemInput }
                             placeholder="amount"
@@ -207,16 +208,13 @@ const GameScreen = () => {
                             onChangeText={handleAmountChange}
                             keyboardType="numeric"
                         />
-                    </View>
                 )}
-                <View style={ styles.actionItemSection }>
                     <Pressable
                         style={ styles.actionItemButton }
                         onPress={ () => handleActionPress(item) }
                     >
                         <Text style={ styles.actionItemButtonText }>{item}</Text>
                     </Pressable>
-                </View>
             </View>
         );
     };
