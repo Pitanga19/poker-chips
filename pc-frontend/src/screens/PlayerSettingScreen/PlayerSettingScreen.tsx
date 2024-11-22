@@ -4,7 +4,7 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
-import { IP, PORT, Player } from '../../utils/constants';
+import { API_URL, Player } from '../../utils/constants';
 import { isAlphanumericString, isNumericString, getFloorFromString } from '../../utils/functions';
 
 type PlayerSettingScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PlayerSetting'>;
@@ -80,7 +80,7 @@ const PlayerSettingScreen = () => {
         };
 
         try {
-            const response = await fetch(`http://${IP}:${PORT}/api/playerList`, {
+            const response = await fetch(`${API_URL}/playerList`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

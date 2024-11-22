@@ -22,6 +22,4 @@ app.post('/api/playerAction', playerAction);
 
 app.post('/api/winnerSelect', winnerSelect);
 
-app.listen(PORT, IP, () => {
-    console.log(`Server running at http://${IP}:${PORT}`)
-});
+app.listen(PORT, IP);

@@ -1,5 +1,6 @@
 export const PORT = 3000;
-export const IP = '192.168.0.8';
+export const IP = '127.0.0.1';
+export const API_URL = `http://${IP}:${PORT}/api`;
 
 export enum toExecuteValidatorType {
     HandStageValidator = 'handStageValidator',

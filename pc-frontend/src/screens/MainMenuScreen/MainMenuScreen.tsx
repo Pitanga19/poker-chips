@@ -4,7 +4,7 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
-import { IP, PORT } from '../../utils/constants';
+import { API_URL } from '../../utils/constants';
 import { isNumericString, getFloorFromString } from '../../utils/functions';
 
 type MainMenuScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'MainMenu'>;
@@ -17,7 +17,7 @@ const MainMenuScreen = () => {
         try {
             if (bigBlindValue === '') throw new Error('Missing big blind value.');
 
-            const response = await fetch(`http://${IP}:${PORT}/api/newGame`, {
+            const response = await fetch(`${API_URL}/newGame`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ bigBlindValue })
@@ -28,8 +28,6 @@ const MainMenuScreen = () => {
                 throw new Error(errorData?.message || 'Failed to create new game.');
             };
 
-            const data = await response.json();
-            console.log('New game created:', data);
             navigation.navigate('PlayerSetting');
         } catch (error: unknown) {
             if (error instanceof Error) {

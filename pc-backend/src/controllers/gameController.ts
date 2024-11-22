@@ -11,7 +11,7 @@ export const newGame = (req: Request, res: Response) => {
     toExecuteValidator = toExecuteValidatorType.HandStageValidator;
     const bigBlindValue = parseInt(req.body.bigBlindValue);
     game.handStage.defineBlindsValues(bigBlindValue);
-    res.status(201).json({ message: 'New game created successfully', game: game.toJSON() });
+    res.status(201).json({ message: 'New game created successfully' });
 };
 
 export const playerList = (req: Request, res: Response) => {
@@ -31,7 +31,6 @@ export const playerList = (req: Request, res: Response) => {
     if (game instanceof Game) {
         game.playerManager.playerList = playerList;
         game.positionManager.initializePositions(game, -1);
-        console.log('Updated positions:', game.positionManager);
     };
 
     res.status(200).json({ message: 'Player list received successfully', playerList: game?.playerManager.playerList });
@@ -41,7 +40,6 @@ export const currentGame = (req: Request, res: Response) => {
     if (!game) {
         res.status(404).json({ message: 'No active game found.' });
     } else {
-        console.log('Sending updated game ...');
         const updatedGame = game.toJSON();
         res.status(200).json(updatedGame);
     };
@@ -52,11 +50,8 @@ export const currentToExecuteValidator = (req: Request, res: Response) => {
         if (!game) {
             res.status(404).json({ message: 'No active game found.' });
         } else {
-            console.log('Current validator:', toExecuteValidator);
-
             switch (toExecuteValidator) {
                 case toExecuteValidatorType.GameOver:
-                    console.log('Game over');
                     break
                     
                 case toExecuteValidatorType.HandStageValidator:
@@ -91,7 +86,6 @@ export const currentToExecuteValidator = (req: Request, res: Response) => {
                     throw new Error('Unexpected validator type.');
             };
 
-            console.log('Sending to execute validator:', toExecuteValidator)
             res.status(200).json(toExecuteValidator);
         };
     } catch (error) {
@@ -110,7 +104,6 @@ export const avalibleActions = (req: Request, res: Response) => {
             res.status(404).json({ message: 'No active game found.' });
         } else {
             const avalibleActions = game.actionSelector.getOptions(game);
-            console.log('Sending avalible actions:', avalibleActions)
             res.status(200).json(avalibleActions);
         }
     } catch (error) {
@@ -127,7 +120,6 @@ export const playerAction = (req: Request, res: Response) => {
     if (!game) {
         res.status(404).json({ message: 'No active game found.' });
     } else {
-        console.log('Received data:', req.body);
         const { action, amount } = req.body;
         const playerActions = game.playerActions;
 
@@ -174,11 +166,7 @@ export const playerAction = (req: Request, res: Response) => {
 
 export const winnerSelect = (req: Request, res: Response) => {
     const winnerListPerPot = req.body.winnerListPerPot;
-    /*
-    if (!winnerListPerPot || !Array.isArray(winnerListPerPot)) {
-        return res.status(400).json({ message: 'Invalid data format for winnerListPerPot.' });
-    }
-    */
+    
     if (!game) {
         res.status(404).json({ message: 'No active game found.' });
     } else {

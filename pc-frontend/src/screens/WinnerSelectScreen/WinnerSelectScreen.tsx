@@ -4,7 +4,7 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation } from '@react-navigation/native';
-import { IP, PORT, Pot } from '../../utils/constants';
+import { API_URL, Pot } from '../../utils/constants';
 
 type WinnerSelectScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'WinnerSelect'>;
 
@@ -15,7 +15,7 @@ const WinnerSelectScreen = () => {
 
     const fetchGameData = async () => {
         try {
-            const response = await fetch(`http://${IP}:${PORT}/api/currentGame`);
+            const response = await fetch(`${API_URL}/currentGame`);
             const data = await response.json();
 
             setPotList(data.potManager?.potList);
@@ -88,7 +88,7 @@ const WinnerSelectScreen = () => {
         };
 
         try {
-            const response = await fetch(`http://${IP}:${PORT}/api/winnerSelect`, {
+            const response = await fetch(`${API_URL}/winnerSelect`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

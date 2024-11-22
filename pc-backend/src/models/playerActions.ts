@@ -10,12 +10,6 @@ export class ActionSelector {
         const handStage = game.handStage;
         const bettingStage = game.bettingStage;
 
-        console.log('PLAYERS:');
-        playerList.forEach(p => console.log('Player:' + p.id + ', Chips:' + p.chips + ', Pending chips:' + p.pendingChips));
-        console.log(positionManager.toJSON());
-        console.log(handStage.toJSON());
-        console.log(bettingStage.toJSON());
-
         const bigBlindValue = handStage.bigBlindValue;
         const actualBetValue = bettingStage.actualBetValue;
         const minimumRaise = bettingStage.minimumRaise;
@@ -118,7 +112,7 @@ export class PlayerActions {
             bettingStage.resetCheckCount();
             positionManager.updateNextTurn(game);
         } else {
-            console.log('Invalid amount, bet must be equal or bigger than big blind.');
+            throw new Error('Invalid amount, bet must be equal or bigger than big blind.');
         };
     }
     
@@ -149,7 +143,7 @@ export class PlayerActions {
             bettingStage.minimumRaise = bettingStage.actualBetValue + raiseValue;
             positionManager.updateNextTurn(game);
         } else {
-            console.log('Invalid amount, raise must be equal or bigger than last one.');
+            throw new Error('Invalid amount, raise must be equal or bigger than last one.');
         };
     }
     

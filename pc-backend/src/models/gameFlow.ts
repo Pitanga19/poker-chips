@@ -145,10 +145,8 @@ export class HandStageValidator {
         const arePlaying = playerList.filter( p => p.isPlaying );
         const areManyPlaying = arePlaying.length > 1;
         if (areManyPlaying) {
-            console.log('Hand stage validation result: Starting new hand stage ...');
             return HandStageValidationType.StartHandStage;
         } else {
-            console.log('Hand stage validation result: Ending game ...');
             return HandStageValidationType.EndGame;
         }
     }
@@ -181,27 +179,13 @@ export class BettingStageValidator {
         const riverPlayed = handStage.stagesPlayed.length === 4;
 
         if (areWinners || riverPlayed) {
-            console.log('Betting stage validation result: Ending hand ...');
             return BettingStageValidationType.EndHandStage;
         } else {
-            console.log('Betting stage validation result: Starting new betting stage ...');
             return BettingStageValidationType.StartBettingStage;
         }
     }
 
     endHand(game: Game): toExecuteValidatorType {
-        /*
-        const potManager = game.potManager;
-        const potList = potManager.potList;
-        const playerManager = game.playerManager;
-        const positionManager = game.positionManager;
-        
-        potList.forEach(pot => pot.defineWinners(game));
-        potList.forEach(pot => pot.payWinners(game));
-        potManager.resetPotList();
-        playerManager.resetIsPlaying();
-        positionManager.updateNextHand(game);
-        */
         return toExecuteValidatorType.WinnerSelector;
     }
 
@@ -221,7 +205,7 @@ export class TurnValidator {
         const positionManager = game.positionManager;
         const currentPlayer = playerList[positionManager.turnIndex];
         const bettingStage = game.bettingStage;
-        
+
         const areEnoughPlaying = currentPot.areEnoughPlayingValidation();
         const arePlayingWithChips = playerList.filter(p => p.isPlaying && p.getTotalChips() > 0);
         const arePlayingWithChipsCount = arePlayingWithChips.length;
@@ -235,21 +219,17 @@ export class TurnValidator {
         const mustEqualBet = doSomeoneBet || currentPlayer.pendingChips < bettingStage.actualBetValue;
 
         if (!areEnoughPlaying || isRaiser || doBBcheck || doEveryoneCheck || areEnoughPlayingWithChips) {
-            console.log('Turn validation result: Ending betting stage ...');
             return TurnValidationType.EndBettingStage;
         }
-    
+
         if (!isPlaying || !hasChipsToBet) {
-            console.log('Turn validation result: Skipping to next player ...');
             return TurnValidationType.NextPlayer;
         }
-    
+
         if (isPlaying && hasChipsToBet && ( !doSomeoneBet || mustEqualBet)) {
-            console.log('Turn validation result: Giving actions to current player ...');
             return TurnValidationType.GiveActions;
         }
-    
-        console.error('Unexpected state in TurnValidator (console.error)');
+
         throw new Error('Unexpected state in TurnValidator (throw new Error)');
     }
 
@@ -259,12 +239,10 @@ export class TurnValidator {
         const bettingStage = game.bettingStage;
         const positionManager = game.positionManager;
 
-        console.log('Creating side pots validation ...');
         while (potManager.needSidePotValidation(game)) {
             potManager.createSidePot(game)
         }
         
-        console.log('Collecting chips to current pot ...');
         potManager.collectToPlayingPot(game);
         handStage.stagesPlayed.push(bettingStage.stage);
         positionManager.updateNextStage();

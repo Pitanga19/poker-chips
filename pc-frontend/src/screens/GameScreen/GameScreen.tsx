@@ -4,7 +4,7 @@ import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
-import { IP, PORT, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager, HandStage, BettingStage, BettingStageType } from '../../utils/constants';
+import { API_URL, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager, HandStage, BettingStage, BettingStageType } from '../../utils/constants';
 import { isNumericString, getFloorFromString } from '../../utils/functions';
 
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
@@ -25,7 +25,7 @@ const GameScreen = () => {
 
     const fetchGameData = async () => {
         try {
-            const response = await fetch(`http://${IP}:${PORT}/api/currentGame`);
+            const response = await fetch(`${API_URL}/currentGame`);
             const data = await response.json();
 
             setPotList(data.potManager?.potList);
@@ -35,19 +35,18 @@ const GameScreen = () => {
             setHandStage(data.handStage);
             setBettingStage(data.bettingStage);
         } catch (error) {
-            console.error('Error fetching game:', error);
+            Alert.alert('Internal error, please try again.');
         };
     };
 
     const fetchToExecuteValidatorData = async () =>{
         try {
-            const response = await fetch(`http://${IP}:${PORT}/api/currentToExecuteValidator`);
+            const response = await fetch(`${API_URL}/currentToExecuteValidator`);
             const data = await response.json();
 
-            console.log('To execute validator received:', data);
             setToExecuteValidator(data);
         } catch (error) {
-            console.error('Error fetching game:', error);
+            Alert.alert('Internal error, please try again.');
         };
 
         if (toExecuteValidator !== toExecuteValidatorType.ActionSelector){
@@ -57,13 +56,12 @@ const GameScreen = () => {
 
     const fetchAvalibleActionsData = async () => {
         try {
-            const response = await fetch(`http://${IP}:${PORT}/api/avalibleActions`);
+            const response = await fetch(`${API_URL}/avalibleActions`);
             const data = await response.json();
 
-            console.log('Avalible actions received:', data);
             setAvalibleActions(data);
         } catch (error) {
-            console.error('Error fetching avalible actions:', error);
+            Alert.alert('Internal error, please try again.');
         };
     };
 
@@ -73,7 +71,6 @@ const GameScreen = () => {
             return;
         }
 
-        console.log('Pots waiting for winners:', potList);
         navigation.navigate('WinnerSelect');
     };
 
@@ -155,7 +152,6 @@ const GameScreen = () => {
     };
 
     const handleActionPress = async (action: ActionType) => {
-        console.log('Sending action:', action);
         const isBet = action === ActionType.Bet;
         const isRaise = action === ActionType.Raise;
 
@@ -165,7 +161,7 @@ const GameScreen = () => {
         };
 
         try {
-            const response = await fetch(`http://${IP}:${PORT}/api/playerAction`, {
+            const response = await fetch(`${API_URL}/playerAction`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -177,16 +173,14 @@ const GameScreen = () => {
             const data = await response.json();
 
             if (data.message) {
-                console.error('Action error:', data.message);
-            } else {
-                console.log('Action result:', data);
+                Alert.alert('Action error:', data.message);
             };
+
             setAmount('');
         } catch(error) {
-            console.error('Error processing action:', error);
+            Alert.alert('Error processing action.');
         };
 
-        console.log('Fetching update game after action press ...');
         setToExecuteValidator(toExecuteValidatorType.TurnValidator);
         setHandleFetching(!handleFetching);
     };
