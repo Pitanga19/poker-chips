@@ -1,5 +1,5 @@
 export const PORT = Number(process.env.PORT) || 3000;
-export const IP = '0.0.0.0';
+export const IP = '192.168.0.8';
 
 export enum ActionType {
     PutSmallBlind = 'putSmallBlind',

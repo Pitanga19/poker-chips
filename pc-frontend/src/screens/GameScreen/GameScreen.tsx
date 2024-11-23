@@ -3,14 +3,22 @@ import { View, Text, FlatList, TextInput, Pressable, Alert, Image } from 'react-
 import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { useNavigation, RouteProp, useRoute, useIsFocused } from '@react-navigation/native';
 import { API_URL, toExecuteValidatorType, ActionType, Pot, PlayerManager, Player, PositionManager, HandStage, BettingStage, BettingStageType } from '../../utils/constants';
-import { isNumericString, getFloorFromString } from '../../utils/functions';
+import { getApiUrl, isNumericString, getFloorFromString } from '../../utils/functions';
 
 type GameScreenScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Game'>;
+type GameScreenRouteProp = RouteProp<RootStackParamList, 'Game'>;
 
 const GameScreen = () => {
     const navigation = useNavigation<GameScreenScreenNavigationProp>();
+    const route = useRoute<GameScreenRouteProp>();
+    const { gameId } = route.params;
+
+    if (!gameId) {
+        throw new Error('Game ID is required to access this screen.');
+    }
+
     const isFocused = useIsFocused();
     const [potList, setPotList] = useState<Pot[]>([]);
     const [playerManager, setPlayerManager] = useState<PlayerManager | null>(null);
@@ -25,7 +33,7 @@ const GameScreen = () => {
 
     const fetchGameData = async () => {
         try {
-            const response = await fetch(`${API_URL}/currentGame`);
+            const response = await fetch(getApiUrl(gameId) + '/currentGame');
             const data = await response.json();
 
             setPotList(data.potManager?.potList);
@@ -41,7 +49,7 @@ const GameScreen = () => {
 
     const fetchToExecuteValidatorData = async () =>{
         try {
-            const response = await fetch(`${API_URL}/currentToExecuteValidator`);
+            const response = await fetch(getApiUrl(gameId) + '/currentToExecuteValidator');
             const data = await response.json();
 
             setToExecuteValidator(data);
@@ -56,7 +64,7 @@ const GameScreen = () => {
 
     const fetchAvalibleActionsData = async () => {
         try {
-            const response = await fetch(`${API_URL}/avalibleActions`);
+            const response = await fetch(getApiUrl(gameId) + '/avalibleActions');
             const data = await response.json();
 
             setAvalibleActions(data);
@@ -71,7 +79,7 @@ const GameScreen = () => {
             return;
         }
 
-        navigation.navigate('WinnerSelect');
+        navigation.navigate('WinnerSelect', { gameId });
     };
 
     useEffect(() => {
@@ -161,7 +169,7 @@ const GameScreen = () => {
         };
 
         try {
-            const response = await fetch(`${API_URL}/playerAction`, {
+            const response = await fetch(getApiUrl(gameId) + '/playerAction', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

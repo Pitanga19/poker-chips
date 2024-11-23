@@ -1,9 +1,10 @@
-import { BettingStageType, BettingStageTypeList } from "../utils/constants";
+import { BettingStageType, BettingStageTypeList, toExecuteValidatorType } from "../utils/constants";
 import { PlayerManager, PotManager } from "./chipHolders";
 import { PositionManager, HandStageValidator, BettingStageValidator, TurnValidator } from "./gameFlow";
 import { ActionSelector, PlayerActions } from "./playerActions";
 
 export class Game {
+    private _toExecuteValidator: toExecuteValidatorType;
     private _playerManager: PlayerManager;
     private _potManager: PotManager;
     private _positionManager: PositionManager;
@@ -16,6 +17,7 @@ export class Game {
     private _playerActions: PlayerActions;
 
     constructor () {
+        this._toExecuteValidator = toExecuteValidatorType.HandStageValidator;
         this._playerManager = new PlayerManager();
         this._potManager = new PotManager();
         this._positionManager = new PositionManager();
@@ -30,6 +32,7 @@ export class Game {
 
     toJSON() {
         return {
+            toExecuteValidator: this._toExecuteValidator,
             playerManager: this._playerManager,
             potManager: this._potManager,
             positionManager: this._positionManager,
@@ -41,6 +44,14 @@ export class Game {
             actionSelector: this._actionSelector,
             playerActions: this._playerActions,
         }
+    }
+
+    get toExecuteValidator(): toExecuteValidatorType {
+        return this._toExecuteValidator;
+    }
+
+    set toExecuteValidator(toExecuteValidator: toExecuteValidatorType) {
+        this._toExecuteValidator = toExecuteValidator;
     }
 
     get playerManager(): PlayerManager {

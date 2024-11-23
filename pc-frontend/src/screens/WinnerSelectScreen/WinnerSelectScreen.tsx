@@ -3,19 +3,28 @@ import { Alert, View, Text, FlatList, Pressable } from 'react-native';
 import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, RouteProp, useRoute } from '@react-navigation/native';
 import { API_URL, Pot } from '../../utils/constants';
+import { getApiUrl } from "../../utils/functions";
 
 type WinnerSelectScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'WinnerSelect'>;
+type WinnerSelectScreenRouteProp = RouteProp<RootStackParamList, 'WinnerSelect'>;
 
 const WinnerSelectScreen = () => {
     const navigation = useNavigation<WinnerSelectScreenNavigationProp>();
+    const route = useRoute<WinnerSelectScreenRouteProp>();
+    const { gameId } = route.params;
+
+    if (!gameId) {
+        throw new Error('Game ID is required to access this screen.');
+    }
+    
     const [potList, setPotList] = useState<Pot[]>([]);
     const [selectedWinners, setSelectedWinners] = useState<Record<number, string[]>>({});
 
     const fetchGameData = async () => {
         try {
-            const response = await fetch(`${API_URL}/currentGame`);
+            const response = await fetch(getApiUrl(gameId) + '/currentGame');
             const data = await response.json();
 
             setPotList(data.potManager?.potList);
@@ -88,7 +97,7 @@ const WinnerSelectScreen = () => {
         };
 
         try {
-            const response = await fetch(`${API_URL}/winnerSelect`, {
+            const response = await fetch(getApiUrl(gameId) + '/winnerSelect', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -102,7 +111,7 @@ const WinnerSelectScreen = () => {
 
             const data = await response.json();
             Alert.alert('¡Succes!', 'Winner selection sent succesfully.');
-            navigation.navigate('Game');
+            navigation.navigate('Game', { gameId });
         } catch (error: unknown) {
             if (error instanceof Error) {
                 Alert.alert('¡Error!', error.message);

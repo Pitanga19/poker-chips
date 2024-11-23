@@ -8,9 +8,9 @@ import WinnerSelectScreen from "../screens/WinnerSelectScreen/WinnerSelectScreen
 
 export type RootStackParamList = {
     MainMenu: undefined;
-    PlayerSetting: undefined;
-    Game: undefined;
-    WinnerSelect: undefined;
+    PlayerSetting: { gameId: string };
+    Game: { gameId: string };
+    WinnerSelect: { gameId: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

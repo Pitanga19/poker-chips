@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "pc-frontend",
+    "slug": "pc-frontend",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./src/assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pitanga.pokerchips"
+    },
+    "android": {
+      "release": {
+        "workflow": "managed"
+      },
+      "preview": {
+        "workflow": "managed"
+      },
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.pitanga.pokerchips",
+      "versionCode": 1
+    },
+    "web": {
+      "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fa057692-effd-4048-a435-f17f44898296"
+      }
+    }
+  }
+}

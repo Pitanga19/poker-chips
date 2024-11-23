@@ -10,16 +10,16 @@ app.use(express.json());
 
 app.post('/api/newGame', newGame);
 
-app.post('/api/playerList', playerList);
+app.post('/api/:gameId/playerList', playerList);
 
-app.get('/api/currentGame', currentGame);
+app.get('/api/:gameId/currentGame', currentGame);
 
-app.get('/api/currentToExecuteValidator', currentToExecuteValidator);
+app.get('/api/:gameId/currentToExecuteValidator', currentToExecuteValidator);
 
-app.get('/api/avalibleActions', avalibleActions);
+app.get('/api/:gameId/avalibleActions', avalibleActions);
 
-app.post('/api/playerAction', playerAction);
+app.post('/api/:gameId/playerAction', playerAction);
 
-app.post('/api/winnerSelect', winnerSelect);
+app.post('/api/:gameId/winnerSelect', winnerSelect);
 
 app.listen(PORT, IP);

@@ -1,3 +1,7 @@
+import { IP, PORT } from "./constants";
+
+export const getApiUrl = (gameId: string) => `http://${IP}:${PORT}/api/${gameId}`;
+
 export const isNumericString = (value: string): boolean => {
     const numericRegex = /^[0-9]+$/; // Solo permite números del 0 al 9
     return numericRegex.test(value);

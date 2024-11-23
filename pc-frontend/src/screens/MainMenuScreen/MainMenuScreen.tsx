@@ -28,7 +28,11 @@ const MainMenuScreen = () => {
                 throw new Error(errorData?.message || 'Failed to create new game.');
             };
 
-            navigation.navigate('PlayerSetting');
+            const { gameId } = await response.json();
+
+            if (!gameId) throw new Error('Game ID not returned by server.');
+            
+            navigation.navigate('PlayerSetting', { gameId });
         } catch (error: unknown) {
             if (error instanceof Error) {
                 Alert.alert('¡Error!', error.message);

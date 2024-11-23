@@ -3,14 +3,22 @@ import { Alert, View, Text, FlatList, TextInput, Pressable, TouchableWithoutFeed
 import styles from './styles';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/AppNavigator';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, RouteProp, useRoute } from '@react-navigation/native';
 import { API_URL, Player } from '../../utils/constants';
-import { isAlphanumericString, isNumericString, getFloorFromString } from '../../utils/functions';
+import { getApiUrl, isAlphanumericString, isNumericString, getFloorFromString } from '../../utils/functions';
 
 type PlayerSettingScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'PlayerSetting'>;
+type PlayerSettingScreenRouteProp = RouteProp<RootStackParamList, 'PlayerSetting'>;
 
 const PlayerSettingScreen = () => {
     const navigation = useNavigation<PlayerSettingScreenNavigationProp>();
+    const route = useRoute<PlayerSettingScreenRouteProp>();
+    const { gameId } = route.params;
+
+    if (!gameId) {
+        throw new Error('Game ID is required to access this screen.');
+    }
+    
     const [playerID, setPlayerID] = useState('');
     const [startingChips, setStartingChips] = useState('');
     const [playerList, setPlayerList] = useState<Player[]>([]);
@@ -80,7 +88,7 @@ const PlayerSettingScreen = () => {
         };
 
         try {
-            const response = await fetch(`${API_URL}/playerList`, {
+            const response = await fetch(getApiUrl(gameId) + '/playerList', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -94,7 +102,7 @@ const PlayerSettingScreen = () => {
 
             const data = await response.json();
             Alert.alert('¡Succes!', 'Player list sent succesfully.');
-            navigation.navigate('Game');
+            navigation.navigate('Game', { gameId });
         } catch (error: unknown) {
             if (error instanceof Error) {
                 Alert.alert('¡Error!', error.message);
